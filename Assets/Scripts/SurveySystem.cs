@@ -6,8 +6,12 @@ using UnityEngine.UI;
 
 public class SurveySystem : MonoBehaviour
 {
+    GameManager gameManager;
     public GameObject quizPanel;
     public GameObject endPanel;
+    public TMP_Text moneyText;
+    public TMP_Text endDescription;
+    public TMP_Text questionsSummary;
     public List<QuestionsAndAnswers> MathQuestions;
     public List<QuestionsAndAnswers> CelebsQuestions;
     public List<QuestionsAndAnswers> LanguageQuestions;
@@ -27,6 +31,7 @@ public class SurveySystem : MonoBehaviour
 
     public int questionAmount = 0;
     private int lastQuestionIndex = -1;
+    public int correctAnswers;
 
     public TMP_Text QuestionText;
     public Slider questionTimer;
@@ -38,6 +43,10 @@ public class SurveySystem : MonoBehaviour
     private List<QuestionsAndAnswers> originalVideoGamesQuestions;
     private List<QuestionsAndAnswers> originalAnimalsQuestions;
     private List<QuestionsAndAnswers> originalMythologyQuestions;
+    private void Awake()
+    {
+        gameManager = FindObjectOfType<GameManager>();
+    }
 
     private void Start()
     {
@@ -74,6 +83,7 @@ public class SurveySystem : MonoBehaviour
     {
         questionAmount++;
         questionTimer.value = 10f;
+        correctAnswers++;
         if (mathCat)
         {
             MathQuestions.RemoveAt(currentQuestion);
@@ -236,15 +246,29 @@ public class SurveySystem : MonoBehaviour
         animalsCat = false;
         mythologyCat = false;
         questionAmount = 0;
+        
+        gameManager.playerMoney += correctAnswers;
+        moneyText.text = "You have earned $" + correctAnswers.ToString();
+        questionsSummary.text = "You answered " + correctAnswers + " questions correctly!";
+        if (correctAnswers >= 3)
+        {
+            endDescription.text = "Good job! You've earned some money for your correct answers.";
+        }
+        else
+        {
+            endDescription.text = "Thank you for your participation! Unfortunately you are not the subject we are looking for at the moment, but you can try again later.";
+        }
     }
     public void ChooseMath()
     {
+        correctAnswers = 0;
         mathCat = true;
         GenerateQuestion(MathQuestions, originalMathQuestions);
         StartCoroutine(QuestionTimer());
     }
     public void ChooseLang()
     {
+        correctAnswers = 0;
         languageCat = true;
         GenerateQuestion(LanguageQuestions, originalLanguageQuestions);
         StartCoroutine(QuestionTimer());
@@ -252,30 +276,35 @@ public class SurveySystem : MonoBehaviour
     }
     public void ChooseCelebs()
     {
+        correctAnswers = 0;
         celebsCat = true;
         GenerateQuestion(CelebsQuestions, originalCelebsQuestions);
         StartCoroutine(QuestionTimer());
     }
     public void ChooseSports()
     {
+        correctAnswers = 0;
         sportsCat = true;
         GenerateQuestion(SportsQuestions, originalSportsQuestions);
         StartCoroutine(QuestionTimer());
     }
     public void ChooseVideoGames()
     {
+        correctAnswers = 0;
         videoGamesCat = true;
         GenerateQuestion(VideoGamesQuestions, originalVideoGamesQuestions);
         StartCoroutine(QuestionTimer());
     }
     public void ChooseAnimals()
     {
+        correctAnswers = 0;
         animalsCat = true;
         GenerateQuestion(AnimalsQuestions, originalAnimalsQuestions);
         StartCoroutine(QuestionTimer());
     }
     public void ChooseMythology()
     {
+        correctAnswers = 0;
         mythologyCat = true;
         GenerateQuestion(MythologyQuestions, originalMythologyQuestions);
         StartCoroutine(QuestionTimer());
@@ -312,13 +341,14 @@ public class SurveySystem : MonoBehaviour
             yield return null;
         }
         // Time's up, treat as wrong answer
-        if (questionAmount < 5)
+        if (questionAmount < 4)
         {
             wrong();
             StartCoroutine(QuestionTimer()); 
         }
         else
         {
+            wrong();
             EndSurvey();
         }
     }
