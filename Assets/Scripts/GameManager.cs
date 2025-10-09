@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
 
 
     public GameObject LockMenu;
+    public GameObject bankWidget;
+    public GameObject stockWidget;
     private void Awake()
     {
         contentChecker = FindObjectOfType<ContentChecker>();

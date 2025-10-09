@@ -247,8 +247,8 @@ public class SurveySystem : MonoBehaviour
         mythologyCat = false;
         questionAmount = 0;
         
-        gameManager.playerMoney += correctAnswers;
-        moneyText.text = "You have earned $" + correctAnswers.ToString();
+        gameManager.playerMoney += correctAnswers / 2f;
+        moneyText.text = "You have earned $" + (correctAnswers / 2f).ToString("F2");
         questionsSummary.text = "You answered " + correctAnswers + " questions correctly!";
         if (correctAnswers >= 3)
         {

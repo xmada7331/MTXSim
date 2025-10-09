@@ -30,6 +30,9 @@ public class CurrencyDisplayManager : MonoBehaviour
     [Header("Battle Pass")]
     public Slider progressSlider;
     public TMP_Text bpProgress;
+    [Header("Banking App")]
+    public TMP_Text bankAccount;
+    public TMP_Text bankApp;
     private void Awake()
     {
         gameManager = FindObjectOfType<GameManager>();
@@ -64,6 +67,10 @@ public class CurrencyDisplayManager : MonoBehaviour
         playerMoneyBPTab.text = "$" + gameManager.playerMoney.ToString();
         progressSlider.value = game_Behaviour.defeatedEnemies;
         bpProgress.text = game_Behaviour.defeatedEnemies.ToString();
+
+        ////////////Banking App
+        bankAccount.text = "$" + gameManager.playerMoney.ToString();
+        bankApp.text = "$" + gameManager.playerMoney.ToString("F2");
 
     }
 

@@ -72,5 +72,38 @@ public class ShopPurchasable : MonoBehaviour
 
     }
 
+    public void PurchaseBankWidget()
+    {
+        if(gameManager.playerMoney >= itemPrice && !itemPurchased && isPurchasable)
+        {
+            gameManager.playerMoney -= itemPrice;
+            Transform lockParent = transform.parent;
+            Transform locklockParent = lockParent.parent;
+            gameManager.bankWidget.SetActive(true);
+            Destroy(locklockParent.gameObject);
+
+        }
+        else if (!itemPurchased)
+        {
+            WiggleItem();
+        }
+    }
+    public void PurchaseStockWidget()
+    {
+        if (gameManager.playerMoney >= itemPrice && !itemPurchased && isPurchasable)
+        {
+            gameManager.playerMoney -= itemPrice;
+            Transform lockParent = transform.parent;
+            Transform locklockParent = lockParent.parent;
+            gameManager.stockWidget.SetActive(true);
+            Destroy(locklockParent.gameObject);
+
+        }
+        else if (!itemPurchased)
+        {
+            WiggleItem();
+        }
+    }
+
 
 }
