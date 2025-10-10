@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class ShopPurchasable : MonoBehaviour
 {
@@ -103,6 +104,36 @@ public class ShopPurchasable : MonoBehaviour
         {
             WiggleItem();
         }
+    }
+    public void PurchaseFreeCoinWidget()
+    {
+        if (gameManager.playerMoney >= itemPrice && !itemPurchased && isPurchasable)
+        {
+            gameManager.playerMoney -= itemPrice;
+            Transform lockParent = transform.parent;
+            Transform locklockParent = lockParent.parent;
+            gameManager.freeCoinWidget.SetActive(true);
+            Destroy(locklockParent.gameObject);
+
+        }
+        else if (!itemPurchased)
+        {
+            WiggleItem();
+        }
+    }
+
+    public void HoverItem()
+    {
+        itemImage.color = new Color32(244, 244, 244, 100);
+        TMP_Text childText = GetComponentInChildren<TMP_Text>();
+        childText.color = new Color32(244, 244, 244, 100);
+    }
+
+    public void UnhoverItem()
+    {
+               itemImage.color = new Color32(244, 244, 244, 255);
+        TMP_Text childText = GetComponentInChildren<TMP_Text>();
+        childText.color = new Color32(244, 244, 244, 255);
     }
 
 
