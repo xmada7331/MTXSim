@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class GameManager : MonoBehaviour
 {
     public UltEvents.UltEvent myEvent;
+    ToolbarSystemIcon toolbarSystemIcon;
     ShopPurchasable shopPurchasable;
     ContentChecker contentChecker;
 
@@ -20,9 +22,14 @@ public class GameManager : MonoBehaviour
     public GameObject bankWidget;
     public GameObject stockWidget;
     public GameObject freeCoinWidget;
+    public GameObject adsSystem;
+    [Header("CameraApp")]
+    public bool hasCamera = false;
+    public GameObject cameraLock;
     private void Awake()
     {
         contentChecker = FindObjectOfType<ContentChecker>();
+        toolbarSystemIcon = FindObjectOfType<ToolbarSystemIcon>();
     }
     void Start()
     {
@@ -53,6 +60,37 @@ public class GameManager : MonoBehaviour
         else
         {
             Debug.Log("not enough money");
+        }
+    }
+
+    public void PurchaseAntivirus(GameObject target)
+    {
+        shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (playerMoney >= shopPurchasable.itemPrice)
+        {
+            adsSystem.GetComponent<AdsSystem>().enabled = false;
+            adsSystem.GetComponentInChildren<SpriteRenderer>().enabled = false;
+            shopPurchasable.itemPurchased = true;
+            shopPurchasable.PurchaseItem();
+        }
+        else
+        {
+            shopPurchasable.WiggleItem();
+        }
+    }
+
+    public void PurchaseCamera(GameObject target)
+    {
+        shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (playerMoney >= shopPurchasable.itemPrice)
+        {
+            hasCamera = true;
+            shopPurchasable.PurchaseItem();
+            cameraLock.SetActive(false);
+        }
+        else
+        {
+            shopPurchasable.WiggleItem();
         }
     }
 

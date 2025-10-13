@@ -5,6 +5,7 @@ using TMPro;
 
 public class FreeCoinSystem : MonoBehaviour
 {
+    public GameObject adsObject;
     public List<TMP_Text> winners;
     public List<string> names;
 
@@ -74,6 +75,7 @@ public class FreeCoinSystem : MonoBehaviour
     public void StartFlip()
     {
         StartCoroutine(FlipCoin());
+        adsObject.SetActive(true);
     }
     private IEnumerator FlipCoin()
     {

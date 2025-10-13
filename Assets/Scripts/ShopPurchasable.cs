@@ -124,16 +124,28 @@ public class ShopPurchasable : MonoBehaviour
 
     public void HoverItem()
     {
-        itemImage.color = new Color32(244, 244, 244, 100);
-        TMP_Text childText = GetComponentInChildren<TMP_Text>();
-        childText.color = new Color32(244, 244, 244, 100);
+        if (!itemPurchased)
+        {
+            itemImage.color = new Color32(244, 244, 244, 100);
+            TMP_Text childText = GetComponentInChildren<TMP_Text>();
+            childText.color = new Color32(244, 244, 244, 100); 
+        }
     }
 
     public void UnhoverItem()
     {
-               itemImage.color = new Color32(244, 244, 244, 255);
-        TMP_Text childText = GetComponentInChildren<TMP_Text>();
-        childText.color = new Color32(244, 244, 244, 255);
+        if (!itemPurchased)
+        {
+            itemImage.color = new Color32(244, 244, 244, 255);
+            TMP_Text childText = GetComponentInChildren<TMP_Text>();
+            childText.color = new Color32(244, 244, 244, 255); 
+        }
+    }
+
+    public void PurchasedItem()
+    {
+        itemPurchased = true;
+        itemImage.color = new Color32(255, 255, 255, 105);
     }
 
 
