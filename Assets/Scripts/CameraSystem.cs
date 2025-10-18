@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class CameraSystem : MonoBehaviour
 {
     GameManager gameManager;
+    ShopPurchasable shopPurchasable;
     public List<Sprite> feetPics;
     public Image feetPicsImage1;
     public Image feetPicsImage2;
@@ -16,6 +17,10 @@ public class CameraSystem : MonoBehaviour
     public GameObject uploadText;
     public TMP_Text soldForText;
     public TMP_Text noSpaceText;
+
+    public GameObject sellPicHover1;
+    public GameObject sellPicHover2;
+    public GameObject sellPicHover3;
 
     public float pictureCooldown = 60f;
 
@@ -45,16 +50,16 @@ public class CameraSystem : MonoBehaviour
     public void PressCameraButton()
     {
         {
-            if (!slot1Taken || !slot2Taken || !slot3Taken)
+            if (!slot1Taken || !slot2Taken && has2ndSlot || !slot3Taken && has3rdSlot)
             {
-                cameraCooldown.SetActive(true);
-                StartCoroutine(CameraCooldown());
+                    cameraCooldown.SetActive(true);
+                    StartCoroutine(CameraCooldown()); 
             }
             else
             {
                 StartCoroutine(NoSpace());
             }
-        } 
+        }
 
     }
     public void TakeSnapshot()
@@ -101,6 +106,7 @@ public class CameraSystem : MonoBehaviour
             gameManager.playerMoney += moneyEarned2;
             feetPicsImage2.sprite = null;
             slot2Taken = false;
+            StartCoroutine(SoldForText());
         }
     }
     public void SellThirdPic()
@@ -111,6 +117,7 @@ public class CameraSystem : MonoBehaviour
             gameManager.playerMoney += moneyEarned3;
             feetPicsImage3.sprite = null;
             slot3Taken = false;
+            StartCoroutine(SoldForText());
         }
     }
 
@@ -138,7 +145,7 @@ public class CameraSystem : MonoBehaviour
     public IEnumerator SoldForText()
     {
         soldForText.gameObject.SetActive(true);
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(0.5f);
         soldForText.gameObject.SetActive(false);
     }
     public IEnumerator NoSpace()
@@ -146,5 +153,71 @@ public class CameraSystem : MonoBehaviour
         noSpaceText.gameObject.SetActive(true);
         yield return new WaitForSeconds(2f);
         noSpaceText.gameObject.SetActive(false);
+    }
+
+    public void UpgradeCameraCD1(GameObject target)
+    {
+        shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (gameManager.playerMoney >= shopPurchasable.itemPrice && gameManager.hasCamera)
+        {
+            pictureCooldown = 30f;
+            gameManager.playerMoney -= shopPurchasable.itemPrice;
+            shopPurchasable.PurchaseItem();
+        }
+        else
+        {
+            shopPurchasable.WiggleItem();
+        }
+
+    }
+    public void UpgradeCameraCD2(GameObject target)
+    {
+        shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (gameManager.playerMoney >= shopPurchasable.itemPrice && pictureCooldown <= 40)
+        {
+            pictureCooldown = 10f;
+            gameManager.playerMoney -= shopPurchasable.itemPrice;
+            shopPurchasable.PurchaseItem();
+
+        }
+        else
+        {
+            shopPurchasable.WiggleItem();
+        }
+
+    }
+
+    public void HoverSell1()
+    {
+        if (slot1Taken)
+        {
+            sellPicHover1.SetActive(true);
+        }
+        else
+        {
+            sellPicHover1.SetActive(false);
+        }
+    }
+    public void HoverSell2()
+    {
+        if (slot2Taken)
+        {
+            sellPicHover2.SetActive(true);
+        }
+        else
+        {
+            sellPicHover2.SetActive(false);
+        }
+    }
+    public void HoverSell3()
+    {
+        if (slot3Taken)
+        {
+            sellPicHover3.SetActive(true);
+        }
+        else
+        {
+            sellPicHover3.SetActive(false);
+        }
     }
 }

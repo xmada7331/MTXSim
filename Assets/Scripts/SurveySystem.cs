@@ -9,6 +9,7 @@ public class SurveySystem : MonoBehaviour
     GameManager gameManager;
     public GameObject quizPanel;
     public GameObject endPanel;
+    public GameObject mainMenu;
     public TMP_Text moneyText;
     public TMP_Text endDescription;
     public TMP_Text questionsSummary;
@@ -35,6 +36,8 @@ public class SurveySystem : MonoBehaviour
 
     public TMP_Text QuestionText;
     public Slider questionTimer;
+    public GameObject surveyCooldownWindow;
+    public Slider surveyCooldown;
 
     private List<QuestionsAndAnswers> originalMathQuestions;
     private List<QuestionsAndAnswers> originalCelebsQuestions;
@@ -351,5 +354,24 @@ public class SurveySystem : MonoBehaviour
             wrong();
             EndSurvey();
         }
+    }
+    public void TriggerSurveyCooldown()
+    {
+               StartCoroutine(SurveyCooldown());
+    }
+
+    private IEnumerator SurveyCooldown()
+    {
+        surveyCooldownWindow.SetActive(true);
+        surveyCooldown.maxValue = 60f;
+        surveyCooldown.value = 60f;
+        mainMenu.SetActive(false);
+        while (surveyCooldown.value > 0)
+        {
+            surveyCooldown.value -= Time.deltaTime;
+            yield return null;
+        }
+        surveyCooldownWindow.SetActive(false);
+        mainMenu.SetActive(true);
     }
 }

@@ -1,8 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class GameManager : MonoBehaviour
 {
@@ -26,6 +24,21 @@ public class GameManager : MonoBehaviour
     [Header("CameraApp")]
     public bool hasCamera = false;
     public GameObject cameraLock;
+    [Header("DigistoreApp")]
+    public GameObject surveysIcon;
+    public GameObject bankIcon;
+    public GameObject stockIcon;
+    public GameObject shopIcon;
+    public GameObject cameraIcon;
+    public GameObject freeCoinIcon;
+    public GameObject feetPicsIcon;
+    [Header("BankingApp")]
+    public TMP_Text incomeText;
+    public float incomeAmount = 0;
+    public TMP_Text expensesText;
+    public float expensesAmount = 0;
+    [Header("Toolbar")]
+    public GameObject errorWindow;
     private void Awake()
     {
         contentChecker = FindObjectOfType<ContentChecker>();
@@ -33,13 +46,14 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        incomeText.text = "+$" + incomeAmount.ToString("F2");
+        expensesText.text = "-$" + expensesAmount.ToString("F2");
     }
 
     public void DisableAntiClickObjects()
@@ -56,6 +70,7 @@ public class GameManager : MonoBehaviour
             LockMenu.SetActive(false);
             playerMoney -= amount;
             contentChecker.unlockedMainShop = true;
+            expensesAmount += amount;
         }
         else
         {
@@ -92,6 +107,108 @@ public class GameManager : MonoBehaviour
         {
             shopPurchasable.WiggleItem();
         }
+    }
+
+    public void UnlockSurveys(GameObject target)
+    {
+        shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (playerMoney >= shopPurchasable.itemPrice)
+        {
+            surveysIcon.SetActive(true);
+            shopPurchasable.PurchaseItem();
+        }
+        else
+        {
+            shopPurchasable.WiggleItem();
+        }
+
+    }
+    public void UnlockBank(GameObject target)
+    {
+        shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (playerMoney >= shopPurchasable.itemPrice)
+        {
+            bankIcon.SetActive(true);
+            shopPurchasable.PurchaseItem();
+        }
+        else
+        {
+            shopPurchasable.WiggleItem();
+        }
+
+    }
+    public void UnlockStock(GameObject target)
+    {
+        shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (playerMoney >= shopPurchasable.itemPrice)
+        {
+            stockIcon.SetActive(true);
+            shopPurchasable.PurchaseItem();
+        }
+        else
+        {
+            shopPurchasable.WiggleItem();
+        }
+    }
+    public void UnlockFeetPics(GameObject target)
+    {
+        shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (playerMoney >= shopPurchasable.itemPrice)
+        {
+            feetPicsIcon.SetActive(true);
+            shopPurchasable.PurchaseItem();
+        }
+        else
+        {
+            shopPurchasable.WiggleItem();
+        }
+    }
+    public void UnlockFreeCoin(GameObject target)
+    {
+        shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (playerMoney >= shopPurchasable.itemPrice)
+        {
+            freeCoinIcon.SetActive(true);
+            shopPurchasable.PurchaseItem();
+        }
+        else
+        {
+            shopPurchasable.WiggleItem();
+        }
+
+    }
+    public void UnlockCamera(GameObject target)
+    {
+        shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (playerMoney >= shopPurchasable.itemPrice)
+        {
+            cameraIcon.SetActive(true);
+            shopPurchasable.PurchaseItem();
+        }
+        else
+        {
+            shopPurchasable.WiggleItem();
+        }
+
+    }
+    public void UnlockShopDigiStore(GameObject target)
+    {
+        shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (playerMoney >= shopPurchasable.itemPrice)
+        {
+            shopIcon.SetActive(true);
+            shopPurchasable.PurchaseItem();
+        }
+        else
+        {
+            shopPurchasable.WiggleItem();
+        }
+
+    }
+
+    public void ToolbarLockedApp()
+    {
+        errorWindow.SetActive(true);
     }
 
 

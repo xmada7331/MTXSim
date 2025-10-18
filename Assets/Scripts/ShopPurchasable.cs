@@ -34,6 +34,7 @@ public class ShopPurchasable : MonoBehaviour
     {
         if (gameManager.playerMoney >= itemPrice && !itemPurchased && isPurchasable)
         {
+            Debug.Log($"PurchaseItem called on {gameObject.name} — purchased={itemPurchased}");
             Color purchasedColor = new Color(1, 1, 1, 0.2f);
             itemPurchased = true;
             itemImage.color = purchasedColor;

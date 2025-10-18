@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEngine.GraphicsBuffer;
@@ -26,6 +27,27 @@ public class GameTabUnlocker : MonoBehaviour
     public GameObject vsyncLock;
     public GameObject languageLock;
     public GameObject nsfwLock;
+
+    public TMP_Text gameTitle;
+    public Image menuBackground;
+    public GameObject scoreObject;
+    public TMP_Text scoreText;
+    public GameObject clicksObject;
+    public TMP_Text clicksCount;
+    public Image desktopIcon;
+    public GameObject quitButton;
+
+    public GameObject graphicsOptions;
+    public GameObject mediumGraphics;
+    public GameObject highGraphics;
+    public GameObject ultraGraphics;
+    public GameObject epicGraphics;
+    public GameObject postProcessGraphics;
+
+    //public GameObject currencies;
+    public GameObject currencyDollar;
+    public GameObject currencyGems;
+    public GameObject currencyDiamonds;
     [Header("SFX Tab")]
     public GameObject sfxLock;
     public GameObject musicLock;
@@ -43,7 +65,7 @@ public class GameTabUnlocker : MonoBehaviour
 
     void Update()
     {
-        
+
     }
 
     public void GreyOutImage(GameObject target)
@@ -60,7 +82,9 @@ public class GameTabUnlocker : MonoBehaviour
         float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
         if (!contentChecker.hasSettings && gameManager.playerMoney >= itemPrice)
         {
+            gameManager.expensesAmount += itemPrice;
             settingsLock.SetActive(false);
+            
             foreach (GameObject obj in lockedSettings)
             {
                 Image img = obj.GetComponent<Image>();
@@ -81,6 +105,8 @@ public class GameTabUnlocker : MonoBehaviour
         float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
         if (!contentChecker.hasGameTitle && gameManager.playerMoney >= itemPrice)
         {
+            gameTitle.text = "MTX Sim";
+            gameManager.expensesAmount += itemPrice;
             foreach (GameObject obj in lockedGameTitleOptions)
             {
                 Image img = obj.GetComponent<Image>();
@@ -101,6 +127,7 @@ public class GameTabUnlocker : MonoBehaviour
         float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
         if (!contentChecker.hasGraphicsOptions && gameManager.playerMoney >= itemPrice)
         {
+            gameManager.expensesAmount += itemPrice;
             foreach (GameObject obj in lockedGraphicOptions)
             {
                 Image img = obj.GetComponent<Image>();
@@ -121,6 +148,7 @@ public class GameTabUnlocker : MonoBehaviour
         float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
         if (!contentChecker.hasCurrency && gameManager.playerMoney >= itemPrice)
         {
+            gameManager.expensesAmount += itemPrice;
             foreach (GameObject obj in lockedCurrencyOptions)
             {
                 Image img = obj.GetComponent<Image>();
@@ -143,6 +171,8 @@ public class GameTabUnlocker : MonoBehaviour
         {
             gameBackground.enabled = true;
             contentChecker.hasMenuBg = true;
+            shopPurchasable.PurchaseItem();
+            gameManager.expensesAmount += itemPrice;
         }
         else
         {
@@ -152,38 +182,39 @@ public class GameTabUnlocker : MonoBehaviour
 
     public void UnlockVolume(GameObject target)
     {
-        float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
         if (!contentChecker.hasVolume && contentChecker.hasSettings && gameManager.playerMoney >= itemPrice)
         {
-            volumeLock.SetActive(false); 
+            if (volumeLock != null) volumeLock.SetActive(false);
             contentChecker.hasVolume = true;
-        }
-        else
-        {
-            Debug.Log("not enough money / purchased already");
+            purch.PurchaseItem();
+            gameManager.expensesAmount += itemPrice;
         }
     }
     public void UnlockMouseSens(GameObject target)
     {
-        float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
         if (!contentChecker.hasMouseSens && contentChecker.hasSettings && gameManager.playerMoney >= itemPrice)
         {
-            mouseSensLock.SetActive(false);
+            if (mouseSensLock != null) mouseSensLock.SetActive(false);
             contentChecker.hasMouseSens = true;
-        }
-        else
-        {
-            Debug.Log("not enough money / purchased already");
+            purch.PurchaseItem();
+            gameManager.expensesAmount += itemPrice;
         }
     }
     public void UnlockFullscreen(GameObject target)
     {
-        float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
 
         if (!contentChecker.hasFullscreen && contentChecker.hasSettings && gameManager.playerMoney >= itemPrice)
         {
             fullscreenLock.SetActive(false);
             contentChecker.hasFullscreen = true;
+            purch.PurchaseItem();
+            gameManager.expensesAmount += itemPrice;
         }
         else
         {
@@ -192,12 +223,15 @@ public class GameTabUnlocker : MonoBehaviour
     }
     public void UnlockFrameLimit(GameObject target)
     {
-        float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
 
         if (!contentChecker.hasFrameLimit && contentChecker.hasSettings && gameManager.playerMoney >= itemPrice)
         {
             frameLimitLock.SetActive(false);
             contentChecker.hasFrameLimit = true;
+            purch.PurchaseItem();
+            gameManager.expensesAmount += itemPrice;
         }
         else
         {
@@ -206,12 +240,15 @@ public class GameTabUnlocker : MonoBehaviour
     }
     public void UnlockResolutionChange(GameObject target)
     {
-        float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
 
         if (!contentChecker.hasResolutionChange && contentChecker.hasSettings && gameManager.playerMoney >= itemPrice)
         {
             resolutionLock.SetActive(false);
             contentChecker.hasResolutionChange = true;
+            purch.PurchaseItem();
+            gameManager.expensesAmount += itemPrice;
         }
         else
         {
@@ -220,12 +257,15 @@ public class GameTabUnlocker : MonoBehaviour
     }
     public void UnlockVsync(GameObject target)
     {
-        float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
 
         if (!contentChecker.hasVsync && contentChecker.hasSettings && gameManager.playerMoney >= itemPrice)
         {
             vsyncLock.SetActive(false);
             contentChecker.hasVsync = true;
+            purch.PurchaseItem();
+            gameManager.expensesAmount += itemPrice;
         }
         else
         {
@@ -234,12 +274,15 @@ public class GameTabUnlocker : MonoBehaviour
     }
     public void UnlockLanguage(GameObject target)
     {
-        float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
 
         if (!contentChecker.hasLanguage && contentChecker.hasSettings && gameManager.playerMoney >= itemPrice)
         {
             languageLock.SetActive(false);
             contentChecker.hasLanguage = true;
+            purch.PurchaseItem();
+            gameManager.expensesAmount += itemPrice;
         }
         else
         {
@@ -248,12 +291,15 @@ public class GameTabUnlocker : MonoBehaviour
     }
     public void UnlockNSFW(GameObject target)
     {
-        float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
 
         if (!contentChecker.hasNSFW && contentChecker.hasSettings && gameManager.playerMoney >= itemPrice)
         {
             nsfwLock.SetActive(false);
             contentChecker.hasNSFW = true;
+            purch.PurchaseItem();
+            gameManager.expensesAmount += itemPrice;
         }
         else
         {
@@ -263,174 +309,292 @@ public class GameTabUnlocker : MonoBehaviour
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// VFX and MUSIC OPTIONS
     public void UnlockSFX(GameObject target)
     {
-        float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
         if (!contentChecker.hasSFX && gameManager.playerMoney >= itemPrice)
         {
             sfxLock.SetActive(false);
             contentChecker.hasSFX = true;
+            purch.PurchaseItem();
+            gameManager.expensesAmount += itemPrice;
         }
     }
     public void UnlockMusic(GameObject target)
     {
-        float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
         if (!contentChecker.hasMusic && gameManager.playerMoney >= itemPrice)
         {
             musicLock.SetActive(false);
             contentChecker.hasMusic = true;
+            purch.PurchaseItem();
+            gameManager.expensesAmount += itemPrice;
         }
     }
     public void UnlockMouseClick(GameObject target)
     {
-        float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
         if (!contentChecker.hasMouseClick && gameManager.playerMoney >= itemPrice)
         {
             //more content to do here
             contentChecker.hasMouseClick = true;
+            purch.PurchaseItem();
+            gameManager.expensesAmount += itemPrice;
         }
     }
     public void UnlockUISFX(GameObject target)
     {
-        float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
         if (!contentChecker.hasUISFX && gameManager.playerMoney >= itemPrice)
         {
             //more content to do here
             contentChecker.hasUISFX = true;
+            purch.PurchaseItem();
+            gameManager.expensesAmount += itemPrice;
         }
     }
     public void UnlockBossDeath(GameObject target)
     {
-        float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
         if (!contentChecker.hasBossDeath && gameManager.playerMoney >= itemPrice)
         {
             //more content to do here
             contentChecker.hasBossDeath = true;
+            purch.PurchaseItem();
+            gameManager.expensesAmount += itemPrice;
         }
     }
     public void UnlockNextLevel(GameObject target)
     {
-        float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
         if (!contentChecker.hasNextLevel && gameManager.playerMoney >= itemPrice)
         {
             //more content to do here
             contentChecker.hasNextLevel = true;
+            purch.PurchaseItem();
+            gameManager.expensesAmount += itemPrice;
         }
     }
     public void UnlockWeaponSwing(GameObject target)
     {
-        float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
         if (!contentChecker.hasWeaponSwing && gameManager.playerMoney >= itemPrice)
         {
             //more content to do here
             contentChecker.hasWeaponSwing = true;
+            purch.PurchaseItem();
+            gameManager.expensesAmount += itemPrice;
         }
     }
     public void UnlockGemDrop(GameObject target)
     {
-        float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
         if (!contentChecker.hasGemDrop && gameManager.playerMoney >= itemPrice)
         {
             //more content to do here
             contentChecker.hasGemDrop = true;
+            purch.PurchaseItem();
+            gameManager.expensesAmount += itemPrice;
         }
     }
     public void UnlockDiamondDrop(GameObject target)
     {
-        float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
         if (!contentChecker.hasDiamondDrop && gameManager.playerMoney >= itemPrice)
         {
             //more content to do here
             contentChecker.hasDiamondDrop = true;
+            purch.PurchaseItem();
+            gameManager.expensesAmount += itemPrice;
         }
     }
     public void UnlockItemBuy(GameObject target)
     {
-        float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
         if (!contentChecker.hasItemBuy && gameManager.playerMoney >= itemPrice)
         {
             //more content to do here
             contentChecker.hasItemBuy = true;
+            purch.PurchaseItem();
+            gameManager.expensesAmount += itemPrice;
         }
     }
     public void UnlockBattleAmbience(GameObject target)
     {
-        float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
         if (!contentChecker.hasBattleAmbience && gameManager.playerMoney >= itemPrice)
         {
             //more content to do here
             contentChecker.hasBattleAmbience = true;
+            purch.PurchaseItem();
+            gameManager.expensesAmount += itemPrice;
         }
     }
     public void UnlockMainMenuMusic(GameObject target)
     {
-        float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
         if (!contentChecker.hasMainMenuMusic && gameManager.playerMoney >= itemPrice)
         {
             //more content to do here
             contentChecker.hasMainMenuMusic = true;
+            purch.PurchaseItem();
+            gameManager.expensesAmount += itemPrice;
         }
     }
     public void UnlockBattleMusic(GameObject target)
     {
-        float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
         if (!contentChecker.hasBattleMusic && gameManager.playerMoney >= itemPrice)
         {
             //more content to do here
             contentChecker.hasBattleMusic = true;
+            purch.PurchaseItem();
+            gameManager.expensesAmount += itemPrice;
         }
     }
     public void UnlockShopMusic(GameObject target)
     {
-        float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
         if (!contentChecker.hasShopMusic && gameManager.playerMoney >= itemPrice)
         {
             //more content to do here
             contentChecker.hasShopMusic = true;
+            purch.PurchaseItem();
+            gameManager.expensesAmount += itemPrice;
         }
     }
     public void UnlockSettingsMusic(GameObject target)
     {
-        float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
         if (!contentChecker.hasSettingsMusic && gameManager.playerMoney >= itemPrice)
         {
             //more content to do here
             contentChecker.hasSettingsMusic = true;
+            purch.PurchaseItem();
+            gameManager.expensesAmount += itemPrice;
         }
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// SEASONAL TAB
     public void SeasonalHeroSkin(GameObject target)
     {
-        float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
         if (!contentChecker.hasSeasonalHeroSkin && gameManager.playerMoney >= itemPrice)
         {
             //more content to do here
             contentChecker.hasSeasonalHeroSkin = true;
+            purch.PurchaseItem();
+            gameManager.expensesAmount += itemPrice;
         }
     }
     public void SeasonalCursorSkin(GameObject target)
     {
-        float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
         if (!contentChecker.hasSeasonalCursorSkin && gameManager.playerMoney >= itemPrice)
         {
             //more content to do here
             contentChecker.hasSeasonalCursorSkin = true;
+            purch.PurchaseItem();
+            gameManager.expensesAmount += itemPrice;
         }
     }
     public void SeasonalWallpaperSkin(GameObject target)
     {
-        float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
         if (!contentChecker.hasSeasonalWallpaperSkin && gameManager.playerMoney >= itemPrice)
         {
             //more content to do here
             contentChecker.hasSeasonalWallpaperSkin = true;
+            gameManager.expensesAmount += itemPrice;
         }
     }
     public void SeasonalBossSkin(GameObject target)
     {
-        float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
         if (!contentChecker.hasSeasonalBossSkin && gameManager.playerMoney >= itemPrice)
         {
             //more content to do here
             contentChecker.hasSeasonalBossSkin = true;
+            gameManager.expensesAmount += itemPrice;
+        }
+    }
+
+    public void GameTitle(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerMoney >= itemPrice)
+        {
+            
+            gameManager.expensesAmount += itemPrice;
+        }
+    }
+    public void MenuBackground(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerMoney >= itemPrice)
+        {
+            menuBackground.enabled = true;
+            gameManager.expensesAmount += itemPrice;
+        }
+    }
+    public void Score(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerMoney >= itemPrice)
+        {
+            scoreObject.SetActive(true);
+            gameManager.expensesAmount += itemPrice;
+        }
+
+    }
+    public void ClicksCount(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerMoney >= itemPrice)
+        {
+            clicksObject.SetActive(true);
+            gameManager.expensesAmount += itemPrice;
+        }
+
+    }
+    public void DesktopIcon(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerMoney >= itemPrice)
+        {
+            desktopIcon.color = new Color32(255,255,255,255);
+            gameManager.expensesAmount += itemPrice;
+        }
+    }
+    public void QuitButton(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerMoney >= itemPrice)
+        {
+            quitButton.SetActive(true);
+            gameManager.expensesAmount += itemPrice;
         }
     }
 

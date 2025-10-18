@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class FreeCoinSystem : MonoBehaviour
 {
+    GameManager gameManager;
+    ShopPurchasable shopPurchasable;
     public GameObject adsObject;
     public List<TMP_Text> winners;
     public List<string> names;
@@ -15,12 +18,29 @@ public class FreeCoinSystem : MonoBehaviour
     public TMP_Text timerCountdownWidgetMinimise;
     public Animator coinAnimator;
     public bool timerRunning = false;
+
+    public TMP_Text maxBet;
+    public TMP_Text yourBet;
+    public TMP_Text flipResult;
+    public GameObject notEnoughMoney;
+    private float betAmount = 0f;
+    public GameObject betLevel2Lock;
+    public GameObject betLevel3Lock;
+    public GameObject betLevel4Lock;
+    public GameObject betLevel5Lock;
+
+    private float maxBetAmount = 5f;
+
+    private void Awake()
+    {
+        gameManager = FindObjectOfType<GameManager>();
+    }
     void Start()
     {
         StartCoroutine(WinnersRoulette());
     }
 
-    
+
     void Update()
     {
         if (countdownTime <= 1)
@@ -30,6 +50,8 @@ public class FreeCoinSystem : MonoBehaviour
             countdownTime = 5f;
             coinAnimator.ResetTrigger("Flip");
         }
+        yourBet.text = "Your bet:    $"+ betAmount.ToString("F0");
+        maxBet.text = "M: $"+ maxBetAmount.ToString("F0");
     }
 
     private IEnumerator WinnersRoulette()
@@ -74,19 +96,131 @@ public class FreeCoinSystem : MonoBehaviour
     }
     public void StartFlip()
     {
-        StartCoroutine(FlipCoin());
-        adsObject.SetActive(true);
+        if (gameManager.playerMoney >= betAmount)
+        {
+            StartCoroutine(FlipCoin());
+            adsObject.SetActive(true);
+        }
+        else
+        {
+            StartCoroutine(NotEnoughMoney());
+        }
     }
     private IEnumerator FlipCoin()
     {
-            if (!timerRunning)
+        if (!timerRunning)
+        {
+            timerRunning = true;
+            coinAnimator.SetTrigger("Flip");
+            if (Random.value > 0.5f)
             {
-                timerRunning = true;
-                coinAnimator.SetTrigger("Flip");
-                StartCoroutine(Countdown());
-                yield return null; 
+                yield return new WaitForSeconds(1.5f);
+                gameManager.playerMoney += betAmount;
+                flipResult.text = "You won $" + betAmount.ToString("F2") + "!";
+                flipResult.color = Color.green;
             }
-       
+            else
+            {
+                yield return new WaitForSeconds(1.5f);
+                gameManager.playerMoney -= betAmount;
+                flipResult.text = "You lost $" + betAmount.ToString("F2") + "!";
+                flipResult.color = Color.red;
+            }
+            StartCoroutine(Countdown());
+            yield return null;
+        }
+
+    }
+    private IEnumerator NotEnoughMoney()
+    {
+        notEnoughMoney.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        notEnoughMoney.SetActive(false);
+    }
+    public void RaiseBet()
+    {
+        if (betAmount < maxBetAmount)
+        {
+            betAmount += 1f;
+        }
+    }
+    public void LowerBet()
+    {
+        if (betAmount > 0)
+        {
+            betAmount -= 1f;
+        }
+    }
+
+    public void RaiseMaxBet1(GameObject target)
+    {
+        shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (gameManager.playerMoney >= shopPurchasable.itemPrice)
+        {
+            maxBetAmount = 10; 
+            betLevel2Lock.SetActive(false);
+            shopPurchasable.PurchaseItem();
+        }
+        else
+        {
+            shopPurchasable.WiggleItem();
+        }
+    }
+    public void RaiseMaxBet2(GameObject target)
+    {
+        shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (gameManager.playerMoney >= shopPurchasable.itemPrice && maxBetAmount == 10)
+        {
+            maxBetAmount = 15;
+            betLevel3Lock.SetActive(false);
+            shopPurchasable.PurchaseItem();
+
+        }
+        else
+        {
+            shopPurchasable.WiggleItem();
+        }
+    }
+    public void RaiseMaxBet3(GameObject target)
+    {
+        shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (gameManager.playerMoney >= shopPurchasable.itemPrice && maxBetAmount == 15)
+        {
+            maxBetAmount = 25;
+            betLevel4Lock.SetActive(false);
+            shopPurchasable.PurchaseItem();
+        }
+        else
+        {
+            shopPurchasable.WiggleItem();
+        }
+    }
+    public void RaiseMaxBet4(GameObject target)
+    {
+        shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (gameManager.playerMoney >= shopPurchasable.itemPrice && maxBetAmount == 25)
+        {
+            maxBetAmount = 50;
+            betLevel5Lock.SetActive(false);
+            shopPurchasable.PurchaseItem();
+        }
+        else
+        {
+            shopPurchasable.WiggleItem();
+        }
+    }
+    public void RaiseMaxBet5(GameObject target)
+    {
+        shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (gameManager.playerMoney >= shopPurchasable.itemPrice && maxBetAmount == 50)
+        {
+            maxBetAmount = 100;
+            shopPurchasable.PurchaseItem();
+        }
+        else
+        {
+            shopPurchasable.WiggleItem();
+        }
     }
 }
 

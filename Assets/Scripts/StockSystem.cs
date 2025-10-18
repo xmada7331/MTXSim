@@ -5,6 +5,7 @@ using UnityEngine;
 public class StockSystem : MonoBehaviour
 {
     GameManager gameManager;
+    ShopPurchasable shopPurchasable;
     public float aStockPrice;
     public float bStockPrice;
     public float cStockPrice;
@@ -21,10 +22,19 @@ public class StockSystem : MonoBehaviour
     public TMP_Text aCoinWidget;
     public TMP_Text bCoinWidget;
     public TMP_Text cCoinWidget;
+    public TMP_Text walletAmountWidget;
 
     private bool isBuyingA;
     private bool isBuyingB;
     private bool isBuyingC;
+
+    public TMP_Text wallet;
+    public TMP_Text cashoutText;
+    public GameObject notEnoughText;
+    public GameObject cashoutWindow;
+    public float amountInWallet;
+
+
 
 
     private void Awake()
@@ -48,6 +58,15 @@ public class StockSystem : MonoBehaviour
         aCoinWidget.text = "$" + aStockPrice.ToString("F4");
         bCoinWidget.text = "$" + bStockPrice.ToString("F4");
         cCoinWidget.text = "$" + cStockPrice.ToString("F4");
+        
+
+        amountInWallet = ((aStockPrice * aCoinAmount) + (bStockPrice * bCoinAmount) + (cStockPrice * cCoinAmount));
+        wallet.text = "$" + ((aStockPrice * aCoinAmount) + (bStockPrice * bCoinAmount) + (cStockPrice * cCoinAmount));
+        cashoutText.text = "Would you like to cashout all stocks worth $" + amountInWallet.ToString("F4") + " for a fee of $50?";
+
+
+
+        walletAmountWidget.text = "$" + amountInWallet;
 
         if (isBuyingA)
         {
@@ -129,6 +148,7 @@ public class StockSystem : MonoBehaviour
             if (gameManager.playerMoney >= aStockPrice)
             {
                 gameManager.playerMoney -= aStockPrice;
+                amountInWallet += aStockPrice;
                 aCoinAmount++;
                 Debug.Log("bought A stock");
             }
@@ -141,6 +161,7 @@ public class StockSystem : MonoBehaviour
         {
             if (gameManager.playerMoney >= bStockPrice)
             {
+                amountInWallet += bStockPrice;
                 bCoinAmount++;
                 gameManager.playerMoney -= bStockPrice;
                 Debug.Log("bought B stock");
@@ -154,6 +175,7 @@ public class StockSystem : MonoBehaviour
         {
             if (gameManager.playerMoney >= cStockPrice)
             {
+                amountInWallet += cStockPrice;
                 cCoinAmount++;
                 gameManager.playerMoney -= cStockPrice;
                 Debug.Log("bought C stock");
@@ -165,46 +187,75 @@ public class StockSystem : MonoBehaviour
         }
     }
 
-    public void SellStock()
+    //public void SellStock()
+    //{
+    //    if (isBuyingA)
+    //    {
+    //        if (aCoinAmount > 0)
+    //        {
+    //            aCoinAmount--;
+    //            amountInWallet += aStockPrice;
+    //            Debug.Log("sold A stock");
+    //        }
+    //        else
+    //        {
+    //            Debug.Log("no stocks to sell");
+    //        }
+    //    }
+    //    else if (isBuyingB)
+    //    {
+    //        if (bCoinAmount > 0)
+    //        {
+    //            bCoinAmount--;
+    //            amountInWallet += bStockPrice;
+    //            Debug.Log("sold B stock");
+    //        }
+    //        else
+    //        {
+    //            Debug.Log("no stocks to sell");
+    //        }
+    //    }
+    //    else if (isBuyingC)
+    //    {
+    //        if (cCoinAmount > 0)
+    //        {
+    //            cCoinAmount--;
+    //            amountInWallet += cStockPrice;
+    //            Debug.Log("sold C stock");
+    //        }
+    //        else
+    //        {
+    //            Debug.Log("no stocks to sell");
+    //        }
+    //    }
+    //}
+
+    public void CashoutWallet()
     {
-        if (isBuyingA)
+        if (amountInWallet >= 1)
         {
-            if (aCoinAmount > 0)
-            {
-                aCoinAmount--;
-                gameManager.playerMoney += aStockPrice;
-                Debug.Log("sold A stock");
-            }
-            else
-            {
-                Debug.Log("no stocks to sell");
-            }
+            aCoinAmount = 0;
+            bCoinAmount = 0;
+            cCoinAmount = 0;
+            gameManager.playerMoney += amountInWallet - 50;
+            Debug.Log("Cashed out $" + (amountInWallet - 50).ToString("F4"));
+            amountInWallet = 0;
+            cashoutWindow.SetActive(false);
         }
-        else if (isBuyingB)
+        else
         {
-            if (bCoinAmount > 0)
-            {
-                bCoinAmount--;
-                gameManager.playerMoney += bStockPrice;
-                Debug.Log("sold B stock");
-            }
-            else
-            {
-                Debug.Log("no stocks to sell");
-            }
-        }
-        else if (isBuyingC)
-        {
-            if (cCoinAmount > 0)
-            {
-                cCoinAmount--;
-                gameManager.playerMoney += cStockPrice;
-                Debug.Log("sold C stock");
-            }
-            else
-            {
-                Debug.Log("no stocks to sell");
-            }
+            Debug.Log("Not enough to cashout");
+            StartCoroutine(CantCashout());
         }
     }
+
+    private IEnumerator CantCashout()
+    {
+        notEnoughText.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        notEnoughText.SetActive(false);
+    }
+
+
+
 }
