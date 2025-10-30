@@ -150,11 +150,11 @@ public class StockSystem : MonoBehaviour
                 gameManager.playerMoney -= aStockPrice;
                 amountInWallet += aStockPrice;
                 aCoinAmount++;
-                Debug.Log("bought A stock");
+                //Debug.Log("bought A stock");
             }
             else
             {
-                Debug.Log("not enough money");
+                //Debug.Log("not enough money");
             }
         }
         else if (isBuyingB)
@@ -164,11 +164,11 @@ public class StockSystem : MonoBehaviour
                 amountInWallet += bStockPrice;
                 bCoinAmount++;
                 gameManager.playerMoney -= bStockPrice;
-                Debug.Log("bought B stock");
+                //Debug.Log("bought B stock");
             }
             else
             {
-                Debug.Log("not enough money");
+                //Debug.Log("not enough money");
             }
         }
         else if (isBuyingC)
@@ -178,11 +178,11 @@ public class StockSystem : MonoBehaviour
                 amountInWallet += cStockPrice;
                 cCoinAmount++;
                 gameManager.playerMoney -= cStockPrice;
-                Debug.Log("bought C stock");
+                //Debug.Log("bought C stock");
             }
             else
             {
-                Debug.Log("not enough money");
+                //Debug.Log("not enough money");
             }
         }
     }
@@ -238,13 +238,13 @@ public class StockSystem : MonoBehaviour
             bCoinAmount = 0;
             cCoinAmount = 0;
             gameManager.playerMoney += amountInWallet - 50;
-            Debug.Log("Cashed out $" + (amountInWallet - 50).ToString("F4"));
+            //Debug.Log("Cashed out $" + (amountInWallet - 50).ToString("F4"));
             amountInWallet = 0;
             cashoutWindow.SetActive(false);
         }
         else
         {
-            Debug.Log("Not enough to cashout");
+            //Debug.Log("Not enough to cashout");
             StartCoroutine(CantCashout());
         }
     }

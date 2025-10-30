@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     ToolbarSystemIcon toolbarSystemIcon;
     ShopPurchasable shopPurchasable;
     ContentChecker contentChecker;
+    EndGameManager endGameManager;
 
 
 
@@ -56,6 +57,7 @@ public class GameManager : MonoBehaviour
     {
         contentChecker = FindObjectOfType<ContentChecker>();
         toolbarSystemIcon = FindObjectOfType<ToolbarSystemIcon>();
+        endGameManager = FindObjectOfType<EndGameManager>();
     }
     void Start()
     {
@@ -257,7 +259,7 @@ public class GameManager : MonoBehaviour
         }
         debtTimer.text = "00:00";
         debtSlider.value = 0f;
-        //end game content here
+        endGameManager.DebtGameOver();
 
     }
 
