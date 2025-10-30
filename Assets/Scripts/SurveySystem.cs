@@ -363,8 +363,8 @@ public class SurveySystem : MonoBehaviour
     private IEnumerator SurveyCooldown()
     {
         surveyCooldownWindow.SetActive(true);
-        surveyCooldown.maxValue = 60f;
-        surveyCooldown.value = 60f;
+        surveyCooldown.maxValue = 25f;
+        surveyCooldown.value = 25f;
         mainMenu.SetActive(false);
         while (surveyCooldown.value > 0)
         {

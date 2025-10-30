@@ -1,28 +1,55 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
+using System.Collections.Generic;
+using System.Collections;
 
 public class Game_behaviour : MonoBehaviour
 {
     GameManager gameManager;
     GameTabUnlocker gameTabUnlocker;
+    ContentChecker contentChecker;
+    public GameObject currencyMoney;
+    public GameObject currencyGems;
+    public GameObject currencyDiamonds;
     public float bossHp;
     public Slider bossHpSlider;
     public float clickDmg;
     public float defeatedEnemies = 0f;
 
     public float clicks;
-    public float score;
+    public float monstersSlain;
 
     public Image bossImage;
+    public TMP_Text bossName;
+    // Keep existing type (Image) so this change is non-breaking in inspector.
+    public List<Sprite> bossSprites;
+    public List<string> bossNames;
+
+    public List<Sprite> playerSkin;
+    public List<Sprite> weaponSkin;
+    public Image defaultPlayerSkin;
+    public Image defaultWeaponSkin;
+
+    public bool hasAutoClick = false;
+    public bool isAutoClickRunning = false;
+    public GameObject gameWindow;
+
+    public GameObject PopupPrefab;
+    public bool hasPopUpUpgrade = false;
+
+    public Animator playerAnimator;
+    public Animator bossAnimator;
 
     private void Awake()
     {
         gameManager = FindObjectOfType<GameManager>();
         gameTabUnlocker = FindObjectOfType<GameTabUnlocker>();
+        contentChecker = FindObjectOfType<ContentChecker>();
     }
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
@@ -33,6 +60,23 @@ public class Game_behaviour : MonoBehaviour
         {
             RotateNewBoss();
         }
+        if (hasAutoClick && !isAutoClickRunning && (gameWindow == null || gameWindow.activeSelf))
+        {
+            StartCoroutine(AutoClickDamage());
+        }
+
+        if (contentChecker.hasCardLinked)
+        {
+            currencyMoney.SetActive(true);
+            currencyGems.SetActive(true);
+            currencyDiamonds.SetActive(true);
+        }
+        else
+        {
+            currencyMoney.SetActive(false);
+            currencyGems.SetActive(false);
+            currencyDiamonds.SetActive(false);
+        }
     }
 
     public void TakeClickDamage()
@@ -40,28 +84,130 @@ public class Game_behaviour : MonoBehaviour
         bossHp -= clickDmg;
         clicks += 1;
         gameTabUnlocker.clicksCount.text = clicks.ToString("F0");
-        
+        if (hasPopUpUpgrade)
+        {
+            GameObject popUp = Instantiate(PopupPrefab, new Vector3((Random.Range(1f, 2f)), 0, 0), Quaternion.identity, gameWindow != null ? gameWindow.transform : null);
+            popUp.GetComponentInChildren<TMP_Text>().text = clickDmg.ToString("F0"); 
+        }
+        playerAnimator.SetTrigger("Click");
+        bossAnimator.SetTrigger("Hit");
+
     }
 
     private void RotateNewBoss()
     {
-        Color randomColor = new Color(Random.value, Random.value, Random.value);
         bossHp = 100;
-        bossImage.color = randomColor;
-        GetBossMoney(); 
+
+        int available = Mathf.Min(
+            bossSprites != null ? bossSprites.Count : 0,
+            bossNames != null ? bossNames.Count : 0
+        );
+
+        int index = Random.Range(0, available);
+
+        var selectedImage = bossSprites[index];
+        if (selectedImage != null)
+        {
+            bossImage.sprite = selectedImage;
+        }
+
+        bossName.text = bossNames[index];
+
+        GetBossMoney();
         defeatedEnemies += 1;
-        score += Random.Range(25,100);
-        gameTabUnlocker.scoreText.text = score.ToString("F0");
+        monstersSlain++;
+        gameTabUnlocker.scoreText.text = monstersSlain.ToString("F0");
     }
 
     private void GetBossMoney()
     {
-        //float coinToss = Random.Range(0, 1);
-        gameManager.playerMoney += 10;
-        gameManager.playerGems += 1;
-        if (Random.value <= .2)
+        //if (Random.value < 0.5)
+        //{
+        //    gameManager.playerMoney += 10; 
+        //}
+        if (Random.value <= 0.7f)
+        {
+            gameManager.playerGems += 1; 
+        }
+        if (Random.value <= .2f)
         {
             gameManager.playerDiamonds += 1; 
+        }
+    }
+
+    private IEnumerator AutoClickDamage()
+    {
+        isAutoClickRunning = true;
+        while (hasAutoClick && (gameWindow == null || gameWindow.activeSelf))
+        {
+            yield return new WaitForSeconds(0.1f);
+            bossHp -= clickDmg / 2f;
+            playerAnimator.SetTrigger("Click");
+            bossAnimator.SetTrigger("Hit");
+            if (hasPopUpUpgrade)
+            {
+                GameObject popUp = Instantiate(PopupPrefab, new Vector3((Random.Range(1f, 2f)), 0, 0), Quaternion.identity, gameWindow != null ? gameWindow.transform : null);
+                popUp.GetComponentInChildren<TMP_Text>().text = clickDmg.ToString("F0");
+            }
+        }
+        isAutoClickRunning = false;
+    }
+    public void ChangePlayerSkin()
+    {
+        if (playerSkin == null || playerSkin.Count == 0 || defaultPlayerSkin == null)
+        {
+            return;
+        }
+
+        Sprite current = defaultPlayerSkin.sprite;
+        int currentIndex = playerSkin.IndexOf(current); // -1 if not found
+        int nextIndex = currentIndex + 1;
+
+        // If nextIndex is out of bounds, rotate back to first index (0)
+        if (nextIndex >= playerSkin.Count || nextIndex < 0)
+        {
+            nextIndex = 0;
+        }
+
+        // Find the next non-null sprite, scanning up to playerSkin.Count entries and wrapping around.
+        for (int i = 0; i < playerSkin.Count; i++)
+        {
+            int idx = (nextIndex + i) % playerSkin.Count;
+            Sprite candidate = playerSkin[idx];
+            if (candidate != null)
+            {
+                defaultPlayerSkin.sprite = candidate;
+                return;
+            }
+        }
+    }
+    public void ChangeWeaponSkin()
+    {
+        if (weaponSkin == null || weaponSkin.Count == 0 || defaultWeaponSkin == null)
+        {
+            return;
+        }
+
+        Sprite current = defaultWeaponSkin.sprite;
+        int currentIndex = weaponSkin.IndexOf(current); // -1 if not found
+        int nextIndex = currentIndex + 1;
+
+        // If nextIndex is out of bounds, rotate back to first index (0)
+        if (nextIndex >= weaponSkin.Count || nextIndex < 0)
+        {
+            nextIndex = 0;
+        }
+
+        // Find the next non-null sprite, scanning up to weaponSkin.Count entries and wrapping around.
+        for (int i = 0; i < weaponSkin.Count; i++)
+        {
+            int idx = (nextIndex + i) % weaponSkin.Count;
+            Sprite candidate = weaponSkin[idx];
+            if (candidate != null)
+            {
+                defaultWeaponSkin.sprite = candidate;
+                return;
+            }
         }
     }
 }

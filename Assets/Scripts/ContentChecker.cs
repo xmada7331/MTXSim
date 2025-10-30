@@ -9,6 +9,7 @@ public class ContentChecker : MonoBehaviour
 
     [Header("Main Shop")]
     public bool unlockedMainShop = false;
+    public bool hasCardLinked = false;
     [Header("Game Tab")]
     public bool hasSettings = false;
     public bool hasPauseMenu = false;
@@ -35,7 +36,6 @@ public class ContentChecker : MonoBehaviour
     public bool hasGraphicsPro = false;
     public bool hasGraphicsTrueFan = false;
     public bool hasCurrency = false;
-    public bool hasCurrencyDollars = false;
     public bool hasCurrencyGems = false;
     public bool hasCurrencyDiamonds = false;
     [Header("SFX Tab")]

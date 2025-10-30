@@ -9,24 +9,29 @@ public class CurrencyDisplayManager : MonoBehaviour
     GameManager gameManager;
     [SerializeField]Game_behaviour game_Behaviour;
 
+    public GameObject MainShop;
+    public GameObject MainMenu;
+    public GameObject GameWindow;
+    public GameObject SettingsWindow;
+
     [Header("Main Shop")]
     public TMP_Text playerMoneyMainShop;
     public TMP_Text playerGemsMainShop;
     public TMP_Text playerDiamondsMainShop;
     [Header("The Game")]
     public TMP_Text playerMoneyGame;
+    public GameObject playerMoneyGameObject;
     public TMP_Text playerGemsGame;
+    public GameObject playerGemsGameObject;
     public TMP_Text playerDiamondsGame;
+    public GameObject playerDiamondsGameObject;
     [Header("Locked Shop")]
     public TMP_Text purchaseNowButton;
     public TMP_Text lockedShopMoney;
     [Header("Shop Tabs")]
-    public TMP_Text playerMoneyGameTab;
-    public TMP_Text playerMoneySkinsTab;
-    public TMP_Text playerMoneySFXTab;
-    public TMP_Text playerMoneySeasonalTab;
-    public TMP_Text playerMoneyDLCTab;
-    public TMP_Text playerMoneyBPTab;
+    public TMP_Text playerShopMoney;
+    public TMP_Text playerShopGems;
+    public TMP_Text playerShopDiamonds;
     [Header("Battle Pass")]
     public Slider progressSlider;
     public TMP_Text bpProgress;
@@ -42,8 +47,8 @@ public class CurrencyDisplayManager : MonoBehaviour
     void Update()
     {
         playerMoneyMainShop.text = "$" + gameManager.playerMoney.ToString();
-        playerGemsMainShop.text = gameManager.playerGems.ToString();
-        playerDiamondsMainShop.text = gameManager.playerDiamonds.ToString();
+        playerGemsMainShop.text = "G " + gameManager.playerGems.ToString();
+        playerDiamondsMainShop.text = "D " + gameManager.playerDiamonds.ToString();
         playerMoneyGame.text = "$" + gameManager.playerMoney.ToString();
         playerGemsGame.text = gameManager.playerGems.ToString();
         playerDiamondsGame.text = gameManager.playerDiamonds.ToString();
@@ -59,12 +64,11 @@ public class CurrencyDisplayManager : MonoBehaviour
 
         }
         lockedShopMoney.text = "YOUR BALANCE: $" + gameManager.playerMoney.ToString();
-        playerMoneyGameTab.text = "$" + gameManager.playerMoney.ToString();
-        playerMoneySkinsTab.text = "$" + gameManager.playerMoney.ToString();
-        playerMoneySFXTab.text = "$" + gameManager.playerMoney.ToString();
-        playerMoneySeasonalTab.text = "$" + gameManager.playerMoney.ToString();
-        playerMoneyDLCTab.text = "$" + gameManager.playerMoney.ToString();
-        playerMoneyBPTab.text = "$" + gameManager.playerMoney.ToString();
+
+        playerShopMoney.text = "$" + gameManager.playerMoney.ToString();
+        playerShopGems.text = "G " + gameManager.playerGems.ToString();
+        playerShopDiamonds.text = "D " + gameManager.playerDiamonds.ToString();
+
         progressSlider.value = game_Behaviour.defeatedEnemies;
         bpProgress.text = game_Behaviour.defeatedEnemies.ToString();
 
@@ -72,6 +76,26 @@ public class CurrencyDisplayManager : MonoBehaviour
         bankAccount.text = "$" + gameManager.playerMoney.ToString();
         bankApp.text = "$" + gameManager.playerMoney.ToString("F2");
 
+        if (MainShop.activeSelf || MainMenu.activeSelf || GameWindow.activeSelf || SettingsWindow.activeSelf)
+        {
+            //playerMoneyMainShop.enabled = true;
+            //playerGemsMainShop.enabled = true;
+            //playerDiamondsMainShop.enabled = true;
+
+            playerMoneyGameObject.SetActive(false);
+            playerGemsGameObject.SetActive(false);
+            playerDiamondsGameObject.SetActive(false);
+        }
+        else
+        {
+            //playerMoneyMainShop.enabled = false;
+            //playerGemsMainShop.enabled = false;
+            //playerDiamondsMainShop.enabled = false;
+
+            playerMoneyGameObject.SetActive(value: true);
+            playerGemsGameObject.SetActive(true);
+            playerDiamondsGameObject.SetActive(true);
+        }
     }
 
 

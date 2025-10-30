@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -8,6 +11,9 @@ public class GameManager : MonoBehaviour
     ToolbarSystemIcon toolbarSystemIcon;
     ShopPurchasable shopPurchasable;
     ContentChecker contentChecker;
+
+
+
 
     public List<GameObject> antiClickObject;
 
@@ -21,6 +27,8 @@ public class GameManager : MonoBehaviour
     public GameObject stockWidget;
     public GameObject freeCoinWidget;
     public GameObject adsSystem;
+    public Image cursorHoverImage;
+    public TMP_Text cursorHoverText;
     [Header("CameraApp")]
     public bool hasCamera = false;
     public GameObject cameraLock;
@@ -39,6 +47,11 @@ public class GameManager : MonoBehaviour
     public float expensesAmount = 0;
     [Header("Toolbar")]
     public GameObject errorWindow;
+    public GameObject debtObject;
+    public Slider debtSlider;
+    public TMP_Text debtTimer;
+    private bool debtTriggered = false;
+
     private void Awake()
     {
         contentChecker = FindObjectOfType<ContentChecker>();
@@ -54,6 +67,19 @@ public class GameManager : MonoBehaviour
     {
         incomeText.text = "+$" + incomeAmount.ToString("F2");
         expensesText.text = "-$" + expensesAmount.ToString("F2");
+        if (playerMoney < 0 && !debtTriggered)
+        {
+            TriggerDebt();
+        }
+        else
+        {
+            if (playerMoney >= 0 && debtTriggered)
+            {
+                debtObject.SetActive(false);
+                StopCoroutine(DebtTimer());
+                debtTriggered = false;
+            }
+        }
     }
 
     public void DisableAntiClickObjects()
@@ -210,6 +236,38 @@ public class GameManager : MonoBehaviour
     {
         errorWindow.SetActive(true);
     }
+    private void TriggerDebt()
+    {
+        debtObject.SetActive(true);
+        StartCoroutine(DebtTimer());
+    }
+
+    private IEnumerator DebtTimer()
+    {
+        debtTriggered = true;
+        debtSlider.maxValue = 20f;
+        debtSlider.value = 20f;
+        while (debtSlider.value > 0)
+        {
+            int minutes = Mathf.FloorToInt(debtSlider.value / 60f);
+            int seconds = Mathf.FloorToInt(debtSlider.value % 60f);
+            debtTimer.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+            yield return new WaitForSeconds(1f);
+            debtSlider.value -= 1f;
+        }
+        debtTimer.text = "00:00";
+        debtSlider.value = 0f;
+        //end game content here
+
+    }
+
+    public void MoveHierarchy(GameObject window)
+    {
+        window.transform.SetAsLastSibling();
+    }
+
+
+
 
 
 }

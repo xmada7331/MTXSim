@@ -36,21 +36,31 @@ public class GameTabUnlocker : MonoBehaviour
     public TMP_Text clicksCount;
     public Image desktopIcon;
     public GameObject quitButton;
+    public GameObject fpsCounter;
+    public GameObject tutorialBlock;
 
-    public GameObject graphicsOptions;
-    public GameObject mediumGraphics;
-    public GameObject highGraphics;
-    public GameObject ultraGraphics;
-    public GameObject epicGraphics;
-    public GameObject postProcessGraphics;
+    public GameObject graphicsOptionsBlock;
+    public GameObject highGraphicsBlock;
+    public GameObject ultraGraphicsBlock;
+    public GameObject epicGraphicsBlock;
+    public GameObject postProcessGraphicsBlock;
 
     //public GameObject currencies;
-    public GameObject currencyDollar;
-    public GameObject currencyGems;
-    public GameObject currencyDiamonds;
+    public GameObject currencyGemsBlock;
+    public GameObject currencyGemsBlock2;
+    public GameObject currencyGemsBlock3;
+    public GameObject currencyDiamondsBlock;
+    public GameObject currencyDiamondsBlock2;
+    public GameObject currencyDiamondsBlock3;
     [Header("SFX Tab")]
     public GameObject sfxLock;
     public GameObject musicLock;
+    [Header("Skins Tab")]
+    public List<Sprite> cursorSkins;
+    public List<Sprite> playerSkins;
+    public List<Sprite> monsterSkins;
+    public List<string> monsterNames;
+    public List<Sprite> weaponSkins;
 
     private void Awake()
     {
@@ -61,6 +71,7 @@ public class GameTabUnlocker : MonoBehaviour
     void Start()
     {
         gameBackground.enabled = false;
+
     }
 
     void Update()
@@ -128,6 +139,7 @@ public class GameTabUnlocker : MonoBehaviour
         if (!contentChecker.hasGraphicsOptions && gameManager.playerMoney >= itemPrice)
         {
             gameManager.expensesAmount += itemPrice;
+            graphicsOptionsBlock.SetActive(false);
             foreach (GameObject obj in lockedGraphicOptions)
             {
                 Image img = obj.GetComponent<Image>();
@@ -304,6 +316,117 @@ public class GameTabUnlocker : MonoBehaviour
         else
         {
             Debug.Log("not enough money / purchased already");
+        }
+    }
+    public void GameTitle(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerMoney >= itemPrice)
+        {
+
+            gameManager.expensesAmount += itemPrice;
+        }
+    }
+    public void MenuBackground(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerMoney >= itemPrice)
+        {
+            menuBackground.enabled = true;
+            gameManager.expensesAmount += itemPrice;
+        }
+    }
+    public void Score(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerMoney >= itemPrice)
+        {
+            scoreObject.SetActive(true);
+            gameManager.expensesAmount += itemPrice;
+        }
+
+    }
+    public void ClicksCount(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerMoney >= itemPrice)
+        {
+            clicksObject.SetActive(true);
+            gameManager.expensesAmount += itemPrice;
+        }
+
+    }
+    public void DesktopIcon(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerMoney >= itemPrice)
+        {
+            desktopIcon.color = new Color32(255, 255, 255, 255);
+            gameManager.expensesAmount += itemPrice;
+        }
+    }
+    public void QuitButton(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerMoney >= itemPrice)
+        {
+            quitButton.SetActive(true);
+            gameManager.expensesAmount += itemPrice;
+        }
+    }
+    public void FPScounter(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerMoney >= itemPrice)
+        {
+            fpsCounter.SetActive(true);
+            gameManager.expensesAmount += itemPrice;
+        }
+    }
+    public void TutorialBlock(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerMoney >= itemPrice)
+        {
+            tutorialBlock.SetActive(false);
+            gameManager.expensesAmount += itemPrice;
+        }
+    }
+
+    public void CurrencyGems(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (!contentChecker.hasCurrencyGems && gameManager.playerMoney >= itemPrice && purch.isPurchasable)
+        {
+            currencyGemsBlock.SetActive(false);
+            currencyGemsBlock2.SetActive(false);
+            currencyGemsBlock3.SetActive(false);
+            contentChecker.hasCurrencyGems = true;
+            purch.PurchaseItem();
+            gameManager.expensesAmount += itemPrice;
+        }
+    }
+    public void CurrencyDiamonds(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (!contentChecker.hasCurrencyDiamonds && gameManager.playerMoney >= itemPrice && purch.isPurchasable)
+        {
+            currencyDiamondsBlock.SetActive(false);
+            currencyDiamondsBlock2.SetActive(false);
+            currencyDiamondsBlock3.SetActive(false);
+            contentChecker.hasCurrencyDiamonds = true;
+            purch.PurchaseItem();
+            gameManager.expensesAmount += itemPrice;
         }
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// VFX and MUSIC OPTIONS
@@ -492,7 +615,7 @@ public class GameTabUnlocker : MonoBehaviour
     {
         var purch = target.GetComponent<ShopPurchasable>();
         float itemPrice = purch.itemPrice;
-        if (!contentChecker.hasSeasonalHeroSkin && gameManager.playerMoney >= itemPrice)
+        if (!contentChecker.hasSeasonalHeroSkin && gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
         {
             //more content to do here
             contentChecker.hasSeasonalHeroSkin = true;
@@ -504,7 +627,7 @@ public class GameTabUnlocker : MonoBehaviour
     {
         var purch = target.GetComponent<ShopPurchasable>();
         float itemPrice = purch.itemPrice;
-        if (!contentChecker.hasSeasonalCursorSkin && gameManager.playerMoney >= itemPrice)
+        if (!contentChecker.hasSeasonalCursorSkin && gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
         {
             //more content to do here
             contentChecker.hasSeasonalCursorSkin = true;
@@ -516,7 +639,7 @@ public class GameTabUnlocker : MonoBehaviour
     {
         var purch = target.GetComponent<ShopPurchasable>();
         float itemPrice = purch.itemPrice;
-        if (!contentChecker.hasSeasonalWallpaperSkin && gameManager.playerMoney >= itemPrice)
+        if (!contentChecker.hasSeasonalWallpaperSkin && gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
         {
             //more content to do here
             contentChecker.hasSeasonalWallpaperSkin = true;
@@ -527,7 +650,7 @@ public class GameTabUnlocker : MonoBehaviour
     {
         var purch = target.GetComponent<ShopPurchasable>();
         float itemPrice = purch.itemPrice;
-        if (!contentChecker.hasSeasonalBossSkin && gameManager.playerMoney >= itemPrice)
+        if (!contentChecker.hasSeasonalBossSkin && gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
         {
             //more content to do here
             contentChecker.hasSeasonalBossSkin = true;
@@ -535,65 +658,408 @@ public class GameTabUnlocker : MonoBehaviour
         }
     }
 
-    public void GameTitle(GameObject target)
-    {
-        var purch = target.GetComponent<ShopPurchasable>();
-        float itemPrice = purch.itemPrice;
-        if (gameManager.playerMoney >= itemPrice)
-        {
-            
-            gameManager.expensesAmount += itemPrice;
-        }
-    }
-    public void MenuBackground(GameObject target)
-    {
-        var purch = target.GetComponent<ShopPurchasable>();
-        float itemPrice = purch.itemPrice;
-        if (gameManager.playerMoney >= itemPrice)
-        {
-            menuBackground.enabled = true;
-            gameManager.expensesAmount += itemPrice;
-        }
-    }
-    public void Score(GameObject target)
-    {
-        var purch = target.GetComponent<ShopPurchasable>();
-        float itemPrice = purch.itemPrice;
-        if (gameManager.playerMoney >= itemPrice)
-        {
-            scoreObject.SetActive(true);
-            gameManager.expensesAmount += itemPrice;
-        }
 
+    /////////////////////////////////////////////////////////////////////////////////////// GRAPHICS OPTIONS
+    public void HighGraphics()
+    {
+        highGraphicsBlock.SetActive(false);
     }
-    public void ClicksCount(GameObject target)
+    public void UltraGraphics()
+    {
+        ultraGraphicsBlock.SetActive(false);
+    }
+    public void EpicGraphics()
+    {
+        epicGraphicsBlock.SetActive(false);
+    }
+    public void PostProcessGraphics()
+    {
+        postProcessGraphicsBlock.SetActive(false);
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////// FEATURED SHOP MAIN
+    public void AutoClick(GameObject target)
     {
         var purch = target.GetComponent<ShopPurchasable>();
         float itemPrice = purch.itemPrice;
         if (gameManager.playerMoney >= itemPrice)
         {
-            clicksObject.SetActive(true);
+            gameBehaviour.hasAutoClick = true;
             gameManager.expensesAmount += itemPrice;
         }
+    }
+    public void DamageUp(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerMoney >= itemPrice)
+        {
+            gameBehaviour.clickDmg *= 1.5f;
+            gameManager.expensesAmount += itemPrice;
+        }
+    }
+    public void PopUpDamage(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerMoney >= itemPrice)
+        {
+            gameBehaviour.hasPopUpUpgrade = true;
+            gameManager.expensesAmount += itemPrice;
+        }
+    }
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// SKINS TAB
+    public void Cursor1(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
+        {
+            //logic here
+            gameManager.expensesAmount += itemPrice;
+        }
+    }
+    public void Cursor2(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
+        {
+            //logic here
+            gameManager.expensesAmount += itemPrice;
+        }
+    }
+    public void Cursor3(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
+        {
+            //logic here
+            gameManager.expensesAmount += itemPrice;
+        }
+    }
+    public void PlayBg1(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
+        {
+            //logic here
+            gameManager.expensesAmount += itemPrice;
+        }
+    }
+    public void PlayBg2(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
+        {
+            //logic here
+            gameManager.expensesAmount += itemPrice;
+        }
+    }
+    public void PlayBg3(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
+        {
+            //logic here
+            gameManager.expensesAmount += itemPrice;
+        }
+    }
+    public void PlayBg4(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
+        {
+            //logic here
+            gameManager.expensesAmount += itemPrice;
+        }
+    }
+    public void PlayBg5(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
+        {
+            //logic here
+            gameManager.expensesAmount += itemPrice;
+        }
+    }
+    public void PlayerSkin1(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
+        {
+            if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
+            {
 
+                // Take first sprite from monsterSkins and add to Game_behaviour.bossSprites
+                if (playerSkins != null && playerSkins.Count > 0)
+                {
+                    if (gameBehaviour.playerSkin == null) gameBehaviour.playerSkin = new List<Sprite>();
+                    gameBehaviour.playerSkin.Add(playerSkins[0]);
+                }
+                gameManager.expensesAmount += itemPrice;
+            }
+        }
     }
-    public void DesktopIcon(GameObject target)
+    public void PlayerSkin2(GameObject target)
     {
         var purch = target.GetComponent<ShopPurchasable>();
         float itemPrice = purch.itemPrice;
-        if (gameManager.playerMoney >= itemPrice)
+        if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
         {
-            desktopIcon.color = new Color32(255,255,255,255);
+            if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
+            {
+
+                // Take first sprite from monsterSkins and add to Game_behaviour.bossSprites
+                if (playerSkins != null && playerSkins.Count > 1)
+                {
+                    if (gameBehaviour.playerSkin == null) gameBehaviour.playerSkin = new List<Sprite>();
+                    gameBehaviour.playerSkin.Add(playerSkins[1]);
+                }
+                gameManager.expensesAmount += itemPrice;
+            }
+        }
+    }
+    public void PlayerSkin3(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
+        {
+            if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
+            {
+
+                // Take first sprite from monsterSkins and add to Game_behaviour.bossSprites
+                if (playerSkins != null && playerSkins.Count > 2)
+                {
+                    if (gameBehaviour.playerSkin == null) gameBehaviour.playerSkin = new List<Sprite>();
+                    gameBehaviour.playerSkin.Add(playerSkins[2]);
+                }
+                gameManager.expensesAmount += itemPrice;
+            }
+        }
+    }
+    public void PlayerSkin4(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
+        {
+            if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
+            {
+
+                // Take first sprite from monsterSkins and add to Game_behaviour.bossSprites
+                if (playerSkins != null && playerSkins.Count > 3)
+                {
+                    if (gameBehaviour.playerSkin == null) gameBehaviour.playerSkin = new List<Sprite>();
+                    gameBehaviour.playerSkin.Add(playerSkins[3]);
+                }
+                gameManager.expensesAmount += itemPrice;
+            }
+        }
+    }
+    public void PlayerSkin5(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
+        {
+            if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
+            {
+
+                // Take first sprite from monsterSkins and add to Game_behaviour.bossSprites
+                if (playerSkins != null && playerSkins.Count > 4)
+                {
+                    if (gameBehaviour.playerSkin == null) gameBehaviour.playerSkin = new List<Sprite>();
+                    gameBehaviour.playerSkin.Add(playerSkins[4]);
+                }
+                gameManager.expensesAmount += itemPrice;
+            }
+        }
+    }
+    public void MonsterSkin1(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
+        {
+
+            // Take first sprite from monsterSkins and add to Game_behaviour.bossSprites
+            if (monsterSkins != null && monsterSkins.Count > 0)
+            {
+                if (gameBehaviour.bossSprites == null) gameBehaviour.bossSprites = new List<Sprite>();
+                gameBehaviour.bossSprites.Add(monsterSkins[0]);
+            }
+            // Take first name from monsterNames and add to Game_behaviour.bossNames
+            if (monsterNames != null && monsterNames.Count > 0)
+            {
+                if (gameBehaviour.bossNames == null) gameBehaviour.bossNames = new List<string>();
+                gameBehaviour.bossNames.Add(monsterNames[0]);
+            }
             gameManager.expensesAmount += itemPrice;
         }
     }
-    public void QuitButton(GameObject target)
+    public void MonsterSkin2(GameObject target)
     {
         var purch = target.GetComponent<ShopPurchasable>();
         float itemPrice = purch.itemPrice;
-        if (gameManager.playerMoney >= itemPrice)
+        if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
         {
-            quitButton.SetActive(true);
+
+            // Take first sprite from monsterSkins and add to Game_behaviour.bossSprites
+            if (monsterSkins != null && monsterSkins.Count > 1)
+            {
+                if (gameBehaviour.bossSprites == null) gameBehaviour.bossSprites = new List<Sprite>();
+                gameBehaviour.bossSprites.Add(monsterSkins[1]);
+            }
+            // Take first name from monsterNames and add to Game_behaviour.bossNames
+            if (monsterNames != null && monsterNames.Count > 1)
+            {
+                if (gameBehaviour.bossNames == null) gameBehaviour.bossNames = new List<string>();
+                gameBehaviour.bossNames.Add(monsterNames[1]);
+            }
+            gameManager.expensesAmount += itemPrice;
+        }
+    }
+    public void MonsterSkin3(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
+        {
+
+            // Take first sprite from monsterSkins and add to Game_behaviour.bossSprites
+            if (monsterSkins != null && monsterSkins.Count > 2)
+            {
+                if (gameBehaviour.bossSprites == null) gameBehaviour.bossSprites = new List<Sprite>();
+                gameBehaviour.bossSprites.Add(monsterSkins[2]);
+            }
+            // Take first name from monsterNames and add to Game_behaviour.bossNames
+            if (monsterNames != null && monsterNames.Count > 2)
+            {
+                if (gameBehaviour.bossNames == null) gameBehaviour.bossNames = new List<string>();
+                gameBehaviour.bossNames.Add(monsterNames[2]);
+            }
+            gameManager.expensesAmount += itemPrice;
+        }
+    }
+    public void MonsterSkin4(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
+        {
+
+            // Take first sprite from monsterSkins and add to Game_behaviour.bossSprites
+            if (monsterSkins != null && monsterSkins.Count > 3)
+            {
+                if (gameBehaviour.bossSprites == null) gameBehaviour.bossSprites = new List<Sprite>();
+                gameBehaviour.bossSprites.Add(monsterSkins[3]);
+            }
+            // Take first name from monsterNames and add to Game_behaviour.bossNames
+            if (monsterNames != null && monsterNames.Count > 3)
+            {
+                if (gameBehaviour.bossNames == null) gameBehaviour.bossNames = new List<string>();
+                gameBehaviour.bossNames.Add(monsterNames[3]);
+            }
+            gameManager.expensesAmount += itemPrice;
+        }
+    }
+    public void MonsterSkin5(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
+        {
+
+            // Take first sprite from monsterSkins and add to Game_behaviour.bossSprites
+            if (monsterSkins != null && monsterSkins.Count > 4)
+            {
+                if (gameBehaviour.bossSprites == null) gameBehaviour.bossSprites = new List<Sprite>();
+                gameBehaviour.bossSprites.Add(monsterSkins[4]);
+            }
+            // Take first name from monsterNames and add to Game_behaviour.bossNames
+            if (monsterNames != null && monsterNames.Count > 4)
+            {
+                if (gameBehaviour.bossNames == null) gameBehaviour.bossNames = new List<string>();
+                gameBehaviour.bossNames.Add(monsterNames[4]);
+            }
+            gameManager.expensesAmount += itemPrice;
+        }
+    }
+    public void WeaponSkin1(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
+        {
+            if (weaponSkins != null && weaponSkins.Count > 0)
+            {
+                if (gameBehaviour.weaponSkin == null) gameBehaviour.weaponSkin = new List<Sprite>();
+                gameBehaviour.weaponSkin.Add(weaponSkins[0]);
+            }
+            gameManager.expensesAmount += itemPrice;
+        }
+    }
+    public void WeaponSkin2(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
+        {
+            if (weaponSkins != null && weaponSkins.Count > 1)
+            {
+                if (gameBehaviour.weaponSkin == null) gameBehaviour.weaponSkin = new List<Sprite>();
+                gameBehaviour.weaponSkin.Add(weaponSkins[1]);
+            }
+            gameManager.expensesAmount += itemPrice;
+        }
+    }
+    public void WeaponSkin3(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
+        {
+            if (weaponSkins != null && weaponSkins.Count > 2)
+            {
+                if (gameBehaviour.weaponSkin == null) gameBehaviour.weaponSkin = new List<Sprite>();
+                gameBehaviour.weaponSkin.Add(weaponSkins[2]);
+            }
+            gameManager.expensesAmount += itemPrice;
+        }
+    }
+    public void WeaponSkin4(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
+        {
+            if (weaponSkins != null && weaponSkins.Count > 3)
+            {
+                if (gameBehaviour.weaponSkin == null) gameBehaviour.weaponSkin = new List<Sprite>();
+                gameBehaviour.weaponSkin.Add(weaponSkins[3]);
+            }
+            gameManager.expensesAmount += itemPrice;
+        }
+    }
+    public void WeaponSkin5(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
+        {
+            if (weaponSkins != null && weaponSkins.Count > 4)
+            {
+                if (gameBehaviour.weaponSkin == null) gameBehaviour.weaponSkin = new List<Sprite>();
+                gameBehaviour.weaponSkin.Add(weaponSkins[4]);
+            }
             gameManager.expensesAmount += itemPrice;
         }
     }

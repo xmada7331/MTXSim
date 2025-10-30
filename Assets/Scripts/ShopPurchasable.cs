@@ -7,6 +7,7 @@ using TMPro;
 public class ShopPurchasable : MonoBehaviour
 {
     GameManager gameManager;
+    ContentChecker contentChecker;
     public Image itemImage;
     public float itemPrice;
     public Transform transformToWiggle;
@@ -19,6 +20,7 @@ public class ShopPurchasable : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>();
         itemImage = GetComponent<Image>();
         transformToWiggle = GetComponent<Transform>();
+        contentChecker = FindObjectOfType<ContentChecker>();
     }
     void Start()
     {
@@ -34,7 +36,6 @@ public class ShopPurchasable : MonoBehaviour
     {
         if (gameManager.playerMoney >= itemPrice && !itemPurchased && isPurchasable)
         {
-            Debug.Log($"PurchaseItem called on {gameObject.name} — purchased={itemPurchased}");
             Color purchasedColor = new Color(1, 1, 1, 0.2f);
             itemPurchased = true;
             itemImage.color = purchasedColor;
@@ -43,6 +44,34 @@ public class ShopPurchasable : MonoBehaviour
         else if (!itemPurchased)
         {
           WiggleItem();
+        }
+    }
+    public void PurchaseItemGems()
+    {
+        if (gameManager.playerGems >= itemPrice && !itemPurchased && isPurchasable && contentChecker.hasCurrencyGems)
+        {
+            Color purchasedColor = new Color(1, 1, 1, 0.2f);
+            itemPurchased = true;
+            itemImage.color = purchasedColor;
+            gameManager.playerGems -= itemPrice;
+        }
+        else if (!itemPurchased)
+        {
+            WiggleItem();
+        }
+    }
+    public void PurchaseItemDiamonds()
+    {
+        if (gameManager.playerDiamonds >= itemPrice && !itemPurchased && isPurchasable && contentChecker.hasCurrencyDiamonds)
+        {
+            Color purchasedColor = new Color(1, 1, 1, 0.2f);
+            itemPurchased = true;
+            itemImage.color = purchasedColor;
+            gameManager.playerDiamonds -= itemPrice;
+        }
+        else if (!itemPurchased)
+        {
+            WiggleItem();
         }
     }
     public void WiggleItem()
