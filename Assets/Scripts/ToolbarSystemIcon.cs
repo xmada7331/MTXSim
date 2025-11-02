@@ -15,6 +15,11 @@ public class ToolbarSystemIcon : MonoBehaviour
     public Sprite wallpaper2;
     public Sprite wallpaper3;
     public Sprite wallpaper4;
+
+    public GameObject powerBlock;
+    public GameObject wpChangeBlock;
+    public GameObject wpDefaultBlock;
+    public GameObject cursorBlock;
     private void Awake()
     {
         gameManager = FindObjectOfType<GameManager>();
@@ -115,6 +120,63 @@ public class ToolbarSystemIcon : MonoBehaviour
                 wallpapers.Add(wallpaper4);
                 shopPurchasable.PurchasedItem();
             }
+        }
+        else
+        {
+            shopPurchasable.WiggleItem();
+        }
+    }
+
+    public void PurchasePower(GameObject target)
+    {
+        shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (gameManager.playerMoney >= shopPurchasable.itemPrice)
+        {
+            powerBlock.SetActive(false);
+            gameManager.playerMoney -= shopPurchasable.itemPrice;
+            shopPurchasable.PurchasedItem();
+        }
+        else
+        {
+            shopPurchasable.WiggleItem();
+        }
+    }
+    public void PurchaseWpChange(GameObject target)
+    {
+        shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (gameManager.playerMoney >= shopPurchasable.itemPrice)
+        {
+            wpChangeBlock.SetActive(false);
+            gameManager.playerMoney -= shopPurchasable.itemPrice;
+            shopPurchasable.PurchasedItem();
+        }
+        else
+        {
+            shopPurchasable.WiggleItem();
+        }
+    }
+    public void PurchaseWpDefault(GameObject target)
+    {
+        shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (gameManager.playerMoney >= shopPurchasable.itemPrice)
+        {
+            wpDefaultBlock.SetActive(false);
+            gameManager.playerMoney -= shopPurchasable.itemPrice;
+            shopPurchasable.PurchasedItem();
+        }
+        else
+        { 
+            shopPurchasable.WiggleItem();
+        }
+    }
+    public void PurchaseCursor(GameObject target)
+    {
+        shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (gameManager.playerMoney >= shopPurchasable.itemPrice)
+        {
+            cursorBlock.SetActive(false);
+            gameManager.playerMoney -= shopPurchasable.itemPrice;
+            shopPurchasable.PurchasedItem();
         }
         else
         {

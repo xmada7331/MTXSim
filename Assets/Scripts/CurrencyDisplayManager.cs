@@ -63,11 +63,11 @@ public class CurrencyDisplayManager : MonoBehaviour
             purchaseNowButton.color = Color.red;
 
         }
-        lockedShopMoney.text = "YOUR BALANCE: $" + gameManager.playerMoney.ToString();
+        lockedShopMoney.text = "YOUR BALANCE: $" + gameManager.playerMoney.ToString("F2");
 
-        playerShopMoney.text = "$" + gameManager.playerMoney.ToString();
-        playerShopGems.text = "G " + gameManager.playerGems.ToString();
-        playerShopDiamonds.text = "D " + gameManager.playerDiamonds.ToString();
+        playerShopMoney.text = "$" + gameManager.playerMoney.ToString("F2");
+        playerShopGems.text = "G " + gameManager.playerGems.ToString("F0");
+        playerShopDiamonds.text = "D " + gameManager.playerDiamonds.ToString("F0");
 
         progressSlider.value = game_Behaviour.defeatedEnemies;
         bpProgress.text = game_Behaviour.defeatedEnemies.ToString();

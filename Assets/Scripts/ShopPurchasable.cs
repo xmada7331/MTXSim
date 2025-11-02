@@ -162,13 +162,14 @@ public class ShopPurchasable : MonoBehaviour
         }
     }
 
-    public void UnhoverItem()
+    public void UnhoverItem(TMP_Text priceText)
     {
         if (!itemPurchased)
         {
             itemImage.color = new Color32(244, 244, 244, 255);
             TMP_Text childText = GetComponentInChildren<TMP_Text>();
             childText.color = new Color32(244, 244, 244, 255); 
+            priceText.gameObject.SetActive(false);
         }
     }
 
@@ -176,6 +177,19 @@ public class ShopPurchasable : MonoBehaviour
     {
         itemPurchased = true;
         itemImage.color = new Color32(255, 255, 255, 105);
+    }
+
+    public void HoverWithPrice(TMP_Text priceText)
+    {
+        if (!itemPurchased)
+        {
+            priceText.gameObject.SetActive(true);
+            priceText.text = "$" + itemPrice.ToString("F2");
+        }
+        else
+        {
+            priceText.text = "PURCHASED";
+        }
     }
 
 

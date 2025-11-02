@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
     public GameObject cameraIcon;
     public GameObject freeCoinIcon;
     public GameObject feetPicsIcon;
+    public GameObject gaymTesterIcon;
     [Header("BankingApp")]
     public TMP_Text incomeText;
     public float incomeAmount = 0;
@@ -225,6 +226,20 @@ public class GameManager : MonoBehaviour
         if (playerMoney >= shopPurchasable.itemPrice)
         {
             shopIcon.SetActive(true);
+            shopPurchasable.PurchaseItem();
+        }
+        else
+        {
+            shopPurchasable.WiggleItem();
+        }
+
+    }
+    public void UnlockGaymTester(GameObject target)
+    {
+        shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (playerMoney >= shopPurchasable.itemPrice)
+        {
+            gaymTesterIcon.SetActive(true);
             shopPurchasable.PurchaseItem();
         }
         else
