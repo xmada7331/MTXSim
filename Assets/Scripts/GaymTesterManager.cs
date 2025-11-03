@@ -81,6 +81,22 @@ public class GaymTesterManager : MonoBehaviour
             screamerScoreInt += 2;
             screamerScore.text = "Score: " + screamerScoreInt.ToString();
         }
+        if (screamSlider.value < 25)
+        {
+            screamImage.color = Color.red;
+        }
+        else if (screamSlider.value < 50)
+        {
+            screamImage.color = new Color32(255, 165, 0, 255); // Orange
+        }
+        else if (screamSlider.value < 75)
+        {
+            screamImage.color = Color.yellow;
+        }
+        else
+        {
+            screamImage.color = Color.green;
+        }
     }
     public void RouletteGame()
     {

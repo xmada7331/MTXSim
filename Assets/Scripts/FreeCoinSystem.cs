@@ -17,11 +17,14 @@ public class FreeCoinSystem : MonoBehaviour
     public TMP_Text timerCountdownWidget;
     public TMP_Text timerCountdownWidgetMinimise;
     public Animator coinAnimator;
+    public Animator coinAnimatorWidget;
     public bool timerRunning = false;
 
     public TMP_Text maxBet;
     public TMP_Text yourBet;
+    public TMP_Text yourBetWidget;
     public TMP_Text flipResult;
+    public TMP_Text flipResultWidget;
     public GameObject notEnoughMoney;
     private float betAmount = 0f;
     public GameObject betLevel2Lock;
@@ -51,6 +54,7 @@ public class FreeCoinSystem : MonoBehaviour
             coinAnimator.ResetTrigger("Flip");
         }
         yourBet.text = "Your bet:    $"+ betAmount.ToString("F0");
+        yourBetWidget.text = "Your bet:    $"+ betAmount.ToString("F0");
         maxBet.text = "M: $"+ maxBetAmount.ToString("F0");
     }
 
@@ -106,6 +110,17 @@ public class FreeCoinSystem : MonoBehaviour
             StartCoroutine(NotEnoughMoney());
         }
     }
+    public void StartFlipWidget()
+    {
+        if (gameManager.playerMoney >= betAmount)
+        {
+            StartCoroutine(FlipCoinWidget());
+        }
+        else
+        {
+            StartCoroutine(NotEnoughMoney());
+        }
+    }
     private IEnumerator FlipCoin()
     {
         if (!timerRunning)
@@ -125,6 +140,31 @@ public class FreeCoinSystem : MonoBehaviour
                 gameManager.playerMoney -= betAmount;
                 flipResult.text = "You lost $" + betAmount.ToString("F2") + "!";
                 flipResult.color = Color.red;
+            }
+            StartCoroutine(Countdown());
+            yield return null;
+        }
+
+    }
+    private IEnumerator FlipCoinWidget()
+    {
+        if (!timerRunning)
+        {
+            timerRunning = true;
+            coinAnimatorWidget.SetTrigger("FlipWidget");
+            if (Random.value > 0.5f)
+            {
+                yield return new WaitForSeconds(1.5f);
+                gameManager.playerMoney += betAmount;
+                flipResultWidget.text = "You won $" + betAmount.ToString("F2") + "!";
+                flipResultWidget.color = Color.green;
+            }
+            else
+            {
+                yield return new WaitForSeconds(1.5f);
+                gameManager.playerMoney -= betAmount;
+                flipResultWidget.text = "You lost $" + betAmount.ToString("F2") + "!";
+                flipResultWidget.color = Color.red;
             }
             StartCoroutine(Countdown());
             yield return null;
