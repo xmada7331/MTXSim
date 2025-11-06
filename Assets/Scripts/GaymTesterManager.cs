@@ -27,6 +27,7 @@ public class GaymTesterManager : MonoBehaviour
     public TMP_Text scoreText;
     private int clicksShown;
     private int clicks;
+    public Animator cookieAnimator;
     [Header("Bananamania")]
     public GameObject bananaBlock;
     public GameObject bananaGameWindow;
@@ -34,10 +35,23 @@ public class GaymTesterManager : MonoBehaviour
     public List<GameObject> bananas;
     public TMP_Text bananaScore;
     private int bananaScoreInt;
+    public Sprite bananaSprite1;
+    public Sprite bananaSprite2;
+    public Sprite bananaSprite3;
+    public Sprite fruitSprite1;
+    public Sprite fruitSprite2;
+    public Sprite fruitSprite3;
+    public Sprite fruitSprite4;
+    public Sprite fruitSprite5;
+    public Sprite fruitSprite6;
     [Header("Screamer")]
     public GameObject screamerBlock;
     public Slider screamSlider;
     public Image screamImage;
+    public Sprite screamImageStage1;
+    public Sprite screamImageStage2;
+    public Sprite screamImageStage3;
+    public Sprite screamImageStage4;
     private int screamerScoreInt;
     public TMP_Text screamerScore;
     [Header("Survey Form")]
@@ -63,6 +77,8 @@ public class GaymTesterManager : MonoBehaviour
     public Slider successSlider;
     public TMP_Text moneyMessage;
     private float moneyEarned;
+    public Image successImage1;
+    public Image successImage2;
 
     private void Awake()
     {
@@ -83,19 +99,19 @@ public class GaymTesterManager : MonoBehaviour
         }
         if (screamSlider.value < 25)
         {
-            screamImage.color = Color.red;
+            screamImage.sprite = screamImageStage2;
         }
         else if (screamSlider.value < 50)
         {
-            screamImage.color = new Color32(255, 165, 0, 255); // Orange
+            screamImage.sprite = screamImageStage4;
         }
         else if (screamSlider.value < 75)
         {
-            screamImage.color = Color.yellow;
+            screamImage.sprite = screamImageStage3;
         }
         else
         {
-            screamImage.color = Color.green;
+            screamImage.sprite = screamImageStage1;
         }
     }
     public void RouletteGame()
@@ -148,6 +164,7 @@ public class GaymTesterManager : MonoBehaviour
         if (clicks % 3 == 0)
         {
             clicksShown++;
+            cookieAnimator.SetTrigger("CookieTrigger");
         }
         scoreText.text = "Score: " + clicksShown.ToString();
     }
@@ -166,7 +183,7 @@ public class GaymTesterManager : MonoBehaviour
             + bug1.text.Length + bug2.text.Length + bug3.text.Length
             + bug4.text.Length + bug5.text.Length + bug6.text.Length
             + bug7.text.Length + bug8.text.Length + bug9.text.Length
-            + feedback.text.Length + (screamerScoreInt/10) + (bananaScoreInt/5) + (clicksShown/5)) * 0.05f;
+            + feedback.text.Length + (screamerScoreInt/10) + (bananaScoreInt/5) + (clicksShown/5)) * 0.03f;
 
         moneyEarned = baseAmount * multiplier;
         if (moneyEarned > 15f)
@@ -202,10 +219,14 @@ public class GaymTesterManager : MonoBehaviour
         while (timeLeft > 0)
         {
             moneyMessage.text = "Calculating...";
+            successImage2.gameObject.SetActive(false);
+            successImage1.gameObject.SetActive(true);
             yield return new WaitForSeconds(1f);
             timeLeft--;
             successSlider.value = timeLeft;
         }
+        successImage2.gameObject.SetActive(true);
+        successImage1.gameObject.SetActive(false);
         backButton.SetActive(true);
         moneyMessage.text = "You have earned $" + moneyEarned.ToString("F2") + " for your feedback!";
         gameManager.playerMoney += moneyEarned;
@@ -269,45 +290,82 @@ public class GaymTesterManager : MonoBehaviour
         const float minY = -280f;
         const float maxY = 200f;
 
-        // Helper to set position for a GameObject that may be UI (RectTransform) or world object
-        void PlaceAtRandom(GameObject g)
+        // Pools for random sprites
+        Sprite[] bananaPool = new[] { bananaSprite1, bananaSprite2, bananaSprite3 };
+        Sprite[] fruitPool = new[] { fruitSprite1, fruitSprite2, fruitSprite3, fruitSprite4, fruitSprite5, fruitSprite6 };
+
+        // Helper to set position, sprite and random rotation for a GameObject
+        void PlaceAndStyle(GameObject g, Sprite[] pool)
         {
             if (g == null) return;
+
+            // Re-enable item
             g.SetActive(true);
 
+            // Parent under bananaGameWindow so coordinates/anchoredPosition make sense
+            if (bananaGameWindow != null)
+                g.transform.SetParent(bananaGameWindow.transform, false);
+
+            // Random position
             float x = Random.Range(minX, maxX);
             float y = Random.Range(minY, maxY);
 
-            // If the object has a RectTransform (UI), set anchoredPosition.
-            var rt = g.GetComponent<RectTransform>();
-            if (rt != null)
+            // Assign sprite if available (support UI Image and SpriteRenderer)
+            Sprite chosen = null;
+            if (pool != null && pool.Length > 0)
             {
-                // keep the object under the bananaGameWindow so coordinates make sense
-                if (bananaGameWindow != null)
-                    g.transform.SetParent(bananaGameWindow.transform, false);
+                // pick a non-null sprite from pool (fallback if several null)
+                int attempts = 0;
+                while (attempts < 8)
+                {
+                    Sprite candidate = pool[Random.Range(0, pool.Length)];
+                    if (candidate != null) { chosen = candidate; break; }
+                    attempts++;
+                }
+            }
 
+            var uiImage = g.GetComponent<Image>();
+            if (uiImage != null)
+            {
+                if (chosen != null) uiImage.sprite = chosen;
+                // set anchored position and random rotation on RectTransform
+                var rt = g.GetComponent<RectTransform>();
                 rt.anchoredPosition = new Vector2(x, y);
+                float zRot = Random.Range(0f, 360f);
+                rt.localEulerAngles = new Vector3(0f, 0f, zRot);
+                // optional horizontal flip
+                if (Random.value < 0.5f)
+                    rt.localScale = new Vector3(-Mathf.Abs(rt.localScale.x), rt.localScale.y, rt.localScale.z);
+                else
+                    rt.localScale = new Vector3(Mathf.Abs(rt.localScale.x), rt.localScale.y, rt.localScale.z);
             }
             else
             {
-                // otherwise use localPosition relative to parent
-                if (bananaGameWindow != null)
-                    g.transform.SetParent(bananaGameWindow.transform, false);
+                var sr = g.GetComponent<SpriteRenderer>();
+                if (sr != null && chosen != null) sr.sprite = chosen;
 
                 g.transform.localPosition = new Vector3(x, y, g.transform.localPosition.z);
+                float zRot = Random.Range(0f, 360f);
+                g.transform.localEulerAngles = new Vector3(0f, 0f, zRot);
+                // optional horizontal flip
+                var ls = g.transform.localScale;
+                if (Random.value < 0.5f)
+                    g.transform.localScale = new Vector3(-Mathf.Abs(ls.x), ls.y, ls.z);
+                else
+                    g.transform.localScale = new Vector3(Mathf.Abs(ls.x), ls.y, ls.z);
             }
         }
 
         if (fruits != null)
         {
             foreach (var f in fruits)
-                PlaceAtRandom(f);
+                PlaceAndStyle(f, fruitPool);
         }
 
         if (bananas != null)
         {
             foreach (var b in bananas)
-                PlaceAtRandom(b);
+                PlaceAndStyle(b, bananaPool);
         }
     }
 
