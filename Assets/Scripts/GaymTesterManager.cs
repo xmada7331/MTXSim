@@ -230,6 +230,7 @@ public class GaymTesterManager : MonoBehaviour
         backButton.SetActive(true);
         moneyMessage.text = "You have earned $" + moneyEarned.ToString("F2") + " for your feedback!";
         gameManager.playerMoney += moneyEarned;
+        gameManager.incomeAmount += moneyEarned;
     }
 
     public void SendForm()

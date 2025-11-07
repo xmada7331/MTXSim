@@ -116,6 +116,8 @@ public class GameManager : MonoBehaviour
             adsSystem.GetComponentInChildren<SpriteRenderer>().enabled = false;
             shopPurchasable.itemPurchased = true;
             shopPurchasable.PurchaseItem();
+            expensesAmount += shopPurchasable.itemPrice;
+
         }
         else
         {
@@ -131,6 +133,8 @@ public class GameManager : MonoBehaviour
             hasCamera = true;
             shopPurchasable.PurchaseItem();
             cameraLock.SetActive(false);
+            expensesAmount += shopPurchasable.itemPrice;
+
         }
         else
         {
@@ -145,6 +149,7 @@ public class GameManager : MonoBehaviour
         {
             surveysIcon.SetActive(true);
             shopPurchasable.PurchaseItem();
+            expensesAmount += shopPurchasable.itemPrice;
         }
         else
         {
@@ -159,6 +164,8 @@ public class GameManager : MonoBehaviour
         {
             bankIcon.SetActive(true);
             shopPurchasable.PurchaseItem();
+            expensesAmount += shopPurchasable.itemPrice;
+
         }
         else
         {
@@ -173,6 +180,8 @@ public class GameManager : MonoBehaviour
         {
             stockIcon.SetActive(true);
             shopPurchasable.PurchaseItem();
+            expensesAmount += shopPurchasable.itemPrice;
+
         }
         else
         {
@@ -186,6 +195,8 @@ public class GameManager : MonoBehaviour
         {
             feetPicsIcon.SetActive(true);
             shopPurchasable.PurchaseItem();
+            expensesAmount += shopPurchasable.itemPrice;
+
         }
         else
         {
@@ -199,6 +210,8 @@ public class GameManager : MonoBehaviour
         {
             freeCoinIcon.SetActive(true);
             shopPurchasable.PurchaseItem();
+            expensesAmount += shopPurchasable.itemPrice;
+
         }
         else
         {
@@ -213,6 +226,8 @@ public class GameManager : MonoBehaviour
         {
             cameraIcon.SetActive(true);
             shopPurchasable.PurchaseItem();
+            expensesAmount += shopPurchasable.itemPrice;
+
         }
         else
         {
@@ -227,6 +242,8 @@ public class GameManager : MonoBehaviour
         {
             shopIcon.SetActive(true);
             shopPurchasable.PurchaseItem();
+            expensesAmount += shopPurchasable.itemPrice;
+
         }
         else
         {

@@ -65,7 +65,7 @@ public class CurrencyDisplayManager : MonoBehaviour
         }
         lockedShopMoney.text = "YOUR BALANCE: $" + gameManager.playerMoney.ToString("F2");
 
-        playerShopMoney.text = "$" + gameManager.playerMoney.ToString("F2");
+        playerShopMoney.text = "$" + gameManager.playerMoney.ToString("F0");
         playerShopGems.text = "G " + gameManager.playerGems.ToString("F0");
         playerShopDiamonds.text = "D " + gameManager.playerDiamonds.ToString("F0");
 

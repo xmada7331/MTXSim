@@ -192,5 +192,10 @@ public class ShopPurchasable : MonoBehaviour
         }
     }
 
+    public void UnhoverWithPrice(TMP_Text priceText)
+    {
+            priceText.gameObject.SetActive(false);
+    }
+
 
 }

@@ -251,7 +251,8 @@ public class SurveySystem : MonoBehaviour
         questionAmount = 0;
         
         gameManager.playerMoney += correctAnswers / 2f;
-        moneyText.text = "You have earned $" + (correctAnswers / 2f).ToString("F2");
+        gameManager.incomeAmount += correctAnswers / 2f;
+        moneyText.text = "You have earned $" + (correctAnswers / 2f).ToString("F2"); 
         questionsSummary.text = "You answered " + correctAnswers + " questions correctly!";
         if (correctAnswers >= 3)
         {
