@@ -14,6 +14,10 @@ public class CursorManager : MonoBehaviour
     public Texture2D cursorSpriteHand;
     public Texture2D cursorSpriteBrown;
     public Texture2D cursorSpriteFuck;
+
+    public Texture2D cursorSpriteShop1;
+    public Texture2D cursorSpriteShop2;
+    public Texture2D cursorSpriteShop3;
     private void Awake()
     {
         shopPurchasable = FindObjectOfType<ShopPurchasable>();
@@ -83,6 +87,61 @@ public class CursorManager : MonoBehaviour
                 gameManager.playerMoney -= shopPurchasable.itemPrice;
                 cursorSprites.Add(cursorSpriteFuck);
                 shopPurchasable.PurchasedItem();
+            }
+        }
+        else
+        {
+            shopPurchasable.WiggleItem();
+        }
+    }
+
+    public void PurchaseShopCursor1(GameObject target)
+    {
+        shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (gameManager.playerGems >= shopPurchasable.itemPrice)
+        {
+            if (!cursorSprites.Contains(cursorSpriteShop1))
+            {
+                gameManager.playerGems -= shopPurchasable.itemPrice;
+                cursorSprites.Add(cursorSpriteShop1);
+                shopPurchasable.PurchasedItem();
+                Cursor.SetCursor(cursorSpriteShop1, new Vector2(10, 0), CursorMode.Auto);
+            }
+        }
+        else
+        {
+            shopPurchasable.WiggleItem();
+        }
+    }
+    public void PurchaseShopCursor2(GameObject target)
+    {
+        shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (gameManager.playerGems >= shopPurchasable.itemPrice)
+        {
+            if (!cursorSprites.Contains(cursorSpriteShop2))
+            {
+                gameManager.playerGems -= shopPurchasable.itemPrice;
+                cursorSprites.Add(cursorSpriteShop2);
+                shopPurchasable.PurchasedItem();
+                Cursor.SetCursor(cursorSpriteShop2, new Vector2(10, 0), CursorMode.Auto);
+            }
+        }
+        else
+        {
+            shopPurchasable.WiggleItem();
+        }
+    }
+    public void PurchaseShopCursor3(GameObject target)
+    {
+        shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (gameManager.playerGems >= shopPurchasable.itemPrice)
+        {
+            if (!cursorSprites.Contains(cursorSpriteShop3))
+            {
+                gameManager.playerGems -= shopPurchasable.itemPrice;
+                cursorSprites.Add(cursorSpriteShop3);
+                shopPurchasable.PurchasedItem();
+                Cursor.SetCursor(cursorSpriteShop3, new Vector2(10, 0), CursorMode.Auto);
             }
         }
         else

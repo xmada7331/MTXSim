@@ -112,6 +112,7 @@ public class ShopPurchasable : MonoBehaviour
             Transform locklockParent = lockParent.parent;
             gameManager.bankWidget.SetActive(true);
             Destroy(locklockParent.gameObject);
+            gameManager.bankWidgetImage.sprite = gameManager.bankWidgetPurchased;
 
         }
         else if (!itemPurchased)

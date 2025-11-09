@@ -47,6 +47,8 @@ public class GameManager : MonoBehaviour
     public float incomeAmount = 0;
     public TMP_Text expensesText;
     public float expensesAmount = 0;
+    public Image bankWidgetImage;
+    public Sprite bankWidgetPurchased;
     [Header("Toolbar")]
     public GameObject errorWindow;
     public GameObject debtObject;
