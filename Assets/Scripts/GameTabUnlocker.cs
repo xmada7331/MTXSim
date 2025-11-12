@@ -61,6 +61,7 @@ public class GameTabUnlocker : MonoBehaviour
     public List<Sprite> monsterSkins;
     public List<string> monsterNames;
     public List<Sprite> weaponSkins;
+    public List<Sprite> backgroundSkins;
 
     private void Awake()
     {
@@ -70,7 +71,7 @@ public class GameTabUnlocker : MonoBehaviour
     }
     void Start()
     {
-        gameBackground.enabled = false;
+        //gameBackground.enabled = false;
 
     }
 
@@ -744,8 +745,12 @@ public class GameTabUnlocker : MonoBehaviour
         float itemPrice = purch.itemPrice;
         if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
         {
-            //logic here
-            gameManager.expensesAmount += itemPrice;
+            if (backgroundSkins != null && backgroundSkins.Count > 0)
+            {
+                if (gameBehaviour.backgroundSkin == null) gameBehaviour.backgroundSkin = new List<Sprite>();
+                gameBehaviour.backgroundSkin.Add(backgroundSkins[0]);
+                gameManager.expensesAmount += itemPrice;
+            }
         }
     }
     public void PlayBg2(GameObject target)
@@ -754,8 +759,12 @@ public class GameTabUnlocker : MonoBehaviour
         float itemPrice = purch.itemPrice;
         if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
         {
-            //logic here
-            gameManager.expensesAmount += itemPrice;
+            if (backgroundSkins != null && backgroundSkins.Count > 1)
+            {
+                if (gameBehaviour.backgroundSkin == null) gameBehaviour.backgroundSkin = new List<Sprite>();
+                gameBehaviour.backgroundSkin.Add(backgroundSkins[1]);
+                gameManager.expensesAmount += itemPrice;
+            }
         }
     }
     public void PlayBg3(GameObject target)
@@ -764,8 +773,12 @@ public class GameTabUnlocker : MonoBehaviour
         float itemPrice = purch.itemPrice;
         if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
         {
-            //logic here
-            gameManager.expensesAmount += itemPrice;
+            if (backgroundSkins != null && backgroundSkins.Count > 2)
+            {
+                if (gameBehaviour.backgroundSkin == null) gameBehaviour.backgroundSkin = new List<Sprite>();
+                gameBehaviour.backgroundSkin.Add(backgroundSkins[2]);
+                gameManager.expensesAmount += itemPrice;
+            }
         }
     }
     public void PlayBg4(GameObject target)
@@ -774,8 +787,12 @@ public class GameTabUnlocker : MonoBehaviour
         float itemPrice = purch.itemPrice;
         if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
         {
-            //logic here
-            gameManager.expensesAmount += itemPrice;
+            if (backgroundSkins != null && backgroundSkins.Count > 3)
+            {
+                if (gameBehaviour.backgroundSkin == null) gameBehaviour.backgroundSkin = new List<Sprite>();
+                gameBehaviour.backgroundSkin.Add(backgroundSkins[3]);
+                gameManager.expensesAmount += itemPrice;
+            }
         }
     }
     public void PlayBg5(GameObject target)
@@ -784,8 +801,12 @@ public class GameTabUnlocker : MonoBehaviour
         float itemPrice = purch.itemPrice;
         if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
         {
-            //logic here
-            gameManager.expensesAmount += itemPrice;
+            if (backgroundSkins != null && backgroundSkins.Count > 4)
+            {
+                if (gameBehaviour.backgroundSkin == null) gameBehaviour.backgroundSkin = new List<Sprite>();
+                gameBehaviour.backgroundSkin.Add(backgroundSkins[4]);
+                gameManager.expensesAmount += itemPrice;
+            }
         }
     }
     public void PlayerSkin1(GameObject target)

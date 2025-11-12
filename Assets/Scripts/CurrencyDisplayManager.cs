@@ -46,10 +46,10 @@ public class CurrencyDisplayManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        playerMoneyMainShop.text = "$" + gameManager.playerMoney.ToString();
+        playerMoneyMainShop.text = "$" + gameManager.playerMoney.ToString("F2");
         playerGemsMainShop.text = "G " + gameManager.playerGems.ToString();
         playerDiamondsMainShop.text = "D " + gameManager.playerDiamonds.ToString();
-        playerMoneyGame.text = "$" + gameManager.playerMoney.ToString();
+        playerMoneyGame.text = "$" + gameManager.playerMoney.ToString("F2");
         playerGemsGame.text = gameManager.playerGems.ToString();
         playerDiamondsGame.text = gameManager.playerDiamonds.ToString();
         if (gameManager.playerMoney >= 20)
@@ -73,7 +73,7 @@ public class CurrencyDisplayManager : MonoBehaviour
         bpProgress.text = game_Behaviour.defeatedEnemies.ToString();
 
         ////////////Banking App
-        bankAccount.text = "$" + gameManager.playerMoney.ToString();
+        bankAccount.text = "$" + gameManager.playerMoney.ToString("F2");
         bankApp.text = "$" + gameManager.playerMoney.ToString("F2");
 
         if (MainShop.activeSelf || MainMenu.activeSelf || GameWindow.activeSelf || SettingsWindow.activeSelf)

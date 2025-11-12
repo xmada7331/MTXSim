@@ -28,8 +28,10 @@ public class Game_behaviour : MonoBehaviour
 
     public List<Sprite> playerSkin;
     public List<Sprite> weaponSkin;
+    public List<Sprite> backgroundSkin;
     public Image defaultPlayerSkin;
     public Image defaultWeaponSkin;
+    public Image defaultBackgroundSkin;
 
     public bool hasAutoClick = false;
     public bool isAutoClickRunning = false;
@@ -206,6 +208,42 @@ public class Game_behaviour : MonoBehaviour
             if (candidate != null)
             {
                 defaultWeaponSkin.sprite = candidate;
+                return;
+            }
+        }
+    }
+
+    public void ChangeBackgroundSkin()
+    {
+        if (backgroundSkin == null || backgroundSkin.Count == 0 || defaultBackgroundSkin == null)
+            return;
+
+        Sprite current = defaultBackgroundSkin.sprite;
+        int currentIndex = backgroundSkin.IndexOf(current); // -1 if not found
+        int nextIndex = currentIndex + 1;
+
+        if (nextIndex >= backgroundSkin.Count || nextIndex < 0)
+            nextIndex = 0;
+
+        // Scan for the next valid choice. If index == 0 we treat it as the "none" option
+        for (int i = 0; i < backgroundSkin.Count; i++)
+        {
+            int idx = (nextIndex + i) % backgroundSkin.Count;
+            Sprite candidate = backgroundSkin[idx];
+
+            if (idx == 0)
+            {
+                // index 0 = "no background" -> disable Image component
+                defaultBackgroundSkin.enabled = false;
+                defaultBackgroundSkin.sprite = candidate; // optional (may be null)
+                return;
+            }
+
+            if (candidate != null)
+            {
+                // normal background -> enable Image and assign sprite
+                defaultBackgroundSkin.enabled = true;
+                defaultBackgroundSkin.sprite = candidate;
                 return;
             }
         }

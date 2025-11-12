@@ -6,6 +6,7 @@ public class CursorManager : MonoBehaviour
 {
     ShopPurchasable shopPurchasable;
     GameManager gameManager;
+    ContentChecker contentChecker;
     private int currentCursorIndex = 0;
 
     public List<Texture2D> cursorSprites;
@@ -20,6 +21,7 @@ public class CursorManager : MonoBehaviour
     public Texture2D cursorSpriteShop3;
     private void Awake()
     {
+        contentChecker = FindObjectOfType<ContentChecker>();
         shopPurchasable = FindObjectOfType<ShopPurchasable>();
         gameManager = FindObjectOfType<GameManager>();
     }
@@ -98,7 +100,7 @@ public class CursorManager : MonoBehaviour
     public void PurchaseShopCursor1(GameObject target)
     {
         shopPurchasable = target.GetComponent<ShopPurchasable>();
-        if (gameManager.playerGems >= shopPurchasable.itemPrice)
+        if (gameManager.playerGems >= shopPurchasable.itemPrice && contentChecker.hasCurrencyGems)
         {
             if (!cursorSprites.Contains(cursorSpriteShop1))
             {
@@ -116,7 +118,7 @@ public class CursorManager : MonoBehaviour
     public void PurchaseShopCursor2(GameObject target)
     {
         shopPurchasable = target.GetComponent<ShopPurchasable>();
-        if (gameManager.playerGems >= shopPurchasable.itemPrice)
+        if (gameManager.playerGems >= shopPurchasable.itemPrice && contentChecker.hasCurrencyGems)
         {
             if (!cursorSprites.Contains(cursorSpriteShop2))
             {
@@ -134,7 +136,7 @@ public class CursorManager : MonoBehaviour
     public void PurchaseShopCursor3(GameObject target)
     {
         shopPurchasable = target.GetComponent<ShopPurchasable>();
-        if (gameManager.playerGems >= shopPurchasable.itemPrice)
+        if (gameManager.playerGems >= shopPurchasable.itemPrice && contentChecker.hasCurrencyGems)
         {
             if (!cursorSprites.Contains(cursorSpriteShop3))
             {
