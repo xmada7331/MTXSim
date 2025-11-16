@@ -35,6 +35,7 @@ public class GameManager : MonoBehaviour
     public TMP_Text pauseMenuCounts;
     private int pauseMenuOpenCount = 5;
     private bool canOpenPauseMenu = true;
+    public GameObject startGameObject;
     [Header("CameraApp")]
     public bool hasCamera = false;
     public GameObject cameraLock;
@@ -80,7 +81,7 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
-
+        startGameObject.SetActive(true);
     }
 
     // Update is called once per frame
