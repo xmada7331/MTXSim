@@ -46,10 +46,10 @@ public class CurrencyDisplayManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        playerMoneyMainShop.text = "$" + gameManager.playerMoney.ToString("F2");
+        playerMoneyMainShop.text = "$" + gameManager.playerMoney.ToString("F0");
         playerGemsMainShop.text = "G " + gameManager.playerGems.ToString();
         playerDiamondsMainShop.text = "D " + gameManager.playerDiamonds.ToString();
-        playerMoneyGame.text = "$" + gameManager.playerMoney.ToString("F2");
+        playerMoneyGame.text = "$" + gameManager.playerMoney.ToString("F0");
         playerGemsGame.text = gameManager.playerGems.ToString();
         playerDiamondsGame.text = gameManager.playerDiamonds.ToString();
         if (gameManager.playerMoney >= 20)
@@ -63,7 +63,7 @@ public class CurrencyDisplayManager : MonoBehaviour
             purchaseNowButton.color = Color.red;
 
         }
-        lockedShopMoney.text = "YOUR BALANCE: $" + gameManager.playerMoney.ToString("F2");
+        lockedShopMoney.text = "YOUR BALANCE: $" + gameManager.playerMoney.ToString("F0");
 
         playerShopMoney.text = "$" + gameManager.playerMoney.ToString("F0");
         playerShopGems.text = "G " + gameManager.playerGems.ToString("F0");

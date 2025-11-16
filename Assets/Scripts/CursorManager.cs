@@ -55,6 +55,8 @@ public class CursorManager : MonoBehaviour
                 gameManager.playerMoney -= shopPurchasable.itemPrice;
                 cursorSprites.Add(cursorSpriteHand);
                 shopPurchasable.PurchasedItem();
+                Cursor.SetCursor(cursorSpriteHand, new Vector2(10, 0), CursorMode.Auto);
+
             }
         }
         else
@@ -72,6 +74,8 @@ public class CursorManager : MonoBehaviour
                 gameManager.playerMoney -= shopPurchasable.itemPrice;
                 cursorSprites.Add(cursorSpriteBrown);
                 shopPurchasable.PurchasedItem();
+                Cursor.SetCursor(cursorSpriteBrown, new Vector2(10, 0), CursorMode.Auto);
+
             }
         }
         else
@@ -89,6 +93,8 @@ public class CursorManager : MonoBehaviour
                 gameManager.playerMoney -= shopPurchasable.itemPrice;
                 cursorSprites.Add(cursorSpriteFuck);
                 shopPurchasable.PurchasedItem();
+                Cursor.SetCursor(cursorSpriteFuck, new Vector2(10, 0), CursorMode.Auto);
+
             }
         }
         else
@@ -104,9 +110,8 @@ public class CursorManager : MonoBehaviour
         {
             if (!cursorSprites.Contains(cursorSpriteShop1))
             {
-                gameManager.playerGems -= shopPurchasable.itemPrice;
                 cursorSprites.Add(cursorSpriteShop1);
-                shopPurchasable.PurchasedItem();
+                shopPurchasable.PurchaseItemGems();
                 Cursor.SetCursor(cursorSpriteShop1, new Vector2(10, 0), CursorMode.Auto);
             }
         }
@@ -122,9 +127,8 @@ public class CursorManager : MonoBehaviour
         {
             if (!cursorSprites.Contains(cursorSpriteShop2))
             {
-                gameManager.playerGems -= shopPurchasable.itemPrice;
                 cursorSprites.Add(cursorSpriteShop2);
-                shopPurchasable.PurchasedItem();
+                shopPurchasable.PurchaseItemGems();
                 Cursor.SetCursor(cursorSpriteShop2, new Vector2(10, 0), CursorMode.Auto);
             }
         }
@@ -140,9 +144,8 @@ public class CursorManager : MonoBehaviour
         {
             if (!cursorSprites.Contains(cursorSpriteShop3))
             {
-                gameManager.playerGems -= shopPurchasable.itemPrice;
                 cursorSprites.Add(cursorSpriteShop3);
-                shopPurchasable.PurchasedItem();
+                shopPurchasable.PurchaseItemGems();
                 Cursor.SetCursor(cursorSpriteShop3, new Vector2(10, 0), CursorMode.Auto);
             }
         }

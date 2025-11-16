@@ -55,10 +55,6 @@ public class ShopPurchasable : MonoBehaviour
             itemImage.color = purchasedColor;
             gameManager.playerGems -= itemPrice;
         }
-        else if (!itemPurchased)
-        {
-            WiggleItem();
-        }
     }
     public void PurchaseItemDiamonds()
     {
@@ -129,6 +125,7 @@ public class ShopPurchasable : MonoBehaviour
             Transform locklockParent = lockParent.parent;
             gameManager.stockWidget.SetActive(true);
             Destroy(locklockParent.gameObject);
+            gameManager.stockWidgetImage.sprite = gameManager.stockWidgetPurchased;
 
         }
         else if (!itemPurchased)
@@ -145,6 +142,7 @@ public class ShopPurchasable : MonoBehaviour
             Transform locklockParent = lockParent.parent;
             gameManager.freeCoinWidget.SetActive(true);
             Destroy(locklockParent.gameObject);
+            gameManager.freeCoinWidgetImage.sprite = gameManager.freeCoinWidgetPurchased;
 
         }
         else if (!itemPurchased)
@@ -196,6 +194,20 @@ public class ShopPurchasable : MonoBehaviour
     public void UnhoverWithPrice(TMP_Text priceText)
     {
             priceText.gameObject.SetActive(false);
+    }
+
+    public void HoverShopDescription( string description)
+    {
+        if (!itemPurchased)
+        {
+            gameManager.shopDescription.gameObject.SetActive(true);
+            gameManager.shopDescription.text = description;
+        }
+    }  
+
+    public void UnhoverShopDescription()
+    {
+        gameManager.shopDescription.gameObject.SetActive(false);
     }
 
 

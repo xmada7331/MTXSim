@@ -16,6 +16,7 @@ public class CardLinking : MonoBehaviour
     public GameObject mainWindow;
     public GameObject successWindow;
     public GameObject linkCardBlock;
+    public GameObject settingsBlock;
 
     private void Awake()
     {
@@ -88,6 +89,7 @@ public class CardLinking : MonoBehaviour
         mainWindow.SetActive(false);
         linkCardBlock.SetActive(false);
         successWindow.SetActive(true);
+        settingsBlock.SetActive(false);
     }
 
     private IEnumerator CloseMainWindow()

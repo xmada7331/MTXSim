@@ -30,4 +30,16 @@ public class EndGameManager : MonoBehaviour
         yield return new WaitForSeconds(2f);
         SceneManager.LoadScene("DebtGameOver");
     }
+
+    public void DiamondGameOver()
+    {
+        StartCoroutine(DiamondEndGameAnimation());
+    }
+
+    private IEnumerator DiamondEndGameAnimation()
+    {
+        blackoutAnimator.SetTrigger("GameOver");
+        yield return new WaitForSeconds(2f);
+        SceneManager.LoadScene("DiamondGameOver");
+    }
 }

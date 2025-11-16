@@ -16,6 +16,8 @@ public class Game_behaviour : MonoBehaviour
     public Slider bossHpSlider;
     public float clickDmg;
     public float defeatedEnemies = 0f;
+    private int lastBossIndex = -1;
+    private float dropRateMult = 1f;
 
     public float clicks;
     public float monstersSlain;
@@ -42,6 +44,9 @@ public class Game_behaviour : MonoBehaviour
 
     public Animator playerAnimator;
     public Animator bossAnimator;
+
+    private bool firstTimePlaying = true;
+    public GameObject introSequenceObject;
 
     private void Awake()
     {
@@ -98,22 +103,49 @@ public class Game_behaviour : MonoBehaviour
 
     private void RotateNewBoss()
     {
-        bossHp = 100;
 
         int available = Mathf.Min(
             bossSprites != null ? bossSprites.Count : 0,
             bossNames != null ? bossNames.Count : 0
         );
 
-        int index = Random.Range(0, available);
+        int index;
+        if (available == 1)
+        {
+            index = 0;
+        }
+        else
+        {
+            // Build a candidate list excluding the last chosen index to avoid repeats
+            var candidates = new List<int>(available - 1);
+            for (int i = 0; i < available; i++)
+            {
+                if (i != lastBossIndex) candidates.Add(i);
+            }
+            index = candidates[Random.Range(0, candidates.Count)];
+        }
+
+        lastBossIndex = index;
 
         var selectedImage = bossSprites[index];
         if (selectedImage != null)
         {
             bossImage.sprite = selectedImage;
         }
+        if (selectedImage == bossSprites[0] || selectedImage == bossSprites[1] || selectedImage == bossSprites[2])
+        {
+            dropRateMult = 1f;
+            bossHpSlider.maxValue = 100;
+            bossHp = 100;
+        }
+        else
+        {
+            dropRateMult = 1.5f;
+            bossHpSlider.maxValue = 200;
+            bossHp = 200;
+        }
 
-        bossName.text = bossNames[index];
+            bossName.text = bossNames[index];
 
         GetBossMoney();
         defeatedEnemies += 1;
@@ -123,15 +155,11 @@ public class Game_behaviour : MonoBehaviour
 
     private void GetBossMoney()
     {
-        //if (Random.value < 0.5)
-        //{
-        //    gameManager.playerMoney += 10; 
-        //}
-        if (Random.value <= 0.7f)
+        if (Random.value <= 0.35f * dropRateMult)
         {
             gameManager.playerGems += 1; 
         }
-        if (Random.value <= .2f)
+        if (Random.value <= .005f)
         {
             gameManager.playerDiamonds += 1; 
         }
@@ -247,5 +275,21 @@ public class Game_behaviour : MonoBehaviour
                 return;
             }
         }
+    }
+
+    public void IntroSequence()
+    {
+        if (firstTimePlaying)
+        {
+            firstTimePlaying = false;
+            StartCoroutine(IntroSequenceAnimation());
+        }
+    }
+
+    private IEnumerator IntroSequenceAnimation()
+    {
+        introSequenceObject.SetActive(true);
+        yield return new WaitForSeconds(5f);
+        introSequenceObject.SetActive(false);
     }
 }

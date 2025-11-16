@@ -37,6 +37,7 @@ public class StockSystem : MonoBehaviour
 
 
 
+
     private void Awake()
     {
         gameManager = FindObjectOfType<GameManager>();
@@ -61,7 +62,7 @@ public class StockSystem : MonoBehaviour
         
 
         amountInWallet = ((aStockPrice * aCoinAmount) + (bStockPrice * bCoinAmount) + (cStockPrice * cCoinAmount));
-        wallet.text = "$" + ((aStockPrice * aCoinAmount) + (bStockPrice * bCoinAmount) + (cStockPrice * cCoinAmount));
+        wallet.text = "$" + amountInWallet.ToString("F4");
         cashoutText.text = "Would you like to cashout all stocks worth $" + amountInWallet.ToString("F4") + " for a fee of $50?";
 
 

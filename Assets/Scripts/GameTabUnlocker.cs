@@ -1,9 +1,7 @@
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEngine.GraphicsBuffer;
 
 public class GameTabUnlocker : MonoBehaviour
 {
@@ -12,10 +10,10 @@ public class GameTabUnlocker : MonoBehaviour
     Game_behaviour gameBehaviour;
     ShopPurchasable shopPurchasable;
     [Header("Game Tab")]
-    public List <GameObject> lockedSettings;
-    public List <GameObject> lockedGameTitleOptions;
-    public List <GameObject> lockedGraphicOptions;
-    public List <GameObject> lockedCurrencyOptions;
+    public List<GameObject> lockedSettings;
+    public List<GameObject> lockedGameTitleOptions;
+    public List<GameObject> lockedGraphicOptions;
+    public List<GameObject> lockedCurrencyOptions;
 
     public Image gameBackground;
     public GameObject settingsLock;
@@ -91,12 +89,13 @@ public class GameTabUnlocker : MonoBehaviour
 
     public void UnlockSettingsMenu(GameObject target)
     {
-        float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
         if (!contentChecker.hasSettings && gameManager.playerMoney >= itemPrice)
         {
             gameManager.expensesAmount += itemPrice;
             settingsLock.SetActive(false);
-            
+
             foreach (GameObject obj in lockedSettings)
             {
                 Image img = obj.GetComponent<Image>();
@@ -109,12 +108,18 @@ public class GameTabUnlocker : MonoBehaviour
                     img.color = new Color32(244, 244, 244, 255);
                 }
             }
+            purch.PurchaseItem();
             contentChecker.hasSettings = true;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void UnlockGameOptions(GameObject target)
     {
-        float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
         if (!contentChecker.hasGameTitle && gameManager.playerMoney >= itemPrice)
         {
             gameTitle.text = "MTX Sim";
@@ -131,12 +136,18 @@ public class GameTabUnlocker : MonoBehaviour
                     img.color = new Color32(244, 244, 244, 255);
                 }
             }
+            purch.PurchaseItem();
             contentChecker.hasGameTitle = true;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void UnlockGraphicOptions(GameObject target)
     {
-        float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
         if (!contentChecker.hasGraphicsOptions && gameManager.playerMoney >= itemPrice)
         {
             gameManager.expensesAmount += itemPrice;
@@ -153,12 +164,18 @@ public class GameTabUnlocker : MonoBehaviour
                     img.color = new Color32(244, 244, 244, 255);
                 }
             }
+            purch.PurchaseItem();
             contentChecker.hasGraphicsOptions = true;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void UnlockCurrencyOptions(GameObject target)
     {
-        float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
         if (!contentChecker.hasCurrency && gameManager.playerMoney >= itemPrice)
         {
             gameManager.expensesAmount += itemPrice;
@@ -174,22 +191,28 @@ public class GameTabUnlocker : MonoBehaviour
                     img.color = new Color32(244, 244, 244, 255);
                 }
             }
+            purch.PurchaseItem();
             contentChecker.hasCurrency = true;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void UnlockMenuBg(GameObject target)
     {
-        float itemPrice = target.GetComponent<ShopPurchasable>().itemPrice;
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
         if (!contentChecker.hasMenuBg && contentChecker.hasSettings && gameManager.playerMoney >= itemPrice)
         {
             gameBackground.enabled = true;
             contentChecker.hasMenuBg = true;
-            shopPurchasable.PurchaseItem();
+            purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
         }
         else
         {
-            Debug.Log("not enough money / purchased already");
+            purch.WiggleItem();
         }
     }
 
@@ -204,6 +227,10 @@ public class GameTabUnlocker : MonoBehaviour
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
         }
+        else
+        {
+            purch.WiggleItem();
+        }
     }
     public void UnlockMouseSens(GameObject target)
     {
@@ -215,6 +242,10 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasMouseSens = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void UnlockFullscreen(GameObject target)
@@ -231,7 +262,7 @@ public class GameTabUnlocker : MonoBehaviour
         }
         else
         {
-            Debug.Log("not enough money / purchased already");
+            purch.WiggleItem();
         }
     }
     public void UnlockFrameLimit(GameObject target)
@@ -248,7 +279,7 @@ public class GameTabUnlocker : MonoBehaviour
         }
         else
         {
-            Debug.Log("not enough money / purchased already");
+            purch.WiggleItem();
         }
     }
     public void UnlockResolutionChange(GameObject target)
@@ -265,7 +296,7 @@ public class GameTabUnlocker : MonoBehaviour
         }
         else
         {
-            Debug.Log("not enough money / purchased already");
+            purch.WiggleItem();
         }
     }
     public void UnlockVsync(GameObject target)
@@ -282,7 +313,7 @@ public class GameTabUnlocker : MonoBehaviour
         }
         else
         {
-            Debug.Log("not enough money / purchased already");
+            purch.WiggleItem();
         }
     }
     public void UnlockLanguage(GameObject target)
@@ -299,7 +330,7 @@ public class GameTabUnlocker : MonoBehaviour
         }
         else
         {
-            Debug.Log("not enough money / purchased already");
+            purch.WiggleItem();
         }
     }
     public void UnlockNSFW(GameObject target)
@@ -316,7 +347,7 @@ public class GameTabUnlocker : MonoBehaviour
         }
         else
         {
-            Debug.Log("not enough money / purchased already");
+            purch.WiggleItem();
         }
     }
     public void GameTitle(GameObject target)
@@ -325,8 +356,12 @@ public class GameTabUnlocker : MonoBehaviour
         float itemPrice = purch.itemPrice;
         if (gameManager.playerMoney >= itemPrice)
         {
-
+            purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void MenuBackground(GameObject target)
@@ -335,8 +370,13 @@ public class GameTabUnlocker : MonoBehaviour
         float itemPrice = purch.itemPrice;
         if (gameManager.playerMoney >= itemPrice)
         {
+            purch.PurchaseItem();
             menuBackground.enabled = true;
             gameManager.expensesAmount += itemPrice;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void Score(GameObject target)
@@ -345,8 +385,13 @@ public class GameTabUnlocker : MonoBehaviour
         float itemPrice = purch.itemPrice;
         if (gameManager.playerMoney >= itemPrice)
         {
+            purch.PurchaseItem();
             scoreObject.SetActive(true);
             gameManager.expensesAmount += itemPrice;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
 
     }
@@ -356,8 +401,13 @@ public class GameTabUnlocker : MonoBehaviour
         float itemPrice = purch.itemPrice;
         if (gameManager.playerMoney >= itemPrice)
         {
+            purch.PurchaseItem();
             clicksObject.SetActive(true);
             gameManager.expensesAmount += itemPrice;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
 
     }
@@ -367,8 +417,13 @@ public class GameTabUnlocker : MonoBehaviour
         float itemPrice = purch.itemPrice;
         if (gameManager.playerMoney >= itemPrice)
         {
+            purch.PurchaseItem();
             desktopIcon.color = new Color32(255, 255, 255, 255);
             gameManager.expensesAmount += itemPrice;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void QuitButton(GameObject target)
@@ -377,8 +432,13 @@ public class GameTabUnlocker : MonoBehaviour
         float itemPrice = purch.itemPrice;
         if (gameManager.playerMoney >= itemPrice)
         {
+            purch.PurchaseItem();
             quitButton.SetActive(true);
             gameManager.expensesAmount += itemPrice;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void FPScounter(GameObject target)
@@ -387,8 +447,13 @@ public class GameTabUnlocker : MonoBehaviour
         float itemPrice = purch.itemPrice;
         if (gameManager.playerMoney >= itemPrice)
         {
+            purch.PurchaseItem();
             fpsCounter.SetActive(true);
             gameManager.expensesAmount += itemPrice;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void TutorialBlock(GameObject target)
@@ -397,8 +462,13 @@ public class GameTabUnlocker : MonoBehaviour
         float itemPrice = purch.itemPrice;
         if (gameManager.playerMoney >= itemPrice)
         {
+            purch.PurchaseItem();
             tutorialBlock.SetActive(false);
             gameManager.expensesAmount += itemPrice;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
 
@@ -415,6 +485,10 @@ public class GameTabUnlocker : MonoBehaviour
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
         }
+        else
+        {
+            purch.WiggleItem();
+        }
     }
     public void CurrencyDiamonds(GameObject target)
     {
@@ -429,6 +503,10 @@ public class GameTabUnlocker : MonoBehaviour
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
         }
+        else
+        {
+            purch.WiggleItem();
+        }
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// VFX and MUSIC OPTIONS
     public void UnlockSFX(GameObject target)
@@ -442,6 +520,10 @@ public class GameTabUnlocker : MonoBehaviour
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
         }
+        else
+        {
+            purch.WiggleItem();
+        }
     }
     public void UnlockMusic(GameObject target)
     {
@@ -453,6 +535,10 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasMusic = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void UnlockMouseClick(GameObject target)
@@ -466,6 +552,11 @@ public class GameTabUnlocker : MonoBehaviour
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
         }
+        else
+        {
+            purch.WiggleItem();
+        }
+
     }
     public void UnlockUISFX(GameObject target)
     {
@@ -477,6 +568,10 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasUISFX = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void UnlockBossDeath(GameObject target)
@@ -490,6 +585,10 @@ public class GameTabUnlocker : MonoBehaviour
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
         }
+        else
+        {
+            purch.WiggleItem();
+        }
     }
     public void UnlockNextLevel(GameObject target)
     {
@@ -501,6 +600,10 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasNextLevel = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void UnlockWeaponSwing(GameObject target)
@@ -514,6 +617,10 @@ public class GameTabUnlocker : MonoBehaviour
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
         }
+        else
+        {
+            purch.WiggleItem();
+        }
     }
     public void UnlockGemDrop(GameObject target)
     {
@@ -525,6 +632,10 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasGemDrop = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void UnlockDiamondDrop(GameObject target)
@@ -538,6 +649,10 @@ public class GameTabUnlocker : MonoBehaviour
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
         }
+        else
+        {
+            purch.WiggleItem();
+        }
     }
     public void UnlockItemBuy(GameObject target)
     {
@@ -549,6 +664,10 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasItemBuy = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void UnlockBattleAmbience(GameObject target)
@@ -562,6 +681,10 @@ public class GameTabUnlocker : MonoBehaviour
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
         }
+        else
+        {
+            purch.WiggleItem();
+        }
     }
     public void UnlockMainMenuMusic(GameObject target)
     {
@@ -573,6 +696,10 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasMainMenuMusic = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void UnlockBattleMusic(GameObject target)
@@ -586,6 +713,10 @@ public class GameTabUnlocker : MonoBehaviour
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
         }
+        else
+        {
+            purch.WiggleItem();
+        }
     }
     public void UnlockShopMusic(GameObject target)
     {
@@ -597,6 +728,10 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasShopMusic = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void UnlockSettingsMusic(GameObject target)
@@ -610,6 +745,10 @@ public class GameTabUnlocker : MonoBehaviour
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
         }
+        else
+        {
+            purch.WiggleItem();
+        }
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// SEASONAL TAB
     public void SeasonalHeroSkin(GameObject target)
@@ -620,8 +759,12 @@ public class GameTabUnlocker : MonoBehaviour
         {
             //more content to do here
             contentChecker.hasSeasonalHeroSkin = true;
-            purch.PurchaseItem();
+            purch.PurchaseItemGems();
             gameManager.expensesAmount += itemPrice;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void SeasonalCursorSkin(GameObject target)
@@ -632,8 +775,12 @@ public class GameTabUnlocker : MonoBehaviour
         {
             //more content to do here
             contentChecker.hasSeasonalCursorSkin = true;
-            purch.PurchaseItem();
+            purch.PurchaseItemGems();
             gameManager.expensesAmount += itemPrice;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void SeasonalWallpaperSkin(GameObject target)
@@ -644,7 +791,12 @@ public class GameTabUnlocker : MonoBehaviour
         {
             //more content to do here
             contentChecker.hasSeasonalWallpaperSkin = true;
+            purch.PurchaseItemGems();
             gameManager.expensesAmount += itemPrice;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void SeasonalBossSkin(GameObject target)
@@ -656,26 +808,74 @@ public class GameTabUnlocker : MonoBehaviour
             //more content to do here
             contentChecker.hasSeasonalBossSkin = true;
             gameManager.expensesAmount += itemPrice;
+            purch.PurchaseItemGems();
+
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
 
 
     /////////////////////////////////////////////////////////////////////////////////////// GRAPHICS OPTIONS
-    public void HighGraphics()
+    public void HighGraphics(GameObject target)
     {
-        highGraphicsBlock.SetActive(false);
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (!contentChecker.hasGraphicsHigh && contentChecker.hasGraphicsOptions && gameManager.playerMoney >= itemPrice)
+        {
+            purch.PurchaseItem();
+            highGraphicsBlock.SetActive(false);
+        }
+        else
+        {
+            purch.WiggleItem();
+        }
     }
-    public void UltraGraphics()
+    public void UltraGraphics(GameObject target)
     {
-        ultraGraphicsBlock.SetActive(false);
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (!contentChecker.hasGraphicsUltra && contentChecker.hasGraphicsOptions && gameManager.playerMoney >= itemPrice)
+        {
+            purch.PurchaseItem();
+            ultraGraphicsBlock.SetActive(false);
+        }
+        else
+        {
+            purch.WiggleItem();
+        }
     }
-    public void EpicGraphics()
+    public void EpicGraphics(GameObject target)
     {
-        epicGraphicsBlock.SetActive(false);
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (!contentChecker.hasGraphicsEpic && contentChecker.hasGraphicsOptions && gameManager.playerMoney >= itemPrice)
+        {
+            purch.PurchaseItem();
+            epicGraphicsBlock.SetActive(false);
+        }
+        else
+        {
+            purch.WiggleItem();
+        }
+
     }
-    public void PostProcessGraphics()
+
+    public void PostProcessGraphics(GameObject target)
     {
-        postProcessGraphicsBlock.SetActive(false);
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (!contentChecker.hasPostProcess && contentChecker.hasGraphicsOptions && gameManager.playerMoney >= itemPrice)
+        {
+            purch.PurchaseItem();
+            postProcessGraphicsBlock.SetActive(false);
+        }
+        else
+        {
+            purch.WiggleItem();
+        }
     }
     ///////////////////////////////////////////////////////////////////////////////////////////// FEATURED SHOP MAIN
     public void AutoClick(GameObject target)
@@ -684,8 +884,13 @@ public class GameTabUnlocker : MonoBehaviour
         float itemPrice = purch.itemPrice;
         if (gameManager.playerMoney >= itemPrice)
         {
+            purch.PurchaseItem();
             gameBehaviour.hasAutoClick = true;
             gameManager.expensesAmount += itemPrice;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void DamageUp(GameObject target)
@@ -694,8 +899,13 @@ public class GameTabUnlocker : MonoBehaviour
         float itemPrice = purch.itemPrice;
         if (gameManager.playerMoney >= itemPrice)
         {
+            purch.PurchaseItem();
             gameBehaviour.clickDmg *= 1.5f;
             gameManager.expensesAmount += itemPrice;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void PopUpDamage(GameObject target)
@@ -704,41 +914,16 @@ public class GameTabUnlocker : MonoBehaviour
         float itemPrice = purch.itemPrice;
         if (gameManager.playerMoney >= itemPrice)
         {
+            purch.PurchaseItem();
             gameBehaviour.hasPopUpUpgrade = true;
             gameManager.expensesAmount += itemPrice;
         }
+        else
+        {
+            purch.WiggleItem();
+        }
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// SKINS TAB
-    public void Cursor1(GameObject target)
-    {
-        var purch = target.GetComponent<ShopPurchasable>();
-        float itemPrice = purch.itemPrice;
-        if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
-        {
-            //logic here
-            gameManager.expensesAmount += itemPrice;
-        }
-    }
-    public void Cursor2(GameObject target)
-    {
-        var purch = target.GetComponent<ShopPurchasable>();
-        float itemPrice = purch.itemPrice;
-        if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
-        {
-            //logic here
-            gameManager.expensesAmount += itemPrice;
-        }
-    }
-    public void Cursor3(GameObject target)
-    {
-        var purch = target.GetComponent<ShopPurchasable>();
-        float itemPrice = purch.itemPrice;
-        if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
-        {
-            //logic here
-            gameManager.expensesAmount += itemPrice;
-        }
-    }
     public void PlayBg1(GameObject target)
     {
         var purch = target.GetComponent<ShopPurchasable>();
@@ -750,7 +935,12 @@ public class GameTabUnlocker : MonoBehaviour
                 if (gameBehaviour.backgroundSkin == null) gameBehaviour.backgroundSkin = new List<Sprite>();
                 gameBehaviour.backgroundSkin.Add(backgroundSkins[0]);
                 gameManager.expensesAmount += itemPrice;
+                purch.PurchaseItemGems();
             }
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void PlayBg2(GameObject target)
@@ -764,7 +954,13 @@ public class GameTabUnlocker : MonoBehaviour
                 if (gameBehaviour.backgroundSkin == null) gameBehaviour.backgroundSkin = new List<Sprite>();
                 gameBehaviour.backgroundSkin.Add(backgroundSkins[1]);
                 gameManager.expensesAmount += itemPrice;
+                purch.PurchaseItemGems();
             }
+
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void PlayBg3(GameObject target)
@@ -778,7 +974,12 @@ public class GameTabUnlocker : MonoBehaviour
                 if (gameBehaviour.backgroundSkin == null) gameBehaviour.backgroundSkin = new List<Sprite>();
                 gameBehaviour.backgroundSkin.Add(backgroundSkins[2]);
                 gameManager.expensesAmount += itemPrice;
+                purch.PurchaseItemGems();
             }
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void PlayBg4(GameObject target)
@@ -792,7 +993,12 @@ public class GameTabUnlocker : MonoBehaviour
                 if (gameBehaviour.backgroundSkin == null) gameBehaviour.backgroundSkin = new List<Sprite>();
                 gameBehaviour.backgroundSkin.Add(backgroundSkins[3]);
                 gameManager.expensesAmount += itemPrice;
+                purch.PurchaseItemGems();
             }
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void PlayBg5(GameObject target)
@@ -806,7 +1012,12 @@ public class GameTabUnlocker : MonoBehaviour
                 if (gameBehaviour.backgroundSkin == null) gameBehaviour.backgroundSkin = new List<Sprite>();
                 gameBehaviour.backgroundSkin.Add(backgroundSkins[4]);
                 gameManager.expensesAmount += itemPrice;
+                purch.PurchaseItemGems();
             }
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void PlayerSkin1(GameObject target)
@@ -815,17 +1026,19 @@ public class GameTabUnlocker : MonoBehaviour
         float itemPrice = purch.itemPrice;
         if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
         {
-            if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
-            {
 
-                // Take first sprite from monsterSkins and add to Game_behaviour.bossSprites
-                if (playerSkins != null && playerSkins.Count > 0)
-                {
-                    if (gameBehaviour.playerSkin == null) gameBehaviour.playerSkin = new List<Sprite>();
-                    gameBehaviour.playerSkin.Add(playerSkins[0]);
-                }
-                gameManager.expensesAmount += itemPrice;
+            if (playerSkins != null && playerSkins.Count > 0)
+            {
+                if (gameBehaviour.playerSkin == null) gameBehaviour.playerSkin = new List<Sprite>();
+                gameBehaviour.playerSkin.Add(playerSkins[0]);
+                purch.PurchaseItemGems();
             }
+            gameManager.expensesAmount += itemPrice;
+
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void PlayerSkin2(GameObject target)
@@ -834,74 +1047,89 @@ public class GameTabUnlocker : MonoBehaviour
         float itemPrice = purch.itemPrice;
         if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
         {
-            if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
-            {
 
-                // Take first sprite from monsterSkins and add to Game_behaviour.bossSprites
-                if (playerSkins != null && playerSkins.Count > 1)
-                {
-                    if (gameBehaviour.playerSkin == null) gameBehaviour.playerSkin = new List<Sprite>();
-                    gameBehaviour.playerSkin.Add(playerSkins[1]);
-                }
-                gameManager.expensesAmount += itemPrice;
+            // Take first sprite from monsterSkins and add to Game_behaviour.bossSprites
+            if (playerSkins != null && playerSkins.Count > 1)
+            {
+                if (gameBehaviour.playerSkin == null) gameBehaviour.playerSkin = new List<Sprite>();
+                gameBehaviour.playerSkin.Add(playerSkins[1]);
+                purch.PurchaseItemGems();
             }
+            gameManager.expensesAmount += itemPrice;
+
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void PlayerSkin3(GameObject target)
     {
         var purch = target.GetComponent<ShopPurchasable>();
         float itemPrice = purch.itemPrice;
+
         if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
         {
-            if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
-            {
 
-                // Take first sprite from monsterSkins and add to Game_behaviour.bossSprites
-                if (playerSkins != null && playerSkins.Count > 2)
-                {
-                    if (gameBehaviour.playerSkin == null) gameBehaviour.playerSkin = new List<Sprite>();
-                    gameBehaviour.playerSkin.Add(playerSkins[2]);
-                }
-                gameManager.expensesAmount += itemPrice;
+            // Take first sprite from monsterSkins and add to Game_behaviour.bossSprites
+            if (playerSkins != null && playerSkins.Count > 2)
+            {
+                if (gameBehaviour.playerSkin == null) gameBehaviour.playerSkin = new List<Sprite>();
+                gameBehaviour.playerSkin.Add(playerSkins[2]);
+                purch.PurchaseItemGems();
             }
+            gameManager.expensesAmount += itemPrice;
+
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void PlayerSkin4(GameObject target)
     {
         var purch = target.GetComponent<ShopPurchasable>();
         float itemPrice = purch.itemPrice;
+
         if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
         {
-            if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
-            {
 
-                // Take first sprite from monsterSkins and add to Game_behaviour.bossSprites
-                if (playerSkins != null && playerSkins.Count > 3)
-                {
-                    if (gameBehaviour.playerSkin == null) gameBehaviour.playerSkin = new List<Sprite>();
-                    gameBehaviour.playerSkin.Add(playerSkins[3]);
-                }
-                gameManager.expensesAmount += itemPrice;
+            // Take first sprite from monsterSkins and add to Game_behaviour.bossSprites
+            if (playerSkins != null && playerSkins.Count > 3)
+            {
+                if (gameBehaviour.playerSkin == null) gameBehaviour.playerSkin = new List<Sprite>();
+                gameBehaviour.playerSkin.Add(playerSkins[3]);
+                purch.PurchaseItemGems();
             }
+            gameManager.expensesAmount += itemPrice;
+
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void PlayerSkin5(GameObject target)
     {
         var purch = target.GetComponent<ShopPurchasable>();
         float itemPrice = purch.itemPrice;
+
         if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
         {
-            if (gameManager.playerGems >= itemPrice && contentChecker.hasCurrencyGems)
-            {
 
-                // Take first sprite from monsterSkins and add to Game_behaviour.bossSprites
-                if (playerSkins != null && playerSkins.Count > 4)
-                {
-                    if (gameBehaviour.playerSkin == null) gameBehaviour.playerSkin = new List<Sprite>();
-                    gameBehaviour.playerSkin.Add(playerSkins[4]);
-                }
-                gameManager.expensesAmount += itemPrice;
+            // Take first sprite from monsterSkins and add to Game_behaviour.bossSprites
+            if (playerSkins != null && playerSkins.Count > 4)
+            {
+                if (gameBehaviour.playerSkin == null) gameBehaviour.playerSkin = new List<Sprite>();
+                gameBehaviour.playerSkin.Add(playerSkins[4]);
+                purch.PurchaseItemGems();
             }
+            gameManager.expensesAmount += itemPrice;
+
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void MonsterSkin1(GameObject target)
@@ -923,7 +1151,13 @@ public class GameTabUnlocker : MonoBehaviour
                 if (gameBehaviour.bossNames == null) gameBehaviour.bossNames = new List<string>();
                 gameBehaviour.bossNames.Add(monsterNames[0]);
             }
+            purch.PurchaseItemGems();
+
             gameManager.expensesAmount += itemPrice;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void MonsterSkin2(GameObject target)
@@ -945,7 +1179,13 @@ public class GameTabUnlocker : MonoBehaviour
                 if (gameBehaviour.bossNames == null) gameBehaviour.bossNames = new List<string>();
                 gameBehaviour.bossNames.Add(monsterNames[1]);
             }
+            purch.PurchaseItemGems();
+
             gameManager.expensesAmount += itemPrice;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void MonsterSkin3(GameObject target)
@@ -967,7 +1207,13 @@ public class GameTabUnlocker : MonoBehaviour
                 if (gameBehaviour.bossNames == null) gameBehaviour.bossNames = new List<string>();
                 gameBehaviour.bossNames.Add(monsterNames[2]);
             }
+            purch.PurchaseItemGems();
+
             gameManager.expensesAmount += itemPrice;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void MonsterSkin4(GameObject target)
@@ -989,7 +1235,13 @@ public class GameTabUnlocker : MonoBehaviour
                 if (gameBehaviour.bossNames == null) gameBehaviour.bossNames = new List<string>();
                 gameBehaviour.bossNames.Add(monsterNames[3]);
             }
+            purch.PurchaseItemGems();
+
             gameManager.expensesAmount += itemPrice;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void MonsterSkin5(GameObject target)
@@ -1012,6 +1264,11 @@ public class GameTabUnlocker : MonoBehaviour
                 gameBehaviour.bossNames.Add(monsterNames[4]);
             }
             gameManager.expensesAmount += itemPrice;
+            purch.PurchaseItemGems();
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void WeaponSkin1(GameObject target)
@@ -1025,7 +1282,12 @@ public class GameTabUnlocker : MonoBehaviour
                 if (gameBehaviour.weaponSkin == null) gameBehaviour.weaponSkin = new List<Sprite>();
                 gameBehaviour.weaponSkin.Add(weaponSkins[0]);
             }
+            purch.PurchaseItemGems();
             gameManager.expensesAmount += itemPrice;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void WeaponSkin2(GameObject target)
@@ -1039,7 +1301,12 @@ public class GameTabUnlocker : MonoBehaviour
                 if (gameBehaviour.weaponSkin == null) gameBehaviour.weaponSkin = new List<Sprite>();
                 gameBehaviour.weaponSkin.Add(weaponSkins[1]);
             }
+            purch.PurchaseItemGems();
             gameManager.expensesAmount += itemPrice;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void WeaponSkin3(GameObject target)
@@ -1053,7 +1320,12 @@ public class GameTabUnlocker : MonoBehaviour
                 if (gameBehaviour.weaponSkin == null) gameBehaviour.weaponSkin = new List<Sprite>();
                 gameBehaviour.weaponSkin.Add(weaponSkins[2]);
             }
+            purch.PurchaseItemGems();
             gameManager.expensesAmount += itemPrice;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void WeaponSkin4(GameObject target)
@@ -1067,7 +1339,12 @@ public class GameTabUnlocker : MonoBehaviour
                 if (gameBehaviour.weaponSkin == null) gameBehaviour.weaponSkin = new List<Sprite>();
                 gameBehaviour.weaponSkin.Add(weaponSkins[3]);
             }
+            purch.PurchaseItemGems();
             gameManager.expensesAmount += itemPrice;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
     public void WeaponSkin5(GameObject target)
@@ -1081,7 +1358,12 @@ public class GameTabUnlocker : MonoBehaviour
                 if (gameBehaviour.weaponSkin == null) gameBehaviour.weaponSkin = new List<Sprite>();
                 gameBehaviour.weaponSkin.Add(weaponSkins[4]);
             }
+
             gameManager.expensesAmount += itemPrice;
+        }
+        else
+        {
+            purch.WiggleItem();
         }
     }
 

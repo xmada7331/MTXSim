@@ -8,6 +8,8 @@ public class AdsSystem : MonoBehaviour
     public float timer;
     public float checkInterval = 1f; // How often to check for ad appearance
 
+    public GameObject blackScreen;
+
     void Start()
     {
         StartCoroutine(AdsEngage());
@@ -37,5 +39,24 @@ public class AdsSystem : MonoBehaviour
                 timer = 0f;
             }
         }
+    }
+
+    public void TriggerBlackScreen()
+    {
+        StartCoroutine(BlackScreenFlicker());
+    }
+
+    private IEnumerator BlackScreenFlicker()
+    {
+        int flickers = 0;
+        while (flickers <=9)
+        {
+            flickers++;
+            blackScreen.SetActive(true);
+            yield return new WaitForSeconds(0.3f);
+            blackScreen.SetActive(false);
+            yield return new WaitForSeconds(0.3f);
+        }
+        
     }
 }

@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     public float playerMoney;
     public float playerGems;
     public float playerDiamonds;
+    private bool diamondsEndingActive = false;
 
 
     public GameObject LockMenu;
@@ -30,6 +31,10 @@ public class GameManager : MonoBehaviour
     public GameObject adsSystem;
     public Image cursorHoverImage;
     public TMP_Text cursorHoverText;
+    public GameObject pauseMenu;
+    public TMP_Text pauseMenuCounts;
+    private int pauseMenuOpenCount = 5;
+    private bool canOpenPauseMenu = true;
     [Header("CameraApp")]
     public bool hasCamera = false;
     public GameObject cameraLock;
@@ -55,6 +60,17 @@ public class GameManager : MonoBehaviour
     public Slider debtSlider;
     public TMP_Text debtTimer;
     private bool debtTriggered = false;
+    public TMP_Text timeDisplay;
+    public TMP_Text dateDisplay;
+    [Header("Shop")]
+    public TMP_Text shopDescription;
+    [Header("StockApp")]
+    public Image stockWidgetImage;
+    public Sprite stockWidgetPurchased;
+    [Header("FreeCoin")]
+    public Image freeCoinWidgetImage;
+    public Sprite freeCoinWidgetPurchased;
+
 
     private void Awake()
     {
@@ -72,6 +88,8 @@ public class GameManager : MonoBehaviour
     {
         incomeText.text = "+$" + incomeAmount.ToString("F2");
         expensesText.text = "-$" + expensesAmount.ToString("F2");
+        timeDisplay.text = System.DateTime.Now.ToString("HH:mm:ss");
+        dateDisplay.text = System.DateTime.Now.ToString("dd/MM/yyyy");
         if (playerMoney < 0 && !debtTriggered)
         {
             TriggerDebt();
@@ -83,6 +101,31 @@ public class GameManager : MonoBehaviour
                 debtObject.SetActive(false);
                 StopCoroutine(DebtTimer());
                 debtTriggered = false;
+            }
+        }
+
+        if (playerDiamonds >= 10 && !diamondsEndingActive && contentChecker.hasCurrencyDiamonds)
+        {
+            diamondsEndingActive = true;
+            endGameManager.DiamondGameOver();
+        }
+
+        if(Input.GetKeyDown(KeyCode.Escape) && canOpenPauseMenu)
+        {
+            pauseMenu.SetActive(!pauseMenu.activeSelf);
+            if (pauseMenu.activeSelf)
+            {
+                Time.timeScale = 0f;    
+                pauseMenuOpenCount--;
+                pauseMenuCounts.text = pauseMenuOpenCount.ToString();
+                if (pauseMenuOpenCount <= 0)
+                {
+                    canOpenPauseMenu = false;
+                }
+            }
+            else
+            {
+                Time.timeScale = 1f;
             }
         }
     }
@@ -281,8 +324,8 @@ public class GameManager : MonoBehaviour
     private IEnumerator DebtTimer()
     {
         debtTriggered = true;
-        debtSlider.maxValue = 20f;
-        debtSlider.value = 20f;
+        debtSlider.maxValue = 60f;
+        debtSlider.value = 60f;
         while (debtSlider.value > 0)
         {
             int minutes = Mathf.FloorToInt(debtSlider.value / 60f);
@@ -301,6 +344,9 @@ public class GameManager : MonoBehaviour
     {
         window.transform.SetAsLastSibling();
     }
+
+
+
 
 
 

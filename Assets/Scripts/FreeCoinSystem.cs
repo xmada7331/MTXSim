@@ -16,6 +16,7 @@ public class FreeCoinSystem : MonoBehaviour
     public TMP_Text timerCountdown;
     public TMP_Text timerCountdownWidget;
     public TMP_Text timerCountdownWidgetMinimise;
+    public GameObject timerParent;
     public Animator coinAnimator;
     public Animator coinAnimatorWidget;
     public bool timerRunning = false;
@@ -53,9 +54,9 @@ public class FreeCoinSystem : MonoBehaviour
             countdownTime = 5f;
             coinAnimator.ResetTrigger("Flip");
         }
-        yourBet.text = "Your bet:    $"+ betAmount.ToString("F0");
-        yourBetWidget.text = "Your bet:    $"+ betAmount.ToString("F0");
-        maxBet.text = "M: $"+ maxBetAmount.ToString("F0");
+            yourBet.text = "Your bet:    $" + betAmount.ToString("F0");
+        yourBetWidget.text = "$"+ betAmount.ToString("F0");
+        maxBet.text = "$"+ maxBetAmount.ToString("F0");
     }
 
     private IEnumerator WinnersRoulette()
@@ -81,6 +82,7 @@ public class FreeCoinSystem : MonoBehaviour
 
     private IEnumerator Countdown()
     {
+        timerParent.SetActive(true);
         float remainingTime = countdownTime;
         while (remainingTime >= 0)
         {
@@ -96,6 +98,7 @@ public class FreeCoinSystem : MonoBehaviour
         timerRunning = false;
         countdownTime = 5f;
         coinAnimator.SetTrigger("Idle");
+        timerParent.SetActive(false);
 
     }
     public void StartFlip()
@@ -141,6 +144,7 @@ public class FreeCoinSystem : MonoBehaviour
                 flipResult.text = "You lost $" + betAmount.ToString("F2") + "!";
                 flipResult.color = Color.red;
             }
+            coinAnimator.SetTrigger("Idle");
             StartCoroutine(Countdown());
             yield return null;
         }
@@ -151,21 +155,22 @@ public class FreeCoinSystem : MonoBehaviour
         if (!timerRunning)
         {
             timerRunning = true;
-            coinAnimatorWidget.SetTrigger("FlipWidget");
+            coinAnimatorWidget.SetTrigger("Flip");
             if (Random.value > 0.5f)
             {
                 yield return new WaitForSeconds(1.5f);
                 gameManager.playerMoney += betAmount;
-                flipResultWidget.text = "You won $" + betAmount.ToString("F2") + "!";
+                flipResultWidget.text = "Won $" + betAmount.ToString("F2") + "!";
                 flipResultWidget.color = Color.green;
             }
             else
             {
                 yield return new WaitForSeconds(1.5f);
                 gameManager.playerMoney -= betAmount;
-                flipResultWidget.text = "You lost $" + betAmount.ToString("F2") + "!";
+                flipResultWidget.text = "Lost $" + betAmount.ToString("F2") + "!";
                 flipResultWidget.color = Color.red;
             }
+            coinAnimatorWidget.SetTrigger("Idle");
             StartCoroutine(Countdown());
             yield return null;
         }

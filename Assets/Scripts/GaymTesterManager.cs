@@ -198,7 +198,7 @@ public class GaymTesterManager : MonoBehaviour
 
     public IEnumerator GameTimeCountdown()
     {
-        float timeLeft = 10f;
+        float timeLeft = 15f;
         countdownSlider.maxValue = timeLeft;
         countdownSlider.value = timeLeft;
         while (timeLeft > 0)
@@ -213,7 +213,7 @@ public class GaymTesterManager : MonoBehaviour
     }
     public IEnumerator SuccessCountdown()
     {
-        float timeLeft = 10f;
+        float timeLeft = 15f;
         successSlider.maxValue = timeLeft;
         successSlider.value = timeLeft;
         while (timeLeft > 0)
