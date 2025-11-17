@@ -35,6 +35,11 @@ public class FreeCoinSystem : MonoBehaviour
 
     private float maxBetAmount = 5f;
 
+    public AudioSource coinAudioSource;
+    public AudioClip coinFlip;
+    public AudioClip coinWinClip;
+    public AudioClip coinLoseClip;
+
     private void Awake()
     {
         gameManager = FindObjectOfType<GameManager>();
@@ -105,6 +110,7 @@ public class FreeCoinSystem : MonoBehaviour
     {
         if (gameManager.playerMoney >= betAmount)
         {
+
             StartCoroutine(FlipCoin());
             adsObject.SetActive(true);
         }
@@ -130,12 +136,14 @@ public class FreeCoinSystem : MonoBehaviour
         {
             timerRunning = true;
             coinAnimator.SetTrigger("Flip");
+            coinAudioSource.PlayOneShot(coinFlip);
             if (Random.value > 0.5f)
             {
                 yield return new WaitForSeconds(1.5f);
                 gameManager.playerMoney += betAmount;
                 flipResult.text = "You won $" + betAmount.ToString("F2") + "!";
                 flipResult.color = Color.green;
+                coinAudioSource.PlayOneShot(coinWinClip);
             }
             else
             {
@@ -143,6 +151,8 @@ public class FreeCoinSystem : MonoBehaviour
                 gameManager.playerMoney -= betAmount;
                 flipResult.text = "You lost $" + betAmount.ToString("F2") + "!";
                 flipResult.color = Color.red;
+                coinAudioSource.PlayOneShot(coinLoseClip);
+
             }
             coinAnimator.SetTrigger("Idle");
             StartCoroutine(Countdown());

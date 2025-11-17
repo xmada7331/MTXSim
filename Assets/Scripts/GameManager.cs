@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     ShopPurchasable shopPurchasable;
     ContentChecker contentChecker;
     EndGameManager endGameManager;
+    GameTabUnlocker gameTabUnlocker;
 
 
 
@@ -78,6 +79,7 @@ public class GameManager : MonoBehaviour
         contentChecker = FindObjectOfType<ContentChecker>();
         toolbarSystemIcon = FindObjectOfType<ToolbarSystemIcon>();
         endGameManager = FindObjectOfType<EndGameManager>();
+        gameTabUnlocker = FindObjectOfType<GameTabUnlocker>();
     }
     void Start()
     {
@@ -196,10 +198,12 @@ public class GameManager : MonoBehaviour
             surveysIcon.SetActive(true);
             shopPurchasable.PurchaseItem();
             expensesAmount += shopPurchasable.itemPrice;
+            gameTabUnlocker.purchaseSound.PlayOneShot(gameTabUnlocker.purchaseClip2);
         }
         else
         {
             shopPurchasable.WiggleItem();
+            gameTabUnlocker.denyPurchaseSound.PlayOneShot(gameTabUnlocker.denyPurchaseClip);
         }
 
     }
@@ -211,11 +215,13 @@ public class GameManager : MonoBehaviour
             bankIcon.SetActive(true);
             shopPurchasable.PurchaseItem();
             expensesAmount += shopPurchasable.itemPrice;
+            gameTabUnlocker.purchaseSound.PlayOneShot(gameTabUnlocker.purchaseClip2);
 
         }
         else
         {
             shopPurchasable.WiggleItem();
+            gameTabUnlocker.denyPurchaseSound.PlayOneShot(gameTabUnlocker.denyPurchaseClip);
         }
 
     }
@@ -227,11 +233,13 @@ public class GameManager : MonoBehaviour
             stockIcon.SetActive(true);
             shopPurchasable.PurchaseItem();
             expensesAmount += shopPurchasable.itemPrice;
+            gameTabUnlocker.purchaseSound.PlayOneShot(gameTabUnlocker.purchaseClip2);
 
         }
         else
         {
             shopPurchasable.WiggleItem();
+            gameTabUnlocker.denyPurchaseSound.PlayOneShot(gameTabUnlocker.denyPurchaseClip);
         }
     }
     public void UnlockFeetPics(GameObject target)
@@ -242,11 +250,13 @@ public class GameManager : MonoBehaviour
             feetPicsIcon.SetActive(true);
             shopPurchasable.PurchaseItem();
             expensesAmount += shopPurchasable.itemPrice;
+            gameTabUnlocker.purchaseSound.PlayOneShot(gameTabUnlocker.purchaseClip2);
 
         }
         else
         {
             shopPurchasable.WiggleItem();
+            gameTabUnlocker.denyPurchaseSound.PlayOneShot(gameTabUnlocker.denyPurchaseClip);
         }
     }
     public void UnlockFreeCoin(GameObject target)
@@ -257,11 +267,13 @@ public class GameManager : MonoBehaviour
             freeCoinIcon.SetActive(true);
             shopPurchasable.PurchaseItem();
             expensesAmount += shopPurchasable.itemPrice;
+            gameTabUnlocker.purchaseSound.PlayOneShot(gameTabUnlocker.purchaseClip2);
 
         }
         else
         {
             shopPurchasable.WiggleItem();
+            gameTabUnlocker.denyPurchaseSound.PlayOneShot(gameTabUnlocker.denyPurchaseClip);
         }
 
     }
@@ -273,11 +285,13 @@ public class GameManager : MonoBehaviour
             cameraIcon.SetActive(true);
             shopPurchasable.PurchaseItem();
             expensesAmount += shopPurchasable.itemPrice;
+            gameTabUnlocker.purchaseSound.PlayOneShot(gameTabUnlocker.purchaseClip2);
 
         }
         else
         {
             shopPurchasable.WiggleItem();
+            gameTabUnlocker.denyPurchaseSound.PlayOneShot(gameTabUnlocker.denyPurchaseClip);
         }
 
     }
@@ -289,11 +303,13 @@ public class GameManager : MonoBehaviour
             shopIcon.SetActive(true);
             shopPurchasable.PurchaseItem();
             expensesAmount += shopPurchasable.itemPrice;
+            gameTabUnlocker.purchaseSound.PlayOneShot(gameTabUnlocker.purchaseClip2);
 
         }
         else
         {
             shopPurchasable.WiggleItem();
+            gameTabUnlocker.denyPurchaseSound.PlayOneShot(gameTabUnlocker.denyPurchaseClip);
         }
 
     }
@@ -304,10 +320,12 @@ public class GameManager : MonoBehaviour
         {
             gaymTesterIcon.SetActive(true);
             shopPurchasable.PurchaseItem();
+            gameTabUnlocker.purchaseSound.PlayOneShot(gameTabUnlocker.purchaseClip2);
         }
         else
         {
             shopPurchasable.WiggleItem();
+            gameTabUnlocker.denyPurchaseSound.PlayOneShot(gameTabUnlocker.denyPurchaseClip);
         }
 
     }

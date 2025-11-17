@@ -9,6 +9,8 @@ public class MessagesSystem : MonoBehaviour
     public Image MailIcon;
     public Sprite DefaultAlert;
     public Sprite MailAlert;
+    public AudioSource mailSound;
+    public Animator mailAnimation;
     void Start()
     {
         
@@ -31,9 +33,14 @@ public class MessagesSystem : MonoBehaviour
 
     public void GetMessage (GameObject target)
     {
-        target.SetActive(true);
-        target.transform.SetAsFirstSibling();
-        MailIcon.sprite = MailAlert;
+        if (!target.activeSelf)
+        {
+            target.SetActive(true);
+            target.transform.SetAsFirstSibling();
+            MailIcon.sprite = MailAlert;
+            mailSound.Play();
+            StartCoroutine(MailAnimation()); 
+        }
     }
 
     public void ResetMail()
@@ -44,5 +51,13 @@ public class MessagesSystem : MonoBehaviour
     public void ReadMail(Image target)
     {
         target.color = new Color32(255, 255, 255, 50);
+    }
+
+    private IEnumerator MailAnimation()
+    {
+        mailAnimation.SetTrigger("GotMail");
+        yield return new WaitForSeconds(1f);
+        mailAnimation.SetTrigger("Idle");
+        mailAnimation.ResetTrigger("GotMail");
     }
 }

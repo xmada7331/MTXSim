@@ -7,6 +7,7 @@ public class CursorManager : MonoBehaviour
     ShopPurchasable shopPurchasable;
     GameManager gameManager;
     ContentChecker contentChecker;
+    GameTabUnlocker gameTabUnlocker;
     private int currentCursorIndex = 0;
 
     public List<Texture2D> cursorSprites;
@@ -24,6 +25,7 @@ public class CursorManager : MonoBehaviour
         contentChecker = FindObjectOfType<ContentChecker>();
         shopPurchasable = FindObjectOfType<ShopPurchasable>();
         gameManager = FindObjectOfType<GameManager>();
+        gameTabUnlocker = FindObjectOfType<GameTabUnlocker>();
     }
 
     void Start()
@@ -113,11 +115,15 @@ public class CursorManager : MonoBehaviour
                 cursorSprites.Add(cursorSpriteShop1);
                 shopPurchasable.PurchaseItemGems();
                 Cursor.SetCursor(cursorSpriteShop1, new Vector2(10, 0), CursorMode.Auto);
+                gameTabUnlocker.purchaseSound.PlayOneShot(gameTabUnlocker.purchaseClip);
             }
+            
         }
         else
         {
             shopPurchasable.WiggleItem();
+            gameTabUnlocker.denyPurchaseSound.PlayOneShot(gameTabUnlocker.denyPurchaseClip);
+
         }
     }
     public void PurchaseShopCursor2(GameObject target)
@@ -130,11 +136,14 @@ public class CursorManager : MonoBehaviour
                 cursorSprites.Add(cursorSpriteShop2);
                 shopPurchasable.PurchaseItemGems();
                 Cursor.SetCursor(cursorSpriteShop2, new Vector2(10, 0), CursorMode.Auto);
+                gameTabUnlocker.purchaseSound.PlayOneShot(gameTabUnlocker.purchaseClip);
             }
         }
         else
         {
             shopPurchasable.WiggleItem();
+            gameTabUnlocker.denyPurchaseSound.PlayOneShot(gameTabUnlocker.denyPurchaseClip);
+
         }
     }
     public void PurchaseShopCursor3(GameObject target)
@@ -147,11 +156,13 @@ public class CursorManager : MonoBehaviour
                 cursorSprites.Add(cursorSpriteShop3);
                 shopPurchasable.PurchaseItemGems();
                 Cursor.SetCursor(cursorSpriteShop3, new Vector2(10, 0), CursorMode.Auto);
+                gameTabUnlocker.purchaseSound.PlayOneShot(gameTabUnlocker.purchaseClip);
             }
         }
         else
         {
             shopPurchasable.WiggleItem();
+            gameTabUnlocker.denyPurchaseSound.PlayOneShot(gameTabUnlocker.denyPurchaseClip);
         }
     }
 }

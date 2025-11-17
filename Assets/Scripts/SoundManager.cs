@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
-    // Start is called before the first frame update
+    [SerializeField] private AudioSource mouseClick;
     void Start()
     {
         
@@ -13,6 +13,14 @@ public class SoundManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            PlayMouseClickSound();
+        }
+    }
+
+    private void PlayMouseClickSound()
+    {
+        mouseClick.Play();
     }
 }

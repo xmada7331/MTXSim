@@ -9,6 +9,7 @@ public class AdsSystem : MonoBehaviour
     public float checkInterval = 1f; // How often to check for ad appearance
 
     public GameObject blackScreen;
+    public GameObject virusSounds;
 
     void Start()
     {
@@ -51,12 +52,14 @@ public class AdsSystem : MonoBehaviour
         int flickers = 0;
         while (flickers <=9)
         {
+            virusSounds.SetActive(true);
             flickers++;
             blackScreen.SetActive(true);
             yield return new WaitForSeconds(0.3f);
             blackScreen.SetActive(false);
             yield return new WaitForSeconds(0.3f);
         }
-        
+        virusSounds.SetActive(false);
+
     }
 }
