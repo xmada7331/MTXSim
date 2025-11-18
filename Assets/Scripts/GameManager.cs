@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     ContentChecker contentChecker;
     EndGameManager endGameManager;
     GameTabUnlocker gameTabUnlocker;
+    FreeCoinSystem freeCoinSystem;
 
 
 
@@ -30,13 +31,21 @@ public class GameManager : MonoBehaviour
     public GameObject stockWidget;
     public GameObject freeCoinWidget;
     public GameObject adsSystem;
+
     public Image cursorHoverImage;
     public TMP_Text cursorHoverText;
+
     public GameObject pauseMenu;
     public TMP_Text pauseMenuCounts;
     private int pauseMenuOpenCount = 5;
     private bool canOpenPauseMenu = true;
+
     public GameObject startGameObject;
+    public Animator startGameAnimator;
+    public AudioSource systemBootAudio;
+    private bool systemBooted = false;  
+
+
     [Header("CameraApp")]
     public bool hasCamera = false;
     public GameObject cameraLock;
@@ -80,6 +89,7 @@ public class GameManager : MonoBehaviour
         toolbarSystemIcon = FindObjectOfType<ToolbarSystemIcon>();
         endGameManager = FindObjectOfType<EndGameManager>();
         gameTabUnlocker = FindObjectOfType<GameTabUnlocker>();
+        freeCoinSystem = FindObjectOfType<FreeCoinSystem>();
     }
     void Start()
     {
@@ -131,6 +141,15 @@ public class GameManager : MonoBehaviour
                 Time.timeScale = 1f;
             }
         }
+        if (startGameObject.activeSelf)
+        {
+            if (Input.anyKeyDown && !systemBooted)
+            {
+                systemBooted = true;
+                startGameAnimator.SetTrigger("StartGame");
+                systemBootAudio.Play();
+            }
+        }
     }
 
     public void DisableAntiClickObjects()
@@ -162,6 +181,7 @@ public class GameManager : MonoBehaviour
         {
             adsSystem.GetComponent<AdsSystem>().enabled = false;
             adsSystem.GetComponentInChildren<SpriteRenderer>().enabled = false;
+            freeCoinSystem.bugIcon.SetActive(false);
             shopPurchasable.itemPurchased = true;
             shopPurchasable.PurchaseItem();
             expensesAmount += shopPurchasable.itemPrice;

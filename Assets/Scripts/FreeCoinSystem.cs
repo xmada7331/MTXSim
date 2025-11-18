@@ -9,6 +9,7 @@ public class FreeCoinSystem : MonoBehaviour
     GameManager gameManager;
     ShopPurchasable shopPurchasable;
     public GameObject adsObject;
+    public GameObject bugIcon;
     public List<TMP_Text> winners;
     public List<string> names;
 
@@ -27,6 +28,7 @@ public class FreeCoinSystem : MonoBehaviour
     public TMP_Text flipResult;
     public TMP_Text flipResultWidget;
     public GameObject notEnoughMoney;
+    public TMP_Text notEnoughMoneyText;
     private float betAmount = 0f;
     public GameObject betLevel2Lock;
     public GameObject betLevel3Lock;
@@ -108,14 +110,21 @@ public class FreeCoinSystem : MonoBehaviour
     }
     public void StartFlip()
     {
-        if (gameManager.playerMoney >= betAmount)
+        if (gameManager.playerMoney >= betAmount && betAmount > 0)
         {
 
             StartCoroutine(FlipCoin());
             adsObject.SetActive(true);
+            bugIcon.SetActive(true);
+        }
+        else if (betAmount <= 0)
+        {
+            notEnoughMoneyText.text = "Please place a bet!";
+            StartCoroutine(NotEnoughMoney());
         }
         else
         {
+            notEnoughMoneyText.text = "Not enough money!";
             StartCoroutine(NotEnoughMoney());
         }
     }
