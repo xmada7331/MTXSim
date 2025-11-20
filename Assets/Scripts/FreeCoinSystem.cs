@@ -13,7 +13,7 @@ public class FreeCoinSystem : MonoBehaviour
     public List<TMP_Text> winners;
     public List<string> names;
 
-    public float countdownTime = 5f;
+    public float countdownTime = 7f;
     public TMP_Text timerCountdown;
     public TMP_Text timerCountdownWidget;
     public TMP_Text timerCountdownWidgetMinimise;
@@ -58,7 +58,7 @@ public class FreeCoinSystem : MonoBehaviour
         {
             StopAllCoroutines();
             timerRunning = false;
-            countdownTime = 5f;
+            countdownTime = 7f;
             coinAnimator.ResetTrigger("Flip");
         }
             yourBet.text = "Your bet:    $" + betAmount.ToString("F0");
@@ -78,7 +78,7 @@ public class FreeCoinSystem : MonoBehaviour
 
             // Generate new winner for the top position
             int randomNameIndex = Random.Range(0, names.Count);
-            int randomAmount = Random.Range(10, 300);
+            int randomAmount = Random.Range(10, 100);
             winners[0].text = names[randomNameIndex] + " won $" + randomAmount + "!";
 
             // Wait for a random interval between 0.2s and 3s
@@ -146,7 +146,7 @@ public class FreeCoinSystem : MonoBehaviour
             timerRunning = true;
             coinAnimator.SetTrigger("Flip");
             coinAudioSource.PlayOneShot(coinFlip);
-            if (Random.value > 0.5f)
+            if (Random.value > 0.55f)
             {
                 yield return new WaitForSeconds(1.5f);
                 gameManager.playerMoney += betAmount;

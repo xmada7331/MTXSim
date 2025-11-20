@@ -109,6 +109,7 @@ public class ShopPurchasable : MonoBehaviour
             gameManager.bankWidget.SetActive(true);
             Destroy(locklockParent.gameObject);
             gameManager.bankWidgetImage.sprite = gameManager.bankWidgetPurchased;
+            gameManager.mainAudioSource.PlayOneShot(gameManager.purchaseWidget);
 
         }
         else if (!itemPurchased)
@@ -126,6 +127,8 @@ public class ShopPurchasable : MonoBehaviour
             gameManager.stockWidget.SetActive(true);
             Destroy(locklockParent.gameObject);
             gameManager.stockWidgetImage.sprite = gameManager.stockWidgetPurchased;
+            gameManager.mainAudioSource.PlayOneShot(gameManager.purchaseWidget);
+
 
         }
         else if (!itemPurchased)
@@ -143,6 +146,8 @@ public class ShopPurchasable : MonoBehaviour
             gameManager.freeCoinWidget.SetActive(true);
             Destroy(locklockParent.gameObject);
             gameManager.freeCoinWidgetImage.sprite = gameManager.freeCoinWidgetPurchased;
+            gameManager.mainAudioSource.PlayOneShot(gameManager.purchaseWidget);
+
 
         }
         else if (!itemPurchased)

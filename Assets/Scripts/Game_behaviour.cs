@@ -155,11 +155,11 @@ public class Game_behaviour : MonoBehaviour
 
     private void GetBossMoney()
     {
-        if (Random.value <= 0.35f * dropRateMult)
+        if (Random.value <= 0.35f * dropRateMult && contentChecker.hasCurrencyGems)
         {
             gameManager.playerGems += 1; 
         }
-        if (Random.value <= .005f)
+        if (Random.value <= .005f && contentChecker.hasCurrencyDiamonds)
         {
             gameManager.playerDiamonds += 1; 
         }

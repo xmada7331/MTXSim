@@ -7,6 +7,10 @@ using UnityEngine.UI;
 public class SurveySystem : MonoBehaviour
 {
     GameManager gameManager;
+
+    public AudioSource audioIntens1;
+    public AudioSource audioIntens2;
+
     public GameObject quizPanel;
     public GameObject endPanel;
     public GameObject mainMenu;
@@ -46,6 +50,9 @@ public class SurveySystem : MonoBehaviour
     private List<QuestionsAndAnswers> originalVideoGamesQuestions;
     private List<QuestionsAndAnswers> originalAnimalsQuestions;
     private List<QuestionsAndAnswers> originalMythologyQuestions;
+
+    public GameObject happyEmoji;
+    public GameObject unhappyEmoji;
     private void Awake()
     {
         gameManager = FindObjectOfType<GameManager>();
@@ -60,26 +67,7 @@ public class SurveySystem : MonoBehaviour
         originalVideoGamesQuestions = new List<QuestionsAndAnswers>(VideoGamesQuestions);
         originalAnimalsQuestions = new List<QuestionsAndAnswers>(AnimalsQuestions);
         originalMythologyQuestions = new List<QuestionsAndAnswers>(MythologyQuestions);
-        //else if (languageCat)
-        //{
 
-        //}
-        //else if (sportsCat)
-        //{
-
-        //}
-        //else if (videoGamesCat)
-        //{
-
-        //}
-        //else if (animalsCat)
-        //{
-
-        //}
-        //else if (mythologyCat)
-        //{
-
-        //}
 
     }
     public void correct()
@@ -108,7 +96,7 @@ public class SurveySystem : MonoBehaviour
             GenerateQuestion(SportsQuestions, originalSportsQuestions);
         }
         else if (videoGamesCat)
-        {   
+        {
             VideoGamesQuestions.RemoveAt(currentQuestion);
             GenerateQuestion(VideoGamesQuestions, originalVideoGamesQuestions);
         }
@@ -201,43 +189,10 @@ public class SurveySystem : MonoBehaviour
         }
     }
 
-    //private void GenerateMathQuestion()
-    //{
-    //    MathQuestions = new List<QuestionsAndAnswers>(originalMathQuestions);
-
-    //    if (MathQuestions.Count > 0)
-    //    {
-    //        currentQuestion = Random.Range(0, MathQuestions.Count);
-
-    //        QuestionText.text = MathQuestions[currentQuestion].Question;
-    //        SetAnswers(MathQuestions);
-    //    }
-    //    else
-    //    {
-    //        QuestionText.text = "Survey Complete!";
-    //        EndSurvey();
-    //    }
-    //}
-    //private void GenerateCelebsQuestion()
-    //{
-    //    CelebsQuestions = new List<QuestionsAndAnswers>(originalCelebsQuestions);
-
-    //    if (CelebsQuestions.Count > 0)
-    //    {
-    //        currentQuestion = Random.Range(0, CelebsQuestions.Count);
-
-    //        QuestionText.text = CelebsQuestions[currentQuestion].Question;
-    //        SetAnswers(CelebsQuestions);
-    //    }
-    //    else
-    //    {
-    //        QuestionText.text = "Survey Complete!";
-    //        EndSurvey();
-    //    }
-    //}
-
     public void EndSurvey()
     {
+        audioIntens1.volume = .15f;
+        audioIntens2.volume = 0f;
         StopAllCoroutines();
         quizPanel.SetActive(false);
         endPanel.SetActive(true);
@@ -249,18 +204,22 @@ public class SurveySystem : MonoBehaviour
         animalsCat = false;
         mythologyCat = false;
         questionAmount = 0;
-        
+
         gameManager.playerMoney += correctAnswers;
         gameManager.incomeAmount += correctAnswers;
-        moneyText.text = "You have earned $" + correctAnswers.ToString("F2"); 
+        moneyText.text = "You have earned $" + correctAnswers.ToString("F2");
         questionsSummary.text = "You answered " + correctAnswers + " questions correctly!";
         if (correctAnswers >= 3)
         {
             endDescription.text = "Good job! You've earned some money for your correct answers.";
+            happyEmoji.SetActive(true);
+            unhappyEmoji.SetActive(false);
         }
         else
         {
             endDescription.text = "Thank you for your participation! Unfortunately you are not the subject we are looking for at the moment, but you can try again later.";
+            unhappyEmoji.SetActive(true);
+            happyEmoji.SetActive(false);
         }
     }
     public void ChooseMath()
@@ -269,6 +228,8 @@ public class SurveySystem : MonoBehaviour
         mathCat = true;
         GenerateQuestion(MathQuestions, originalMathQuestions);
         StartCoroutine(QuestionTimer());
+        audioIntens1.volume = 0f;
+        audioIntens2.volume = .5f;
     }
     public void ChooseLang()
     {
@@ -276,6 +237,9 @@ public class SurveySystem : MonoBehaviour
         languageCat = true;
         GenerateQuestion(LanguageQuestions, originalLanguageQuestions);
         StartCoroutine(QuestionTimer());
+        audioIntens1.volume = 0f;
+        audioIntens2.volume = .5f;
+
 
     }
     public void ChooseCelebs()
@@ -284,6 +248,8 @@ public class SurveySystem : MonoBehaviour
         celebsCat = true;
         GenerateQuestion(CelebsQuestions, originalCelebsQuestions);
         StartCoroutine(QuestionTimer());
+        audioIntens1.volume = 0f;
+        audioIntens2.volume = .5f;
     }
     public void ChooseSports()
     {
@@ -291,6 +257,8 @@ public class SurveySystem : MonoBehaviour
         sportsCat = true;
         GenerateQuestion(SportsQuestions, originalSportsQuestions);
         StartCoroutine(QuestionTimer());
+        audioIntens1.volume = 0f;
+        audioIntens2.volume = .5f;
     }
     public void ChooseVideoGames()
     {
@@ -298,6 +266,8 @@ public class SurveySystem : MonoBehaviour
         videoGamesCat = true;
         GenerateQuestion(VideoGamesQuestions, originalVideoGamesQuestions);
         StartCoroutine(QuestionTimer());
+        audioIntens1.volume = 0f;
+        audioIntens2.volume = .5f;
     }
     public void ChooseAnimals()
     {
@@ -305,6 +275,8 @@ public class SurveySystem : MonoBehaviour
         animalsCat = true;
         GenerateQuestion(AnimalsQuestions, originalAnimalsQuestions);
         StartCoroutine(QuestionTimer());
+        audioIntens1.volume = 0f;
+        audioIntens2.volume = .5f;
     }
     public void ChooseMythology()
     {
@@ -312,6 +284,8 @@ public class SurveySystem : MonoBehaviour
         mythologyCat = true;
         GenerateQuestion(MythologyQuestions, originalMythologyQuestions);
         StartCoroutine(QuestionTimer());
+        audioIntens1.volume = 0f;
+        audioIntens2.volume = .5f;
     }
     private void GenerateQuestion(List<QuestionsAndAnswers> questions, List<QuestionsAndAnswers> originalQuestions)
     {
@@ -348,7 +322,7 @@ public class SurveySystem : MonoBehaviour
         if (questionAmount < 4)
         {
             wrong();
-            StartCoroutine(QuestionTimer()); 
+            StartCoroutine(QuestionTimer());
         }
         else
         {
@@ -358,7 +332,7 @@ public class SurveySystem : MonoBehaviour
     }
     public void TriggerSurveyCooldown()
     {
-               StartCoroutine(SurveyCooldown());
+        StartCoroutine(SurveyCooldown());
     }
 
     private IEnumerator SurveyCooldown()

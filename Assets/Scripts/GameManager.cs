@@ -42,7 +42,10 @@ public class GameManager : MonoBehaviour
 
     public GameObject startGameObject;
     public Animator startGameAnimator;
-    public AudioSource systemBootAudio;
+    public AudioSource mainAudioSource;
+    public AudioClip pauseAudio;
+    public AudioClip systemBoot;
+    public AudioClip purchaseWidget;
     private bool systemBooted = false;  
 
 
@@ -125,6 +128,7 @@ public class GameManager : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.Escape) && canOpenPauseMenu)
         {
+            mainAudioSource.PlayOneShot(pauseAudio);
             pauseMenu.SetActive(!pauseMenu.activeSelf);
             if (pauseMenu.activeSelf)
             {
@@ -147,7 +151,7 @@ public class GameManager : MonoBehaviour
             {
                 systemBooted = true;
                 startGameAnimator.SetTrigger("StartGame");
-                systemBootAudio.Play();
+                mainAudioSource.PlayOneShot(systemBoot);
             }
         }
     }

@@ -10,6 +10,12 @@ public class GaymTesterManager : MonoBehaviour
     GameManager gameManager;
 
 
+    public AudioSource gaymAudioSourceKeyboard;
+    public AudioSource gaymAudioSourceMain;
+    public AudioClip cookieClick;
+    public AudioClip fruitClick;
+    public AudioClip bananaClick;
+    public AudioClip screamerClick;
     public GameObject allGamesWindow;
     public GameObject formWindow;
     public GameObject successWindow;
@@ -91,7 +97,7 @@ public class GaymTesterManager : MonoBehaviour
 
     void Update()
     {
-        if (screamerWindow.activeSelf && Input.GetKeyDown(KeyCode.Space))
+        if (screamerWindow.activeSelf && !screamerBlock.activeSelf && Input.GetKeyDown(KeyCode.Space))
         {
             IncreaseScream();
             screamerScoreInt += 2;
@@ -100,18 +106,22 @@ public class GaymTesterManager : MonoBehaviour
         if (screamSlider.value < 25)
         {
             screamImage.sprite = screamImageStage2;
+            gaymAudioSourceMain.pitch = 1f;
         }
         else if (screamSlider.value < 50)
         {
             screamImage.sprite = screamImageStage4;
+            gaymAudioSourceMain.pitch = 1.5f;
         }
         else if (screamSlider.value < 75)
         {
             screamImage.sprite = screamImageStage3;
+            gaymAudioSourceMain.pitch = 2f;
         }
         else
         {
             screamImage.sprite = screamImageStage1;
+            gaymAudioSourceMain.pitch = 2.5f;
         }
     }
     public void RouletteGame()
@@ -136,6 +146,7 @@ public class GaymTesterManager : MonoBehaviour
     }
     public void ResetAllGames()
     {
+        gaymAudioSourceMain.pitch = 1f;
         screamerWindow.SetActive(false);
         bananamaniaWindow.SetActive(false);
         gingersnapWindow.SetActive(false);
@@ -165,6 +176,7 @@ public class GaymTesterManager : MonoBehaviour
         {
             clicksShown++;
             cookieAnimator.SetTrigger("CookieTrigger");
+            gaymAudioSourceMain.PlayOneShot(cookieClick);
         }
         scoreText.text = "Score: " + clicksShown.ToString();
     }
@@ -208,6 +220,9 @@ public class GaymTesterManager : MonoBehaviour
             countdownSlider.value = timeLeft;
         }
         allGamesWindow.SetActive(false);
+        screamerWindow.SetActive(false);
+        bananamaniaWindow.SetActive(false);
+        gingersnapWindow.SetActive(false);
         endScreen.SetActive(true);
         ClearAllInputs();
     }
@@ -375,16 +390,19 @@ public class GaymTesterManager : MonoBehaviour
         bananaScoreInt--;
         bananaScore.text = "Score: " + bananaScoreInt.ToString();
         clicked.SetActive(false);
+        gaymAudioSourceMain.PlayOneShot(bananaClick);
     }
     public void ClickFruit(GameObject clicked)
     {
         bananaScoreInt++;
         bananaScore.text = "Score: " + bananaScoreInt.ToString();
         clicked.SetActive(false);
+        gaymAudioSourceMain.PlayOneShot(fruitClick);
     }
     private void IncreaseScream()
     {
         screamSlider.value += 6f;
+        gaymAudioSourceMain.PlayOneShot(screamerClick);
     }
 
     private IEnumerator ScreamerSliderDecrease()
@@ -405,6 +423,7 @@ public class GaymTesterManager : MonoBehaviour
 
     private void ClearAllInputs()
     {
+        StartCoroutine(ResetAudioSource());
         TMP_InputField[] inputs = new TMP_InputField[]
         {
             nameInput, dateDD, dateMM, dateYY, playersNumber,
@@ -424,5 +443,12 @@ public class GaymTesterManager : MonoBehaviour
     public void StopCoroutines()
     {
                StopAllCoroutines();
+    }
+
+    private IEnumerator ResetAudioSource()
+    {
+        gaymAudioSourceKeyboard.volume = 0;
+        yield return new WaitForSeconds(0.5f);
+        gaymAudioSourceKeyboard.volume = 0.25f;
     }
 }

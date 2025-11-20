@@ -6,6 +6,11 @@ public class StockSystem : MonoBehaviour
 {
     GameManager gameManager;
     ShopPurchasable shopPurchasable;
+
+    public AudioSource stockAudioSource;
+    public AudioClip selectCoin;
+    public AudioClip buyCoin;
+    public AudioClip cashoutWallet;
     public float aStockPrice;
     public float bStockPrice;
     public float cStockPrice;
@@ -124,22 +129,37 @@ public class StockSystem : MonoBehaviour
 
     public void BuyAStock()
     {
+        if (!isBuyingA)
+        {
+            stockAudioSource.PlayOneShot(selectCoin);
+        }
         isBuyingA = true;
         isBuyingB = false;
         isBuyingC = false;
 
+
     }
     public void BuyBStock()
     {
+        if (!isBuyingB)
+        {
+            stockAudioSource.PlayOneShot(selectCoin);
+        }
         isBuyingA = false;
         isBuyingB = true;
         isBuyingC = false;
+
     }
     public void BuyCStock()
     {
+        if (!isBuyingC)
+        {
+            stockAudioSource.PlayOneShot(selectCoin);
+        }
         isBuyingA = false;
         isBuyingB = false;
         isBuyingC = true;
+
     }
 
     public void BuyStock()
@@ -151,6 +171,7 @@ public class StockSystem : MonoBehaviour
                 gameManager.playerMoney -= aStockPrice;
                 amountInWallet += aStockPrice;
                 aCoinAmount++;
+                stockAudioSource.PlayOneShot(buyCoin);
                 //Debug.Log("bought A stock");
             }
             else
@@ -165,6 +186,8 @@ public class StockSystem : MonoBehaviour
                 amountInWallet += bStockPrice;
                 bCoinAmount++;
                 gameManager.playerMoney -= bStockPrice;
+                stockAudioSource.PlayOneShot(buyCoin);
+
                 //Debug.Log("bought B stock");
             }
             else
@@ -179,6 +202,8 @@ public class StockSystem : MonoBehaviour
                 amountInWallet += cStockPrice;
                 cCoinAmount++;
                 gameManager.playerMoney -= cStockPrice;
+                stockAudioSource.PlayOneShot(buyCoin);
+
                 //Debug.Log("bought C stock");
             }
             else
@@ -242,6 +267,7 @@ public class StockSystem : MonoBehaviour
             //Debug.Log("Cashed out $" + (amountInWallet - 50).ToString("F4"));
             amountInWallet = 0;
             cashoutWindow.SetActive(false);
+            stockAudioSource.PlayOneShot(cashoutWallet);
         }
         else
         {

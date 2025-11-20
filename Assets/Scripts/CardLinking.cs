@@ -5,6 +5,10 @@ using UnityEngine;
 public class CardLinking : MonoBehaviour
 {
     ContentChecker contentChecker;
+
+    public AudioSource cardAudioSource;
+    public AudioClip successLink;
+
     public TMP_InputField cardNumber;
     public TMP_InputField expiryDateMonth;
     public TMP_InputField expiryDateYear;
@@ -90,6 +94,7 @@ public class CardLinking : MonoBehaviour
         linkCardBlock.SetActive(false);
         successWindow.SetActive(true);
         settingsBlock.SetActive(false);
+        cardAudioSource.PlayOneShot(successLink);
     }
 
     private IEnumerator CloseMainWindow()
