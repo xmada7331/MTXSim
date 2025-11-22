@@ -41,12 +41,16 @@ public class GameManager : MonoBehaviour
     private bool canOpenPauseMenu = true;
 
     public GameObject startGameObject;
+    public GameObject bootingScreen;
+    public GameObject afterBootScreen;
     public Animator startGameAnimator;
     public AudioSource mainAudioSource;
     public AudioClip pauseAudio;
     public AudioClip systemBoot;
     public AudioClip purchaseWidget;
-    private bool systemBooted = false;  
+    private bool afterBootOn = false;
+    private bool isBooting = false;
+    private bool systemBooted = false;
 
 
     [Header("CameraApp")]
@@ -96,7 +100,9 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
+        StartCoroutine(HideBooting());
         startGameObject.SetActive(true);
+        bootingScreen.SetActive(true);
     }
 
     // Update is called once per frame
@@ -147,11 +153,25 @@ public class GameManager : MonoBehaviour
         }
         if (startGameObject.activeSelf)
         {
-            if (Input.anyKeyDown && !systemBooted)
+            if (Input.GetKeyDown(KeyCode.F) && isBooting)
             {
-                systemBooted = true;
-                startGameAnimator.SetTrigger("StartGame");
-                mainAudioSource.PlayOneShot(systemBoot);
+                isBooting = false;
+                StopCoroutine(HideBooting());
+                bootingScreen.SetActive(false);
+                afterBootScreen.SetActive(true);
+                afterBootOn = true;
+            }
+            if (afterBootOn)
+            {
+                if (Input.anyKeyDown)
+                {
+                    isBooting = false;
+                    afterBootOn = false;
+                    startGameAnimator.SetTrigger("StartGame");
+                    mainAudioSource.PlayOneShot(systemBoot);
+                    StartCoroutine(HideAfterBooting());
+                    systemBooted = true;
+                }
             }
         }
     }
@@ -386,6 +406,23 @@ public class GameManager : MonoBehaviour
     public void MoveHierarchy(GameObject window)
     {
         window.transform.SetAsLastSibling();
+    }
+
+    private IEnumerator HideBooting()
+    {
+        isBooting = true;
+        yield return new WaitForSeconds(15f);
+        bootingScreen.SetActive(false);
+        afterBootScreen.SetActive(true);
+        if (!systemBooted)
+        {
+            afterBootOn = true; 
+        }
+    }
+    private IEnumerator HideAfterBooting()
+    {
+        yield return new WaitForSeconds(5f);
+        afterBootScreen.SetActive(false);
     }
 
 

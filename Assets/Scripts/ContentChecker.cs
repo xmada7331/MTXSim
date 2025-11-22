@@ -46,6 +46,7 @@ public class ContentChecker : MonoBehaviour
     public bool hasBossDeath = false;
     public bool hasNextLevel = false;
     public bool hasWeaponSwing = false;
+    public bool hasWeaponHit = false;
     public bool hasGemDrop = false;
     public bool hasDiamondDrop = false;
     public bool hasItemBuy = false;

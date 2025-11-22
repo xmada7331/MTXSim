@@ -10,6 +10,7 @@ public class TextAppear : MonoBehaviour
     public float delay = 0.1f;
     public string CurrentText;
     public GameObject extraText;
+    public float extraItemDelay = 3f;
     void Start()
     {
         StartCoroutine(ShowText());
@@ -32,7 +33,7 @@ public class TextAppear : MonoBehaviour
 
             yield return new WaitForSeconds(delay);
         }
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(extraItemDelay);
         extraText.SetActive(true);
 
     }

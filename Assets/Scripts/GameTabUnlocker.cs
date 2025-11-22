@@ -15,6 +15,10 @@ public class GameTabUnlocker : MonoBehaviour
     public AudioClip purchaseClip2;
     public AudioSource denyPurchaseSound;
     public AudioClip denyPurchaseClip;
+    public AudioClip weaponHit;
+    public AudioClip weaponSwing;
+    public AudioClip gemDrop;
+    public AudioClip diamondDrop;
     [Header("Game Tab")]
     public List<GameObject> lockedSettings;
     public List<GameObject> lockedGameTitleOptions;
@@ -101,8 +105,10 @@ public class GameTabUnlocker : MonoBehaviour
         {
             gameManager.expensesAmount += itemPrice;
             settingsLock.SetActive(false);
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
             foreach (GameObject obj in lockedSettings)
             {
                 Image img = obj.GetComponent<Image>();
@@ -121,7 +127,10 @@ public class GameTabUnlocker : MonoBehaviour
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip); 
+            }
         }
     }
     public void UnlockGameOptions(GameObject target)
@@ -132,7 +141,10 @@ public class GameTabUnlocker : MonoBehaviour
         {
             gameTitle.text = "MTX Sim";
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
             foreach (GameObject obj in lockedGameTitleOptions)
             {
                 Image img = obj.GetComponent<Image>();
@@ -151,7 +163,10 @@ public class GameTabUnlocker : MonoBehaviour
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void UnlockGraphicOptions(GameObject target)
@@ -162,7 +177,10 @@ public class GameTabUnlocker : MonoBehaviour
         {
             gameManager.expensesAmount += itemPrice;
             graphicsOptionsBlock.SetActive(false);
-            purchaseSound.PlayOneShot(purchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
             foreach (GameObject obj in lockedGraphicOptions)
             {
                 Image img = obj.GetComponent<Image>();
@@ -181,7 +199,10 @@ public class GameTabUnlocker : MonoBehaviour
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void UnlockCurrencyOptions(GameObject target)
@@ -191,7 +212,10 @@ public class GameTabUnlocker : MonoBehaviour
         if (!contentChecker.hasCurrency && gameManager.playerMoney >= itemPrice)
         {
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
             foreach (GameObject obj in lockedCurrencyOptions)
             {
                 Image img = obj.GetComponent<Image>();
@@ -210,7 +234,10 @@ public class GameTabUnlocker : MonoBehaviour
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void UnlockMenuBg(GameObject target)
@@ -223,12 +250,18 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasMenuBg = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
 
@@ -242,7 +275,10 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasVolume = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
@@ -260,13 +296,18 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasMouseSens = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void UnlockFullscreen(GameObject target)
@@ -280,13 +321,18 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasFullscreen = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void UnlockFrameLimit(GameObject target)
@@ -300,13 +346,18 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasFrameLimit = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void UnlockResolutionChange(GameObject target)
@@ -320,13 +371,18 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasResolutionChange = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void UnlockVsync(GameObject target)
@@ -340,13 +396,18 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasVsync = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void UnlockLanguage(GameObject target)
@@ -360,13 +421,18 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasLanguage = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void UnlockNSFW(GameObject target)
@@ -380,13 +446,18 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasNSFW = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void GameTitle(GameObject target)
@@ -397,13 +468,18 @@ public class GameTabUnlocker : MonoBehaviour
         {
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void MenuBackground(GameObject target)
@@ -415,13 +491,18 @@ public class GameTabUnlocker : MonoBehaviour
             purch.PurchaseItem();
             menuBackground.enabled = true;
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void Score(GameObject target)
@@ -433,13 +514,18 @@ public class GameTabUnlocker : MonoBehaviour
             purch.PurchaseItem();
             scoreObject.SetActive(true);
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
 
     }
@@ -452,12 +538,17 @@ public class GameTabUnlocker : MonoBehaviour
             purch.PurchaseItem();
             clicksObject.SetActive(true);
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
             purch.WiggleItem();
         }
 
@@ -471,13 +562,18 @@ public class GameTabUnlocker : MonoBehaviour
             purch.PurchaseItem();
             desktopIcon.color = new Color32(255, 255, 255, 255);
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void QuitButton(GameObject target)
@@ -489,13 +585,18 @@ public class GameTabUnlocker : MonoBehaviour
             purch.PurchaseItem();
             quitButton.SetActive(true);
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void FPScounter(GameObject target)
@@ -507,13 +608,18 @@ public class GameTabUnlocker : MonoBehaviour
             purch.PurchaseItem();
             fpsCounter.SetActive(true);
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void TutorialBlock(GameObject target)
@@ -525,13 +631,18 @@ public class GameTabUnlocker : MonoBehaviour
             purch.PurchaseItem();
             tutorialBlock.SetActive(false);
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
 
@@ -547,13 +658,18 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasCurrencyGems = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void CurrencyDiamonds(GameObject target)
@@ -568,16 +684,21 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasCurrencyDiamonds = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// VFX and MUSIC OPTIONS
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// SFX and MUSIC OPTIONS
     public void UnlockSFX(GameObject target)
     {
         var purch = target.GetComponent<ShopPurchasable>();
@@ -588,13 +709,19 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasSFX = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
 
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void UnlockMusic(GameObject target)
@@ -607,13 +734,19 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasMusic = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip); 
+            }
 
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void UnlockMouseClick(GameObject target)
@@ -626,13 +759,19 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasMouseClick = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
 
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
 
     }
@@ -646,13 +785,19 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasUISFX = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
 
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void UnlockBossDeath(GameObject target)
@@ -665,13 +810,19 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasBossDeath = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
 
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void UnlockNextLevel(GameObject target)
@@ -684,13 +835,19 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasNextLevel = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
 
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void UnlockWeaponSwing(GameObject target)
@@ -703,13 +860,44 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasWeaponSwing = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
 
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
+        }
+    }
+    public void UnlockWeaponHit(GameObject target)
+    {
+        var purch = target.GetComponent<ShopPurchasable>();
+        float itemPrice = purch.itemPrice;
+        if (!contentChecker.hasWeaponHit && gameManager.playerMoney >= itemPrice)
+        {
+            //more content to do here
+            contentChecker.hasWeaponHit = true;
+            purch.PurchaseItem();
+            gameManager.expensesAmount += itemPrice;
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
+
+        }
+        else
+        {
+            purch.WiggleItem();
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void UnlockGemDrop(GameObject target)
@@ -722,13 +910,19 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasGemDrop = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
 
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void UnlockDiamondDrop(GameObject target)
@@ -741,13 +935,19 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasDiamondDrop = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
 
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void UnlockItemBuy(GameObject target)
@@ -760,13 +960,19 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasItemBuy = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
 
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void UnlockBattleAmbience(GameObject target)
@@ -779,13 +985,19 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasBattleAmbience = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
 
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void UnlockMainMenuMusic(GameObject target)
@@ -798,13 +1010,19 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasMainMenuMusic = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
 
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void UnlockBattleMusic(GameObject target)
@@ -817,13 +1035,19 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasBattleMusic = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
 
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void UnlockShopMusic(GameObject target)
@@ -836,13 +1060,19 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasShopMusic = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
 
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void UnlockSettingsMusic(GameObject target)
@@ -855,13 +1085,19 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasSettingsMusic = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
 
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// SEASONAL TAB
@@ -875,13 +1111,19 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasSeasonalHeroSkin = true;
             purch.PurchaseItemGems();
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
 
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void SeasonalCursorSkin(GameObject target)
@@ -894,13 +1136,19 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasSeasonalCursorSkin = true;
             purch.PurchaseItemGems();
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
 
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void SeasonalWallpaperSkin(GameObject target)
@@ -913,13 +1161,19 @@ public class GameTabUnlocker : MonoBehaviour
             contentChecker.hasSeasonalWallpaperSkin = true;
             purch.PurchaseItemGems();
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
 
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void SeasonalBossSkin(GameObject target)
@@ -931,15 +1185,20 @@ public class GameTabUnlocker : MonoBehaviour
             //more content to do here
             contentChecker.hasSeasonalBossSkin = true;
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
             purch.PurchaseItemGems();
 
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
 
@@ -953,13 +1212,18 @@ public class GameTabUnlocker : MonoBehaviour
         {
             purch.PurchaseItem();
             highGraphicsBlock.SetActive(false);
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void UltraGraphics(GameObject target)
@@ -970,13 +1234,18 @@ public class GameTabUnlocker : MonoBehaviour
         {
             purch.PurchaseItem();
             ultraGraphicsBlock.SetActive(false);
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void EpicGraphics(GameObject target)
@@ -987,13 +1256,18 @@ public class GameTabUnlocker : MonoBehaviour
         {
             purch.PurchaseItem();
             epicGraphicsBlock.SetActive(false);
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
 
     }
@@ -1006,13 +1280,18 @@ public class GameTabUnlocker : MonoBehaviour
         {
             purch.PurchaseItem();
             postProcessGraphicsBlock.SetActive(false);
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     ///////////////////////////////////////////////////////////////////////////////////////////// FEATURED SHOP MAIN
@@ -1025,13 +1304,18 @@ public class GameTabUnlocker : MonoBehaviour
             purch.PurchaseItem();
             gameBehaviour.hasAutoClick = true;
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void DamageUp(GameObject target)
@@ -1043,13 +1327,18 @@ public class GameTabUnlocker : MonoBehaviour
             purch.PurchaseItem();
             gameBehaviour.clickDmg *= 1.5f;
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void PopUpDamage(GameObject target)
@@ -1061,13 +1350,18 @@ public class GameTabUnlocker : MonoBehaviour
             purch.PurchaseItem();
             gameBehaviour.hasPopUpUpgrade = true;
             gameManager.expensesAmount += itemPrice;
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// SKINS TAB
@@ -1086,12 +1380,18 @@ public class GameTabUnlocker : MonoBehaviour
 
 
             }
-            purchaseSound.PlayOneShot(purchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void PlayBg2(GameObject target)
@@ -1109,13 +1409,18 @@ public class GameTabUnlocker : MonoBehaviour
 
 
             }
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void PlayBg3(GameObject target)
@@ -1133,12 +1438,18 @@ public class GameTabUnlocker : MonoBehaviour
 
 
             }
-            purchaseSound.PlayOneShot(purchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void PlayBg4(GameObject target)
@@ -1156,12 +1467,18 @@ public class GameTabUnlocker : MonoBehaviour
 
 
             }
-            purchaseSound.PlayOneShot(purchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void PlayBg5(GameObject target)
@@ -1179,12 +1496,18 @@ public class GameTabUnlocker : MonoBehaviour
 
 
             }
-            purchaseSound.PlayOneShot(purchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void PlayerSkin1(GameObject target)
@@ -1202,13 +1525,18 @@ public class GameTabUnlocker : MonoBehaviour
 
 
             }
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void PlayerSkin2(GameObject target)
@@ -1227,12 +1555,18 @@ public class GameTabUnlocker : MonoBehaviour
 
 
             }
-            purchaseSound.PlayOneShot(purchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void PlayerSkin3(GameObject target)
@@ -1252,13 +1586,18 @@ public class GameTabUnlocker : MonoBehaviour
 
 
             }
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void PlayerSkin4(GameObject target)
@@ -1278,13 +1617,18 @@ public class GameTabUnlocker : MonoBehaviour
 
 
             }
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void PlayerSkin5(GameObject target)
@@ -1304,13 +1648,18 @@ public class GameTabUnlocker : MonoBehaviour
 
 
             }
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void MonsterSkin1(GameObject target)
@@ -1334,13 +1683,18 @@ public class GameTabUnlocker : MonoBehaviour
             }
             purch.PurchaseItemGems();
 
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void MonsterSkin2(GameObject target)
@@ -1364,13 +1718,18 @@ public class GameTabUnlocker : MonoBehaviour
             }
             purch.PurchaseItemGems();
 
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void MonsterSkin3(GameObject target)
@@ -1394,13 +1753,18 @@ public class GameTabUnlocker : MonoBehaviour
             }
             purch.PurchaseItemGems();
 
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void MonsterSkin4(GameObject target)
@@ -1424,13 +1788,18 @@ public class GameTabUnlocker : MonoBehaviour
             }
             purch.PurchaseItemGems();
 
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void MonsterSkin5(GameObject target)
@@ -1452,14 +1821,19 @@ public class GameTabUnlocker : MonoBehaviour
                 if (gameBehaviour.bossNames == null) gameBehaviour.bossNames = new List<string>();
                 gameBehaviour.bossNames.Add(monsterNames[4]);
             }
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
             purch.PurchaseItemGems();
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void WeaponSkin1(GameObject target)
@@ -1474,13 +1848,18 @@ public class GameTabUnlocker : MonoBehaviour
                 gameBehaviour.weaponSkin.Add(weaponSkins[0]);
             }
             purch.PurchaseItemGems();
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void WeaponSkin2(GameObject target)
@@ -1495,13 +1874,19 @@ public class GameTabUnlocker : MonoBehaviour
                 gameBehaviour.weaponSkin.Add(weaponSkins[1]);
             }
             purch.PurchaseItemGems();
-            purchaseSound.PlayOneShot(purchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(purchaseClip);
+            }
 
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void WeaponSkin3(GameObject target)
@@ -1516,13 +1901,18 @@ public class GameTabUnlocker : MonoBehaviour
                 gameBehaviour.weaponSkin.Add(weaponSkins[2]);
             }
             purch.PurchaseItemGems();
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void WeaponSkin4(GameObject target)
@@ -1537,13 +1927,18 @@ public class GameTabUnlocker : MonoBehaviour
                 gameBehaviour.weaponSkin.Add(weaponSkins[3]);
             }
             purch.PurchaseItemGems();
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
     public void WeaponSkin5(GameObject target)
@@ -1558,13 +1953,18 @@ public class GameTabUnlocker : MonoBehaviour
                 gameBehaviour.weaponSkin.Add(weaponSkins[4]);
             }
 
-            purchaseSound.PlayOneShot(purchaseClip);
-
+            if (contentChecker.hasUISFX)
+            {
+                purchaseSound.PlayOneShot(purchaseClip);
+            }
         }
         else
         {
             purch.WiggleItem();
-            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+            }
         }
     }
 
