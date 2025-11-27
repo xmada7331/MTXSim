@@ -26,7 +26,8 @@ public class CurrencyDisplayManager : MonoBehaviour
     public TMP_Text playerDiamondsGame;
     public GameObject playerDiamondsGameObject;
     [Header("Locked Shop")]
-    public TMP_Text purchaseNowButton;
+    public GameObject purchaseNowButton;
+    public GameObject notEnoughMoney;
     public TMP_Text lockedShopMoney;
     [Header("Shop Tabs")]
     public TMP_Text playerShopMoney;
@@ -54,13 +55,13 @@ public class CurrencyDisplayManager : MonoBehaviour
         playerDiamondsGame.text = gameManager.playerDiamonds.ToString();
         if (gameManager.playerMoney >= 20)
         {
-            purchaseNowButton.text = "PURCHASE NOW!";
-            purchaseNowButton.color = Color.green;
+            purchaseNowButton.SetActive(true);
+            notEnoughMoney.SetActive(false);
         }
         else
         {
-            purchaseNowButton.text = "NOT ENOUGH MONEY!";
-            purchaseNowButton.color = Color.red;
+            purchaseNowButton.SetActive(false);
+            notEnoughMoney.SetActive(true);
 
         }
         lockedShopMoney.text = "YOUR BALANCE: $" + gameManager.playerMoney.ToString("F0");

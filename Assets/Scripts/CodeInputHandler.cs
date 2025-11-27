@@ -91,7 +91,7 @@ public class CodeInputHandler : MonoBehaviour
         if (gameManager != null)
         {
             TriggerCheatImage();
-            gameManager.playerGems += 15;
+            gameManager.playerGems += 50;
             //Debug.Log("Cheat code activated: Gave 5 Gems");
         }
     }

@@ -1,8 +1,8 @@
+using System.Collections;
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-using System.Collections.Generic;
-using System.Collections;
 
 public class Game_behaviour : MonoBehaviour
 {
@@ -27,6 +27,7 @@ public class Game_behaviour : MonoBehaviour
     // Keep existing type (Image) so this change is non-breaking in inspector.
     public List<Sprite> bossSprites;
     public List<string> bossNames;
+    public List<AudioClip> bossDeathSounds;
 
     public List<Sprite> playerSkin;
     public List<Sprite> weaponSkin;
@@ -48,6 +49,11 @@ public class Game_behaviour : MonoBehaviour
     private bool firstTimePlaying = true;
     public GameObject introSequenceObject;
 
+    public AudioSource battleIntens1;
+    public AudioSource battleIntens2;
+
+    private int currentBossIndex = -1;
+
     private void Awake()
     {
         gameManager = FindObjectOfType<GameManager>();
@@ -56,7 +62,7 @@ public class Game_behaviour : MonoBehaviour
     }
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -65,7 +71,9 @@ public class Game_behaviour : MonoBehaviour
         bossHpSlider.value = bossHp;
         if (bossHp <= 0)
         {
+            HandleBossDeath();
             RotateNewBoss();
+
         }
         if (hasAutoClick && !isAutoClickRunning && (gameWindow == null || gameWindow.activeSelf))
         {
@@ -88,13 +96,27 @@ public class Game_behaviour : MonoBehaviour
 
     public void TakeClickDamage()
     {
+        if (contentChecker.hasWeaponSwing)
+        {
+            gameTabUnlocker.playAudioSource.PlayOneShot(gameTabUnlocker.weaponSwing);
+        }
+        if (contentChecker.hasWeaponHit)
+        {
+            gameTabUnlocker.playAudioSource.PlayOneShot(gameTabUnlocker.weaponHit);
+        }
+        if (contentChecker.hasBattleMusic)
+        {
+            battleIntens1.volume = 0f;
+            battleIntens2.volume = 1f;
+            gameTabUnlocker.mainMenuAudioSource.volume = 0f;
+        }
         bossHp -= clickDmg;
         clicks += 1;
         gameTabUnlocker.clicksCount.text = clicks.ToString("F0");
         if (hasPopUpUpgrade)
         {
             GameObject popUp = Instantiate(PopupPrefab, new Vector3((Random.Range(1f, 2f)), 0, 0), Quaternion.identity, gameWindow != null ? gameWindow.transform : null);
-            popUp.GetComponentInChildren<TMP_Text>().text = clickDmg.ToString("F0"); 
+            popUp.GetComponentInChildren<TMP_Text>().text = clickDmg.ToString("F0");
         }
         playerAnimator.SetTrigger("Click");
         bossAnimator.SetTrigger("Hit");
@@ -126,6 +148,7 @@ public class Game_behaviour : MonoBehaviour
         }
 
         lastBossIndex = index;
+        currentBossIndex = index;
 
         var selectedImage = bossSprites[index];
         if (selectedImage != null)
@@ -140,13 +163,12 @@ public class Game_behaviour : MonoBehaviour
         }
         else
         {
-            dropRateMult = 1.5f;
+            dropRateMult = 1.75f;
             bossHpSlider.maxValue = 200;
             bossHp = 200;
         }
 
-            bossName.text = bossNames[index];
-
+        bossName.text = bossNames[index];
         GetBossMoney();
         defeatedEnemies += 1;
         monstersSlain++;
@@ -155,13 +177,29 @@ public class Game_behaviour : MonoBehaviour
 
     private void GetBossMoney()
     {
-        if (Random.value <= 0.35f * dropRateMult && contentChecker.hasCurrencyGems)
+        if (Random.value <= 0.99f * dropRateMult && contentChecker.hasCurrencyGems)
         {
-            gameManager.playerGems += 1; 
+            if (contentChecker.hasGemDrop)
+            {
+                gameTabUnlocker.playAudioSource.PlayOneShot(gameTabUnlocker.gemDrop);
+                gameManager.playerGems += 1;
+            }
+            else
+            {
+                gameManager.playerGems += 1;
+            }
         }
         if (Random.value <= .005f && contentChecker.hasCurrencyDiamonds)
         {
-            gameManager.playerDiamonds += 1; 
+            if (contentChecker.hasDiamondDrop)
+            {
+                gameTabUnlocker.playAudioSource.PlayOneShot(gameTabUnlocker.diamondDrop);
+                gameManager.playerDiamonds += 1;
+            }
+            else
+            {
+                gameManager.playerDiamonds += 1;
+            }
         }
     }
 
@@ -292,4 +330,27 @@ public class Game_behaviour : MonoBehaviour
         yield return new WaitForSeconds(5f);
         introSequenceObject.SetActive(false);
     }
+
+    public void ResetSound()
+    {
+        if(contentChecker.hasBattleAmbience)
+        {
+            battleIntens1.volume = 1f;
+            battleIntens2.volume = 0f;
+            gameTabUnlocker.mainMenuAudioSource.volume = 1f;
+        }
+    }
+    private void HandleBossDeath()
+    {
+        if (!contentChecker.hasBossDeath) return;
+
+        if (currentBossIndex >= 0 && bossDeathSounds != null && currentBossIndex < bossDeathSounds.Count)
+        {
+            AudioClip clip = bossDeathSounds[currentBossIndex];
+            if (clip != null && gameTabUnlocker != null && gameTabUnlocker.playAudioSource != null)
+                gameTabUnlocker.playAudioSource.PlayOneShot(clip);
+        }
+    }
+
+
 }

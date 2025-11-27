@@ -8,6 +8,7 @@ public class CameraSystem : MonoBehaviour
 {
     GameManager gameManager;
     ShopPurchasable shopPurchasable;
+    FeetPicsSystem feetPicsSystem;
     public List<Sprite> feetPics;
     public Image feetPicsImage1;
     public Image feetPicsImage2;
@@ -33,9 +34,13 @@ public class CameraSystem : MonoBehaviour
     private float moneyEarned1;
     private float moneyEarned2;
     private float moneyEarned3;
+
+
+    public float soldPics = 0f;
     private void Awake()
     {
         gameManager = FindObjectOfType<GameManager>();
+        feetPicsSystem = FindObjectOfType<FeetPicsSystem>();
     }
     void Start()
     {
@@ -96,6 +101,8 @@ public class CameraSystem : MonoBehaviour
             feetPicsImage1.sprite = null;
             slot1Taken = false;
             StartCoroutine(SoldForText());
+            soldPics += 1f;
+            gameManager.incomeAmount += moneyEarned1;
         }
     }
     public void SellSecondPic()
@@ -107,6 +114,9 @@ public class CameraSystem : MonoBehaviour
             feetPicsImage2.sprite = null;
             slot2Taken = false;
             StartCoroutine(SoldForText());
+            soldPics += 1f;
+            gameManager.incomeAmount += moneyEarned2;
+
         }
     }
     public void SellThirdPic()
@@ -118,6 +128,9 @@ public class CameraSystem : MonoBehaviour
             feetPicsImage3.sprite = null;
             slot3Taken = false;
             StartCoroutine(SoldForText());
+            soldPics += 1f;
+            gameManager.incomeAmount += moneyEarned3;
+
         }
     }
 
@@ -163,6 +176,7 @@ public class CameraSystem : MonoBehaviour
             pictureCooldown = 30f;
             gameManager.playerMoney -= shopPurchasable.itemPrice;
             shopPurchasable.PurchaseItem();
+            gameManager.expensesAmount += shopPurchasable.itemPrice;
         }
         else
         {
@@ -178,6 +192,7 @@ public class CameraSystem : MonoBehaviour
             pictureCooldown = 10f;
             gameManager.playerMoney -= shopPurchasable.itemPrice;
             shopPurchasable.PurchaseItem();
+            gameManager.expensesAmount += shopPurchasable.itemPrice;
 
         }
         else

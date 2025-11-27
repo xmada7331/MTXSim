@@ -66,6 +66,7 @@ public class ToolbarSystemIcon : MonoBehaviour
                 gameManager.playerMoney -= shopPurchasable.itemPrice;
                 wallpapers.Add(wallpaper1);
                 shopPurchasable.PurchasedItem();
+                gameManager.expensesAmount += shopPurchasable.itemPrice;
             } 
         }
         else
@@ -84,6 +85,8 @@ public class ToolbarSystemIcon : MonoBehaviour
                 gameManager.playerMoney -= shopPurchasable.itemPrice;
                 wallpapers.Add(wallpaper2);
                 shopPurchasable.PurchasedItem();
+                gameManager.expensesAmount += shopPurchasable.itemPrice;
+
             }
         }
         else
@@ -102,6 +105,8 @@ public class ToolbarSystemIcon : MonoBehaviour
                 gameManager.playerMoney -= shopPurchasable.itemPrice;
                 wallpapers.Add(wallpaper3);
                 shopPurchasable.PurchasedItem();
+                gameManager.expensesAmount += shopPurchasable.itemPrice;
+
             }
         }
         else
@@ -119,6 +124,8 @@ public class ToolbarSystemIcon : MonoBehaviour
                 gameManager.playerMoney -= shopPurchasable.itemPrice;
                 wallpapers.Add(wallpaper4);
                 shopPurchasable.PurchasedItem();
+                gameManager.expensesAmount += shopPurchasable.itemPrice;
+
             }
         }
         else
@@ -135,6 +142,8 @@ public class ToolbarSystemIcon : MonoBehaviour
             powerBlock.SetActive(false);
             gameManager.playerMoney -= shopPurchasable.itemPrice;
             shopPurchasable.PurchasedItem();
+            gameManager.expensesAmount += shopPurchasable.itemPrice;
+
         }
         else
         {
@@ -149,6 +158,8 @@ public class ToolbarSystemIcon : MonoBehaviour
             wpChangeBlock.SetActive(false);
             gameManager.playerMoney -= shopPurchasable.itemPrice;
             shopPurchasable.PurchasedItem();
+            gameManager.expensesAmount += shopPurchasable.itemPrice;
+
         }
         else
         {
@@ -163,6 +174,8 @@ public class ToolbarSystemIcon : MonoBehaviour
             wpDefaultBlock.SetActive(false);
             gameManager.playerMoney -= shopPurchasable.itemPrice;
             shopPurchasable.PurchasedItem();
+            gameManager.expensesAmount += shopPurchasable.itemPrice;
+
         }
         else
         { 
@@ -177,6 +190,8 @@ public class ToolbarSystemIcon : MonoBehaviour
             cursorBlock.SetActive(false);
             gameManager.playerMoney -= shopPurchasable.itemPrice;
             shopPurchasable.PurchasedItem();
+            gameManager.expensesAmount += shopPurchasable.itemPrice;
+
         }
         else
         {

@@ -14,4 +14,16 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/DiamondGameOver.unity
     guid: ce6a7debae28862488a2eaddea677e3f
+  - enabled: 1
+    path: Assets/Scenes/FeetPicsEnding.unity
+    guid: 6f8330365346b22449b6a8cc2f4c02bb
+  - enabled: 1
+    path: Assets/Scenes/CoinFlipEnding.unity
+    guid: 81d9a96cf6ea9544bb437d26afb909d4
+  - enabled: 1
+    path: Assets/Scenes/ShutDownSystemEnding.unity
+    guid: 0814b23ab5b5b074b8f21636cbc373ea
+  - enabled: 1
+    path: Assets/Scenes/RichEnding.unity
+    guid: a88d4a5fde8de884bba35578639b1745
   m_configObjects: {}

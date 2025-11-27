@@ -13,7 +13,7 @@ public class FreeCoinSystem : MonoBehaviour
     public List<TMP_Text> winners;
     public List<string> names;
 
-    public float countdownTime = 7f;
+    public float countdownTime = 5f;
     public TMP_Text timerCountdown;
     public TMP_Text timerCountdownWidget;
     public TMP_Text timerCountdownWidgetMinimise;
@@ -41,6 +41,8 @@ public class FreeCoinSystem : MonoBehaviour
     public AudioClip coinFlip;
     public AudioClip coinWinClip;
     public AudioClip coinLoseClip;
+
+    public float failedCoinFlips = 0f;
 
     private void Awake()
     {
@@ -146,13 +148,15 @@ public class FreeCoinSystem : MonoBehaviour
             timerRunning = true;
             coinAnimator.SetTrigger("Flip");
             coinAudioSource.PlayOneShot(coinFlip);
-            if (Random.value > 0.55f)
+            if (Random.value > 0.50f)
             {
                 yield return new WaitForSeconds(1.5f);
                 gameManager.playerMoney += betAmount;
                 flipResult.text = "You won $" + betAmount.ToString("F2") + "!";
                 flipResult.color = Color.green;
                 coinAudioSource.PlayOneShot(coinWinClip);
+                failedCoinFlips = 0f;
+                gameManager.incomeAmount += betAmount;
             }
             else
             {
@@ -161,6 +165,8 @@ public class FreeCoinSystem : MonoBehaviour
                 flipResult.text = "You lost $" + betAmount.ToString("F2") + "!";
                 flipResult.color = Color.red;
                 coinAudioSource.PlayOneShot(coinLoseClip);
+                failedCoinFlips += 1f;
+                gameManager.expensesAmount += betAmount;
 
             }
             coinAnimator.SetTrigger("Idle");
@@ -181,6 +187,8 @@ public class FreeCoinSystem : MonoBehaviour
                 gameManager.playerMoney += betAmount;
                 flipResultWidget.text = "Won $" + betAmount.ToString("F2") + "!";
                 flipResultWidget.color = Color.green;
+                failedCoinFlips = 0f;
+                gameManager.incomeAmount += betAmount;
             }
             else
             {
@@ -188,6 +196,9 @@ public class FreeCoinSystem : MonoBehaviour
                 gameManager.playerMoney -= betAmount;
                 flipResultWidget.text = "Lost $" + betAmount.ToString("F2") + "!";
                 flipResultWidget.color = Color.red;
+                failedCoinFlips += 1f;
+                gameManager.expensesAmount += betAmount;
+
             }
             coinAnimatorWidget.SetTrigger("Idle");
             StartCoroutine(Countdown());
@@ -224,6 +235,8 @@ public class FreeCoinSystem : MonoBehaviour
             maxBetAmount = 10; 
             betLevel2Lock.SetActive(false);
             shopPurchasable.PurchaseItem();
+            gameManager.expensesAmount += shopPurchasable.itemPrice;
+
         }
         else
         {
@@ -238,6 +251,7 @@ public class FreeCoinSystem : MonoBehaviour
             maxBetAmount = 15;
             betLevel3Lock.SetActive(false);
             shopPurchasable.PurchaseItem();
+            gameManager.expensesAmount += shopPurchasable.itemPrice;
 
         }
         else
@@ -253,6 +267,7 @@ public class FreeCoinSystem : MonoBehaviour
             maxBetAmount = 25;
             betLevel4Lock.SetActive(false);
             shopPurchasable.PurchaseItem();
+            gameManager.expensesAmount += shopPurchasable.itemPrice;
         }
         else
         {
@@ -267,6 +282,7 @@ public class FreeCoinSystem : MonoBehaviour
             maxBetAmount = 50;
             betLevel5Lock.SetActive(false);
             shopPurchasable.PurchaseItem();
+            gameManager.expensesAmount += shopPurchasable.itemPrice;
         }
         else
         {
@@ -280,6 +296,7 @@ public class FreeCoinSystem : MonoBehaviour
         {
             maxBetAmount = 100;
             shopPurchasable.PurchaseItem();
+            gameManager.expensesAmount += shopPurchasable.itemPrice;
         }
         else
         {

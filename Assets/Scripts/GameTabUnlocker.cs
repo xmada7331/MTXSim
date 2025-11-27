@@ -11,6 +11,8 @@ public class GameTabUnlocker : MonoBehaviour
     ShopPurchasable shopPurchasable;
 
     public AudioSource purchaseSound;
+    public AudioSource playAudioSource;
+    public AudioSource mainMenuAudioSource;
     public AudioClip purchaseClip;
     public AudioClip purchaseClip2;
     public AudioSource denyPurchaseSound;
@@ -68,6 +70,7 @@ public class GameTabUnlocker : MonoBehaviour
     public List<Sprite> playerSkins;
     public List<Sprite> monsterSkins;
     public List<string> monsterNames;
+    public List<AudioClip> monsterSounds;
     public List<Sprite> weaponSkins;
     public List<Sprite> backgroundSkins;
 
@@ -749,32 +752,6 @@ public class GameTabUnlocker : MonoBehaviour
             }
         }
     }
-    public void UnlockMouseClick(GameObject target)
-    {
-        var purch = target.GetComponent<ShopPurchasable>();
-        float itemPrice = purch.itemPrice;
-        if (!contentChecker.hasMouseClick && gameManager.playerMoney >= itemPrice)
-        {
-            //more content to do here
-            contentChecker.hasMouseClick = true;
-            purch.PurchaseItem();
-            gameManager.expensesAmount += itemPrice;
-            if (contentChecker.hasUISFX)
-            {
-                purchaseSound.PlayOneShot(purchaseClip);
-            }
-
-        }
-        else
-        {
-            purch.WiggleItem();
-            if (contentChecker.hasUISFX)
-            {
-                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
-            }
-        }
-
-    }
     public void UnlockUISFX(GameObject target)
     {
         var purch = target.GetComponent<ShopPurchasable>();
@@ -808,31 +785,6 @@ public class GameTabUnlocker : MonoBehaviour
         {
             //more content to do here
             contentChecker.hasBossDeath = true;
-            purch.PurchaseItem();
-            gameManager.expensesAmount += itemPrice;
-            if (contentChecker.hasUISFX)
-            {
-                purchaseSound.PlayOneShot(purchaseClip);
-            }
-
-        }
-        else
-        {
-            purch.WiggleItem();
-            if (contentChecker.hasUISFX)
-            {
-                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
-            }
-        }
-    }
-    public void UnlockNextLevel(GameObject target)
-    {
-        var purch = target.GetComponent<ShopPurchasable>();
-        float itemPrice = purch.itemPrice;
-        if (!contentChecker.hasNextLevel && gameManager.playerMoney >= itemPrice)
-        {
-            //more content to do here
-            contentChecker.hasNextLevel = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
             if (contentChecker.hasUISFX)
@@ -950,38 +902,13 @@ public class GameTabUnlocker : MonoBehaviour
             }
         }
     }
-    public void UnlockItemBuy(GameObject target)
-    {
-        var purch = target.GetComponent<ShopPurchasable>();
-        float itemPrice = purch.itemPrice;
-        if (!contentChecker.hasItemBuy && gameManager.playerMoney >= itemPrice)
-        {
-            //more content to do here
-            contentChecker.hasItemBuy = true;
-            purch.PurchaseItem();
-            gameManager.expensesAmount += itemPrice;
-            if (contentChecker.hasUISFX)
-            {
-                purchaseSound.PlayOneShot(purchaseClip);
-            }
-
-        }
-        else
-        {
-            purch.WiggleItem();
-            if (contentChecker.hasUISFX)
-            {
-                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
-            }
-        }
-    }
     public void UnlockBattleAmbience(GameObject target)
     {
         var purch = target.GetComponent<ShopPurchasable>();
         float itemPrice = purch.itemPrice;
         if (!contentChecker.hasBattleAmbience && gameManager.playerMoney >= itemPrice)
         {
-            //more content to do here
+            gameBehaviour.battleIntens1.volume = 1f;
             contentChecker.hasBattleAmbience = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
@@ -1006,7 +933,7 @@ public class GameTabUnlocker : MonoBehaviour
         float itemPrice = purch.itemPrice;
         if (!contentChecker.hasMainMenuMusic && gameManager.playerMoney >= itemPrice)
         {
-            //more content to do here
+            mainMenuAudioSource.volume = 1f;
             contentChecker.hasMainMenuMusic = true;
             purch.PurchaseItem();
             gameManager.expensesAmount += itemPrice;
@@ -1050,56 +977,56 @@ public class GameTabUnlocker : MonoBehaviour
             }
         }
     }
-    public void UnlockShopMusic(GameObject target)
-    {
-        var purch = target.GetComponent<ShopPurchasable>();
-        float itemPrice = purch.itemPrice;
-        if (!contentChecker.hasShopMusic && gameManager.playerMoney >= itemPrice)
-        {
-            //more content to do here
-            contentChecker.hasShopMusic = true;
-            purch.PurchaseItem();
-            gameManager.expensesAmount += itemPrice;
-            if (contentChecker.hasUISFX)
-            {
-                purchaseSound.PlayOneShot(purchaseClip);
-            }
+    //public void UnlockShopMusic(GameObject target)
+    //{
+    //    var purch = target.GetComponent<ShopPurchasable>();
+    //    float itemPrice = purch.itemPrice;
+    //    if (!contentChecker.hasShopMusic && gameManager.playerMoney >= itemPrice)
+    //    {
+    //        //more content to do here
+    //        contentChecker.hasShopMusic = true;
+    //        purch.PurchaseItem();
+    //        gameManager.expensesAmount += itemPrice;
+    //        if (contentChecker.hasUISFX)
+    //        {
+    //            purchaseSound.PlayOneShot(purchaseClip);
+    //        }
 
-        }
-        else
-        {
-            purch.WiggleItem();
-            if (contentChecker.hasUISFX)
-            {
-                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
-            }
-        }
-    }
-    public void UnlockSettingsMusic(GameObject target)
-    {
-        var purch = target.GetComponent<ShopPurchasable>();
-        float itemPrice = purch.itemPrice;
-        if (!contentChecker.hasSettingsMusic && gameManager.playerMoney >= itemPrice)
-        {
-            //more content to do here
-            contentChecker.hasSettingsMusic = true;
-            purch.PurchaseItem();
-            gameManager.expensesAmount += itemPrice;
-            if (contentChecker.hasUISFX)
-            {
-                purchaseSound.PlayOneShot(purchaseClip);
-            }
+    //    }
+    //    else
+    //    {
+    //        purch.WiggleItem();
+    //        if (contentChecker.hasUISFX)
+    //        {
+    //            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+    //        }
+    //    }
+    //}
+    //public void UnlockSettingsMusic(GameObject target)
+    //{
+    //    var purch = target.GetComponent<ShopPurchasable>();
+    //    float itemPrice = purch.itemPrice;
+    //    if (!contentChecker.hasSettingsMusic && gameManager.playerMoney >= itemPrice)
+    //    {
+    //        //more content to do here
+    //        contentChecker.hasSettingsMusic = true;
+    //        purch.PurchaseItem();
+    //        gameManager.expensesAmount += itemPrice;
+    //        if (contentChecker.hasUISFX)
+    //        {
+    //            purchaseSound.PlayOneShot(purchaseClip);
+    //        }
 
-        }
-        else
-        {
-            purch.WiggleItem();
-            if (contentChecker.hasUISFX)
-            {
-                denyPurchaseSound.PlayOneShot(denyPurchaseClip);
-            }
-        }
-    }
+    //    }
+    //    else
+    //    {
+    //        purch.WiggleItem();
+    //        if (contentChecker.hasUISFX)
+    //        {
+    //            denyPurchaseSound.PlayOneShot(denyPurchaseClip);
+    //        }
+    //    }
+    //}
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// SEASONAL TAB
     public void SeasonalHeroSkin(GameObject target)
     {
@@ -1325,7 +1252,7 @@ public class GameTabUnlocker : MonoBehaviour
         if (gameManager.playerMoney >= itemPrice)
         {
             purch.PurchaseItem();
-            gameBehaviour.clickDmg *= 1.5f;
+            gameBehaviour.clickDmg *= 2f;
             gameManager.expensesAmount += itemPrice;
             if (contentChecker.hasUISFX)
             {
@@ -1681,6 +1608,11 @@ public class GameTabUnlocker : MonoBehaviour
                 if (gameBehaviour.bossNames == null) gameBehaviour.bossNames = new List<string>();
                 gameBehaviour.bossNames.Add(monsterNames[0]);
             }
+            if (monsterSounds != null && monsterSounds.Count > 0)
+            {
+                if (gameBehaviour.bossDeathSounds == null) gameBehaviour.bossDeathSounds = new List<AudioClip>();
+                gameBehaviour.bossDeathSounds.Add(monsterSounds[0]);
+            }
             purch.PurchaseItemGems();
 
             if (contentChecker.hasUISFX)
@@ -1715,6 +1647,11 @@ public class GameTabUnlocker : MonoBehaviour
             {
                 if (gameBehaviour.bossNames == null) gameBehaviour.bossNames = new List<string>();
                 gameBehaviour.bossNames.Add(monsterNames[1]);
+            }
+            if (monsterSounds != null && monsterSounds.Count > 1)
+            {
+                if (gameBehaviour.bossDeathSounds == null) gameBehaviour.bossDeathSounds = new List<AudioClip>();
+                gameBehaviour.bossDeathSounds.Add(monsterSounds[1]);
             }
             purch.PurchaseItemGems();
 
@@ -1751,6 +1688,11 @@ public class GameTabUnlocker : MonoBehaviour
                 if (gameBehaviour.bossNames == null) gameBehaviour.bossNames = new List<string>();
                 gameBehaviour.bossNames.Add(monsterNames[2]);
             }
+            if (monsterSounds != null && monsterSounds.Count > 2)
+            {
+                if (gameBehaviour.bossDeathSounds == null) gameBehaviour.bossDeathSounds = new List<AudioClip>();
+                gameBehaviour.bossDeathSounds.Add(monsterSounds[2]);
+            }
             purch.PurchaseItemGems();
 
             if (contentChecker.hasUISFX)
@@ -1786,6 +1728,11 @@ public class GameTabUnlocker : MonoBehaviour
                 if (gameBehaviour.bossNames == null) gameBehaviour.bossNames = new List<string>();
                 gameBehaviour.bossNames.Add(monsterNames[3]);
             }
+            if (monsterSounds != null && monsterSounds.Count > 3)
+            {
+                if (gameBehaviour.bossDeathSounds == null) gameBehaviour.bossDeathSounds = new List<AudioClip>();
+                gameBehaviour.bossDeathSounds.Add(monsterSounds[3]);
+            }
             purch.PurchaseItemGems();
 
             if (contentChecker.hasUISFX)
@@ -1820,6 +1767,11 @@ public class GameTabUnlocker : MonoBehaviour
             {
                 if (gameBehaviour.bossNames == null) gameBehaviour.bossNames = new List<string>();
                 gameBehaviour.bossNames.Add(monsterNames[4]);
+            }
+            if (monsterSounds != null && monsterSounds.Count > 4)
+            {
+                if (gameBehaviour.bossDeathSounds == null) gameBehaviour.bossDeathSounds = new List<AudioClip>();
+                gameBehaviour.bossDeathSounds.Add(monsterSounds[4]);
             }
             if (contentChecker.hasUISFX)
             {

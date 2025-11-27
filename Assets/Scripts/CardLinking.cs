@@ -102,4 +102,8 @@ public class CardLinking : MonoBehaviour
         yield return new WaitForSeconds(5f);
         parentWindow.SetActive(false);
     }
+    public void SkipConfirm()
+    {
+        SuccesfullyLink();
+    }
 }

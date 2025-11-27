@@ -58,6 +58,7 @@ public class CursorManager : MonoBehaviour
                 cursorSprites.Add(cursorSpriteHand);
                 shopPurchasable.PurchasedItem();
                 Cursor.SetCursor(cursorSpriteHand, new Vector2(10, 0), CursorMode.Auto);
+                gameManager.expensesAmount += shopPurchasable.itemPrice;
 
             }
         }
@@ -77,6 +78,7 @@ public class CursorManager : MonoBehaviour
                 cursorSprites.Add(cursorSpriteBrown);
                 shopPurchasable.PurchasedItem();
                 Cursor.SetCursor(cursorSpriteBrown, new Vector2(10, 0), CursorMode.Auto);
+                gameManager.expensesAmount += shopPurchasable.itemPrice;
 
             }
         }
@@ -96,6 +98,7 @@ public class CursorManager : MonoBehaviour
                 cursorSprites.Add(cursorSpriteFuck);
                 shopPurchasable.PurchasedItem();
                 Cursor.SetCursor(cursorSpriteFuck, new Vector2(10, 0), CursorMode.Auto);
+                gameManager.expensesAmount += shopPurchasable.itemPrice;
 
             }
         }
@@ -122,7 +125,10 @@ public class CursorManager : MonoBehaviour
         else
         {
             shopPurchasable.WiggleItem();
-            gameTabUnlocker.denyPurchaseSound.PlayOneShot(gameTabUnlocker.denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                gameTabUnlocker.denyPurchaseSound.PlayOneShot(gameTabUnlocker.denyPurchaseClip);
+            }
 
         }
     }
@@ -142,7 +148,10 @@ public class CursorManager : MonoBehaviour
         else
         {
             shopPurchasable.WiggleItem();
-            gameTabUnlocker.denyPurchaseSound.PlayOneShot(gameTabUnlocker.denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                gameTabUnlocker.denyPurchaseSound.PlayOneShot(gameTabUnlocker.denyPurchaseClip);
+            }
 
         }
     }
@@ -162,7 +171,10 @@ public class CursorManager : MonoBehaviour
         else
         {
             shopPurchasable.WiggleItem();
-            gameTabUnlocker.denyPurchaseSound.PlayOneShot(gameTabUnlocker.denyPurchaseClip);
+            if (contentChecker.hasUISFX)
+            {
+                gameTabUnlocker.denyPurchaseSound.PlayOneShot(gameTabUnlocker.denyPurchaseClip); 
+            }
         }
     }
 }

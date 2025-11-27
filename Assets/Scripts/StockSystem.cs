@@ -172,6 +172,7 @@ public class StockSystem : MonoBehaviour
                 amountInWallet += aStockPrice;
                 aCoinAmount++;
                 stockAudioSource.PlayOneShot(buyCoin);
+                gameManager.expensesAmount += aStockPrice;
                 //Debug.Log("bought A stock");
             }
             else
@@ -187,6 +188,8 @@ public class StockSystem : MonoBehaviour
                 bCoinAmount++;
                 gameManager.playerMoney -= bStockPrice;
                 stockAudioSource.PlayOneShot(buyCoin);
+                gameManager.expensesAmount += bStockPrice;
+
 
                 //Debug.Log("bought B stock");
             }
@@ -203,6 +206,7 @@ public class StockSystem : MonoBehaviour
                 cCoinAmount++;
                 gameManager.playerMoney -= cStockPrice;
                 stockAudioSource.PlayOneShot(buyCoin);
+                gameManager.expensesAmount += cStockPrice;
 
                 //Debug.Log("bought C stock");
             }
@@ -260,6 +264,7 @@ public class StockSystem : MonoBehaviour
     {
         if (amountInWallet >= 1)
         {
+            gameManager.incomeAmount += amountInWallet;
             aCoinAmount = 0;
             bCoinAmount = 0;
             cCoinAmount = 0;
@@ -268,6 +273,8 @@ public class StockSystem : MonoBehaviour
             amountInWallet = 0;
             cashoutWindow.SetActive(false);
             stockAudioSource.PlayOneShot(cashoutWallet);
+            
+
         }
         else
         {

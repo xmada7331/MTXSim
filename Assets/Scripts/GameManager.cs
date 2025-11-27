@@ -1,9 +1,10 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using System.Collections;
+using UnityEngine.UI;
+using static UnityEngine.GraphicsBuffer;
 
 public class GameManager : MonoBehaviour
 {
@@ -39,10 +40,14 @@ public class GameManager : MonoBehaviour
     public TMP_Text pauseMenuCounts;
     private int pauseMenuOpenCount = 5;
     private bool canOpenPauseMenu = true;
+    private bool hasInfinitePauses = false;
+    private bool hasMenuPauses1 = false;
+    private bool hasMenuPauses2 = false;
 
     public GameObject startGameObject;
     public GameObject bootingScreen;
     public GameObject afterBootScreen;
+    public GameObject midBootScreen;
     public Animator startGameAnimator;
     public AudioSource mainAudioSource;
     public AudioClip pauseAudio;
@@ -103,6 +108,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(HideBooting());
         startGameObject.SetActive(true);
         bootingScreen.SetActive(true);
+        midBootScreen.SetActive(true);
     }
 
     // Update is called once per frame
@@ -138,9 +144,16 @@ public class GameManager : MonoBehaviour
             pauseMenu.SetActive(!pauseMenu.activeSelf);
             if (pauseMenu.activeSelf)
             {
-                Time.timeScale = 0f;    
-                pauseMenuOpenCount--;
-                pauseMenuCounts.text = pauseMenuOpenCount.ToString();
+                Time.timeScale = 0f;
+                if (!hasInfinitePauses)
+                {
+                    pauseMenuOpenCount--;
+                    pauseMenuCounts.text = pauseMenuOpenCount.ToString(); 
+                }
+                else
+                {
+                    pauseMenuCounts.text = "naneinf";
+                }
                 if (pauseMenuOpenCount <= 0)
                 {
                     canOpenPauseMenu = false;
@@ -158,6 +171,7 @@ public class GameManager : MonoBehaviour
                 isBooting = false;
                 StopCoroutine(HideBooting());
                 bootingScreen.SetActive(false);
+                midBootScreen.SetActive(false);
                 afterBootScreen.SetActive(true);
                 afterBootOn = true;
             }
@@ -413,6 +427,8 @@ public class GameManager : MonoBehaviour
         isBooting = true;
         yield return new WaitForSeconds(15f);
         bootingScreen.SetActive(false);
+        yield return new WaitForSeconds(1f);
+        midBootScreen.SetActive(false);
         afterBootScreen.SetActive(true);
         if (!systemBooted)
         {
@@ -423,6 +439,67 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(5f);
         afterBootScreen.SetActive(false);
+    }
+
+    public void PurchasePauseMenu1(GameObject target)
+    {
+        shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (playerMoney >= shopPurchasable.itemPrice)
+        {
+            hasMenuPauses1 = true;
+            pauseMenuOpenCount += 5;
+            shopPurchasable.PurchaseItem();
+            expensesAmount += shopPurchasable.itemPrice;
+            gameTabUnlocker.purchaseSound.PlayOneShot(gameTabUnlocker.purchaseClip2);
+
+        }
+        else
+        {
+            shopPurchasable.WiggleItem();
+            gameTabUnlocker.denyPurchaseSound.PlayOneShot(gameTabUnlocker.denyPurchaseClip);
+        }
+    }
+    public void PurchasePauseMenu2(GameObject target)
+    {
+        shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (playerMoney >= shopPurchasable.itemPrice && hasMenuPauses1)
+        {
+            hasMenuPauses2 = true;
+            pauseMenuOpenCount += 10;
+            shopPurchasable.PurchaseItem();
+            expensesAmount += shopPurchasable.itemPrice;
+            gameTabUnlocker.purchaseSound.PlayOneShot(gameTabUnlocker.purchaseClip2);
+
+        }
+        else
+        {
+            shopPurchasable.WiggleItem();
+            gameTabUnlocker.denyPurchaseSound.PlayOneShot(gameTabUnlocker.denyPurchaseClip);
+        }
+    }
+    public void PurchasePauseMenu3(GameObject target)
+    {
+        shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (playerMoney >= shopPurchasable.itemPrice && hasMenuPauses2)
+        {
+            pauseMenuOpenCount += 1;
+            hasInfinitePauses = true;
+            shopPurchasable.PurchaseItem();
+            expensesAmount += shopPurchasable.itemPrice;
+            gameTabUnlocker.purchaseSound.PlayOneShot(gameTabUnlocker.purchaseClip2);
+
+        }
+        else
+        {
+            shopPurchasable.WiggleItem();
+            gameTabUnlocker.denyPurchaseSound.PlayOneShot(gameTabUnlocker.denyPurchaseClip);
+        }
+    }
+
+    public void UnpauseGame()
+    {
+               pauseMenu.SetActive(false);
+        Time.timeScale = 1f;
     }
 
 
