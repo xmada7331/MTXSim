@@ -2181,7 +2181,7 @@ GameObject:
   - component: {fileID: 13233752}
   - component: {fileID: 13233751}
   m_Layer: 5
-  m_Name: SendButton (3)
+  m_Name: Romanceness
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2589,18 +2589,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80be2b2bc8f7fa04b8a1bcefb40b5175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerResponse: Hey mama, you look extra spicy on those photos, i wouldn't mind
-    seeing a bit more
-  playerResponseSecond: 
-  NPCResponse: Rawr! thank you babes, there were made just for this purpose
-  NPCResponseSecond: 
-  seconMessagePlayer: 0
-  secondMessageNPC: 0
+  responseDescription: {fileID: 15313829}
+  mainText:
+  - Compliment
+  - Joke
+  - Pets
+  - Personal
+  - Music
+  - Interests
+  - Animals
+  - Food
+  - Video Games
+  - Sport
+  playerResponses:
+  - You look very good on those photos I saw
+  - Knock knock joke
+  - Do you have any pets?
+  - What do you do in your spare time?
+  - What kind of music do you listen to?
+  - Do you have any hobbies?
+  - Do you like animals?
+  - What do you eat?
+  - What do you play?
+  - What do you excercise?
+  playerResponse: 
+  npcResponses:
+  - Thank youuuuuu
+  - hahahahahahahaah
+  - A few dogs
+  - I read books
+  - Electro, techno etc.
+  - I do have many many hobbies
+  - Of course I do
+  - I eat everything I like...
+  - I play zelda at the moment
+  - I do crunches and pushups
+  NPCResponse: 
   triggersHappiness: 0
-  triggersSpiciness: 1
+  triggersSpiciness: 0
   triggersRomanceness: 0
-  happinessAmount: 0
-  spicinessAmount: 2
+  happinessAmount: 1
+  spicinessAmount: 0
   romancenessAmount: 0
 --- !u!1 &15513412
 GameObject:
@@ -24287,16 +24316,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80be2b2bc8f7fa04b8a1bcefb40b5175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerResponse: Testing fifth choice by the way hehe
-  playerResponseSecond: Might as well
-  NPCResponse: Numero fifto
-  NPCResponseSecond: 
-  seconMessagePlayer: 1
-  secondMessageNPC: 0
+  responseDescription: {fileID: 191707385}
+  mainText:
+  - Compliment
+  - Joke
+  - Pets
+  - Personal
+  - Music
+  - Interests
+  - Animals
+  - Food
+  - Video Games
+  - Sport
+  playerResponses:
+  - You look very good on those photos I saw
+  - Knock knock joke
+  - Do you have any pets?
+  - What do you do in your spare time?
+  - What kind of music do you listen to?
+  - Do you have any hobbies?
+  - Do you like animals?
+  - What do you eat?
+  - What do you play?
+  - What do you excercise?
+  playerResponse: 
+  npcResponses:
+  - Thank youuuuuu
+  - hahahahahahahaah
+  - A few dogs
+  - I read books
+  - Electro, techno etc.
+  - I do have many many hobbies
+  - Of course I do
+  - I eat everything I like...
+  - I play zelda at the moment
+  - I do crunches and pushups
+  NPCResponse: 
   triggersHappiness: 0
   triggersSpiciness: 0
   triggersRomanceness: 0
-  happinessAmount: 0
+  happinessAmount: 1
   spicinessAmount: 0
   romancenessAmount: 0
 --- !u!114 &191707383
@@ -31332,7 +31391,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &262509997
 RectTransform:
   m_ObjectHideFlags: 0
@@ -77404,16 +77463,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80be2b2bc8f7fa04b8a1bcefb40b5175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerResponse: Final choice baby
-  playerResponseSecond: 
-  NPCResponse: This is the end it seems
-  NPCResponseSecond: 
-  seconMessagePlayer: 0
-  secondMessageNPC: 0
+  responseDescription: {fileID: 706566501}
+  mainText:
+  - Compliment
+  - Joke
+  - Pets
+  - Personal
+  - Music
+  - Interests
+  - Animals
+  - Food
+  - Video Games
+  - Sport
+  playerResponses:
+  - You look very good on those photos I saw
+  - Knock knock joke
+  - Do you have any pets?
+  - What do you do in your spare time?
+  - What kind of music do you listen to?
+  - Do you have any hobbies?
+  - Do you like animals?
+  - What do you eat?
+  - What do you play?
+  - What do you excercise?
+  playerResponse: 
+  npcResponses:
+  - Thank youuuuuu
+  - hahahahahahahaah
+  - A few dogs
+  - I read books
+  - Electro, techno etc.
+  - I do have many many hobbies
+  - Of course I do
+  - I eat everything I like...
+  - I play zelda at the moment
+  - I do crunches and pushups
+  NPCResponse: 
   triggersHappiness: 0
   triggersSpiciness: 0
   triggersRomanceness: 0
-  happinessAmount: 0
+  happinessAmount: 1
   spicinessAmount: 0
   romancenessAmount: 0
 --- !u!114 &706566499
@@ -77610,16 +77699,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80be2b2bc8f7fa04b8a1bcefb40b5175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerResponse: Sixth choice in the house
-  playerResponseSecond: 
-  NPCResponse: Okay cool number 6 yeye
-  NPCResponseSecond: 
-  seconMessagePlayer: 0
-  secondMessageNPC: 0
+  responseDescription: {fileID: 707091259}
+  mainText:
+  - Compliment
+  - Joke
+  - Pets
+  - Personal
+  - Music
+  - Interests
+  - Animals
+  - Food
+  - Video Games
+  - Sport
+  playerResponses:
+  - You look very good on those photos I saw
+  - Knock knock joke
+  - Do you have any pets?
+  - What do you do in your spare time?
+  - What kind of music do you listen to?
+  - Do you have any hobbies?
+  - Do you like animals?
+  - What do you eat?
+  - What do you play?
+  - What do you excercise?
+  playerResponse: 
+  npcResponses:
+  - Thank youuuuuu
+  - hahahahahahahaah
+  - A few dogs
+  - I read books
+  - Electro, techno etc.
+  - I do have many many hobbies
+  - Of course I do
+  - I eat everything I like...
+  - I play zelda at the moment
+  - I do crunches and pushups
+  NPCResponse: 
   triggersHappiness: 0
   triggersSpiciness: 0
   triggersRomanceness: 0
-  happinessAmount: 0
+  happinessAmount: 1
   spicinessAmount: 0
   romancenessAmount: 0
 --- !u!114 &707091257
@@ -96485,7 +96604,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &843144563
 RectTransform:
   m_ObjectHideFlags: 0
@@ -109004,7 +109123,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &941084731
 RectTransform:
   m_ObjectHideFlags: 0
@@ -110531,20 +110650,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80be2b2bc8f7fa04b8a1bcefb40b5175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerResponse: You look extra pretty in all these dresses I could see on your
-    profile. Are you always dressing to impress?
-  playerResponseSecond: And I wouldn't mind seeing you without them...
-  NPCResponse: Heh, well thank you, but no, not that often as I'd like anyways.
-  NPCResponseSecond: There were purely made for my profile. I tend to wear hoodies
-    and loose clothes more often than not.
-  seconMessagePlayer: 1
-  secondMessageNPC: 1
-  triggersHappiness: 1
-  triggersSpiciness: 1
-  triggersRomanceness: 1
+  responseDescription: {fileID: 954598787}
+  mainText:
+  - Compliment
+  - Joke
+  - Pets
+  - Personal
+  - Music
+  - Interests
+  - Animals
+  - Food
+  - Video Games
+  - Sport
+  playerResponses:
+  - You look very good on those photos I saw
+  - Knock knock joke
+  - Do you have any pets?
+  - What do you do in your spare time?
+  - What kind of music do you listen to?
+  - Do you have any hobbies?
+  - Do you like animals?
+  - What do you eat?
+  - What do you play?
+  - What do you excercise?
+  playerResponse: 
+  npcResponses:
+  - Thank youuuuuu
+  - hahahahahahahaah
+  - A few dogs
+  - I read books
+  - Electro, techno etc.
+  - I do have many many hobbies
+  - Of course I do
+  - I eat everything I like...
+  - I play zelda at the moment
+  - I do crunches and pushups
+  NPCResponse: 
+  triggersHappiness: 0
+  triggersSpiciness: 0
+  triggersRomanceness: 0
   happinessAmount: 1
-  spicinessAmount: 1
-  romancenessAmount: 1
+  spicinessAmount: 0
+  romancenessAmount: 0
 --- !u!114 &954598785
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -112148,16 +112295,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80be2b2bc8f7fa04b8a1bcefb40b5175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerResponse: Did it fall when you hurt from heaven?
-  playerResponseSecond: 
-  NPCResponse: ...what?
-  NPCResponseSecond: 
-  seconMessagePlayer: 0
-  secondMessageNPC: 0
+  responseDescription: {fileID: 968298394}
+  mainText:
+  - Compliment
+  - Joke
+  - Pets
+  - Personal
+  - Music
+  - Interests
+  - Animals
+  - Food
+  - Video Games
+  - Sport
+  playerResponses:
+  - You look very good on those photos I saw
+  - Knock knock joke
+  - Do you have any pets?
+  - What do you do in your spare time?
+  - What kind of music do you listen to?
+  - Do you have any hobbies?
+  - Do you like animals?
+  - What do you eat?
+  - What do you play?
+  - What do you excercise?
+  playerResponse: 
+  npcResponses:
+  - Thank youuuuuu
+  - hahahahahahahaah
+  - A few dogs
+  - I read books
+  - Electro, techno etc.
+  - I do have many many hobbies
+  - Of course I do
+  - I eat everything I like...
+  - I play zelda at the moment
+  - I do crunches and pushups
+  NPCResponse: 
   triggersHappiness: 0
   triggersSpiciness: 0
   triggersRomanceness: 0
-  happinessAmount: 0
+  happinessAmount: 1
   spicinessAmount: 0
   romancenessAmount: 0
 --- !u!1 &969194815
@@ -112339,16 +112516,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80be2b2bc8f7fa04b8a1bcefb40b5175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerResponse: Sixth choice in the house
-  playerResponseSecond: 
-  NPCResponse: Okay cool number 6 yeye
-  NPCResponseSecond: 
-  seconMessagePlayer: 0
-  secondMessageNPC: 0
+  responseDescription: {fileID: 970369241}
+  mainText:
+  - Compliment
+  - Joke
+  - Pets
+  - Personal
+  - Music
+  - Interests
+  - Animals
+  - Food
+  - Video Games
+  - Sport
+  playerResponses:
+  - You look very good on those photos I saw
+  - Knock knock joke
+  - Do you have any pets?
+  - What do you do in your spare time?
+  - What kind of music do you listen to?
+  - Do you have any hobbies?
+  - Do you like animals?
+  - What do you eat?
+  - What do you play?
+  - What do you excercise?
+  playerResponse: 
+  npcResponses:
+  - Thank youuuuuu
+  - hahahahahahahaah
+  - A few dogs
+  - I read books
+  - Electro, techno etc.
+  - I do have many many hobbies
+  - Of course I do
+  - I eat everything I like...
+  - I play zelda at the moment
+  - I do crunches and pushups
+  NPCResponse: 
   triggersHappiness: 0
   triggersSpiciness: 0
   triggersRomanceness: 0
-  happinessAmount: 0
+  happinessAmount: 1
   spicinessAmount: 0
   romancenessAmount: 0
 --- !u!114 &970369239
@@ -115710,7 +115917,7 @@ GameObject:
   - component: {fileID: 1003560384}
   - component: {fileID: 1003560383}
   m_Layer: 5
-  m_Name: SendButton (1)
+  m_Name: Happiness
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -119643,16 +119850,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80be2b2bc8f7fa04b8a1bcefb40b5175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerResponse: This is a test 4th choice
-  playerResponseSecond: 
-  NPCResponse: oh baby a quadruple
-  NPCResponseSecond: 
-  seconMessagePlayer: 0
-  secondMessageNPC: 0
+  responseDescription: {fileID: 1025529536}
+  mainText:
+  - Compliment
+  - Joke
+  - Pets
+  - Personal
+  - Music
+  - Interests
+  - Animals
+  - Food
+  - Video Games
+  - Sport
+  playerResponses:
+  - You look very good on those photos I saw
+  - Knock knock joke
+  - Do you have any pets?
+  - What do you do in your spare time?
+  - What kind of music do you listen to?
+  - Do you have any hobbies?
+  - Do you like animals?
+  - What do you eat?
+  - What do you play?
+  - What do you excercise?
+  playerResponse: 
+  npcResponses:
+  - Thank youuuuuu
+  - hahahahahahahaah
+  - A few dogs
+  - I read books
+  - Electro, techno etc.
+  - I do have many many hobbies
+  - Of course I do
+  - I eat everything I like...
+  - I play zelda at the moment
+  - I do crunches and pushups
+  NPCResponse: 
   triggersHappiness: 0
   triggersSpiciness: 0
   triggersRomanceness: 0
-  happinessAmount: 0
+  happinessAmount: 1
   spicinessAmount: 0
   romancenessAmount: 0
 --- !u!114 &1025529534
@@ -127963,18 +128200,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80be2b2bc8f7fa04b8a1bcefb40b5175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerResponse: I love your sexy curves on some of these pics. Are you a model
-    by any chance? Do you do yoga much?
-  playerResponseSecond: I'd love to touch them some day...
-  NPCResponse: uhm... thanks. it's all genetics i guess. body isn't everything, you
-    know...
-  NPCResponseSecond: 
-  seconMessagePlayer: 1
-  secondMessageNPC: 0
+  responseDescription: {fileID: 1095703595}
+  mainText:
+  - Compliment
+  - Joke
+  - Pets
+  - Personal
+  - Music
+  - Interests
+  - Animals
+  - Food
+  - Video Games
+  - Sport
+  playerResponses:
+  - You look very good on those photos I saw
+  - Knock knock joke
+  - Do you have any pets?
+  - What do you do in your spare time?
+  - What kind of music do you listen to?
+  - Do you have any hobbies?
+  - Do you like animals?
+  - What do you eat?
+  - What do you play?
+  - What do you excercise?
+  playerResponse: 
+  npcResponses:
+  - Thank youuuuuu
+  - hahahahahahahaah
+  - A few dogs
+  - I read books
+  - Electro, techno etc.
+  - I do have many many hobbies
+  - Of course I do
+  - I eat everything I like...
+  - I play zelda at the moment
+  - I do crunches and pushups
+  NPCResponse: 
   triggersHappiness: 0
   triggersSpiciness: 0
   triggersRomanceness: 0
-  happinessAmount: 0
+  happinessAmount: 1
   spicinessAmount: 0
   romancenessAmount: 0
 --- !u!114 &1095703593
@@ -130199,18 +130464,6 @@ MonoBehaviour:
         - m_Target: {fileID: 1162978934}
           m_TargetAssemblyTypeName: ThunderManager, Assembly-CSharp
           m_MethodName: TriggerYay
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-        - m_Target: {fileID: 1162978934}
-          m_TargetAssemblyTypeName: ThunderManager, Assembly-CSharp
-          m_MethodName: GenerateNewProfile
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -135116,18 +135369,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-        - m_Target: {fileID: 1162978934}
-          m_TargetAssemblyTypeName: ThunderManager, Assembly-CSharp
-          m_MethodName: GenerateNewProfile
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
 --- !u!114 &1153409572
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -136946,6 +137187,8 @@ MonoBehaviour:
   - gayming
   - rock
   - charity
+  chat_name: {fileID: 1325239450}
+  chat_profilePicture: {fileID: 88657214}
   chatScroll: {fileID: 292709686}
   profileAnimator: {fileID: 713038568}
   rejectAnimator: {fileID: 36777074}
@@ -137099,7 +137342,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.0011207156}
+  m_AnchoredPosition: {x: 0, y: -0.0013176779}
   m_SizeDelta: {x: 900.24, y: 43}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1164266807
@@ -145030,19 +145273,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80be2b2bc8f7fa04b8a1bcefb40b5175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerResponse: 'okay i have to ask the standard question: dogs or cats?'
-  playerResponseSecond: 
-  NPCResponse: yeah i knew it was coming sooner or later. the truth is... none really
-  NPCResponseSecond: i love horses, and i mean i looove horses. the stallion can
-    be just so... exciting
-  seconMessagePlayer: 0
-  secondMessageNPC: 1
-  triggersHappiness: 1
-  triggersSpiciness: 1
-  triggersRomanceness: 1
-  happinessAmount: 2
-  spicinessAmount: 2
-  romancenessAmount: 2
+  responseDescription: {fileID: 1229520535}
+  mainText:
+  - Compliment
+  - Joke
+  - Pets
+  - Personal
+  - Music
+  - Interests
+  - Animals
+  - Food
+  - Video Games
+  - Sport
+  playerResponses:
+  - You look very good on those photos I saw
+  - Knock knock joke
+  - Do you have any pets?
+  - What do you do in your spare time?
+  - What kind of music do you listen to?
+  - Do you have any hobbies?
+  - Do you like animals?
+  - What do you eat?
+  - What do you play?
+  - What do you excercise?
+  playerResponse: 
+  npcResponses:
+  - Thank youuuuuu
+  - hahahahahahahaah
+  - A few dogs
+  - I read books
+  - Electro, techno etc.
+  - I do have many many hobbies
+  - Of course I do
+  - I eat everything I like...
+  - I play zelda at the moment
+  - I do crunches and pushups
+  NPCResponse: 
+  triggersHappiness: 0
+  triggersSpiciness: 0
+  triggersRomanceness: 0
+  happinessAmount: 1
+  spicinessAmount: 0
+  romancenessAmount: 0
 --- !u!114 &1229520533
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -145627,18 +145899,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80be2b2bc8f7fa04b8a1bcefb40b5175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerResponse: So what are your interests Sarah?
-  playerResponseSecond: 
-  NPCResponse: Well if you didn't mindlessly swipe right for every chick you see
-    you would see that there are listed on my profile...
-  NPCResponseSecond: ...nevermind that. i like animals, books, travels. your standard
-    online date girl...
-  seconMessagePlayer: 0
-  secondMessageNPC: 1
+  responseDescription: {fileID: 1232236614}
+  mainText:
+  - Compliment
+  - Joke
+  - Pets
+  - Personal
+  - Music
+  - Interests
+  - Animals
+  - Food
+  - Video Games
+  - Sport
+  playerResponses:
+  - You look very good on those photos I saw
+  - Knock knock joke
+  - Do you have any pets?
+  - What do you do in your spare time?
+  - What kind of music do you listen to?
+  - Do you have any hobbies?
+  - Do you like animals?
+  - What do you eat?
+  - What do you play?
+  - What do you excercise?
+  playerResponse: 
+  npcResponses:
+  - Thank youuuuuu
+  - hahahahahahahaah
+  - A few dogs
+  - I read books
+  - Electro, techno etc.
+  - I do have many many hobbies
+  - Of course I do
+  - I eat everything I like...
+  - I play zelda at the moment
+  - I do crunches and pushups
+  NPCResponse: 
   triggersHappiness: 0
   triggersSpiciness: 0
   triggersRomanceness: 0
-  happinessAmount: 0
+  happinessAmount: 1
   spicinessAmount: 0
   romancenessAmount: 0
 --- !u!114 &1232236612
@@ -151023,17 +151323,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80be2b2bc8f7fa04b8a1bcefb40b5175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerResponse: 'So how is your family? Do you have any siblings? '
-  playerResponseSecond: 
-  NPCResponse: Family's good. Are you asking me if I have a sister?
-  NPCResponseSecond: Yeah I figured you wouldn't want to date me, just someone prettier
-    but close...
-  seconMessagePlayer: 0
-  secondMessageNPC: 1
+  responseDescription: {fileID: 1285073914}
+  mainText:
+  - Compliment
+  - Joke
+  - Pets
+  - Personal
+  - Music
+  - Interests
+  - Animals
+  - Food
+  - Video Games
+  - Sport
+  playerResponses:
+  - You look very good on those photos I saw
+  - Knock knock joke
+  - Do you have any pets?
+  - What do you do in your spare time?
+  - What kind of music do you listen to?
+  - Do you have any hobbies?
+  - Do you like animals?
+  - What do you eat?
+  - What do you play?
+  - What do you excercise?
+  playerResponse: 
+  npcResponses:
+  - Thank youuuuuu
+  - hahahahahahahaah
+  - A few dogs
+  - I read books
+  - Electro, techno etc.
+  - I do have many many hobbies
+  - Of course I do
+  - I eat everything I like...
+  - I play zelda at the moment
+  - I do crunches and pushups
+  NPCResponse: 
   triggersHappiness: 0
   triggersSpiciness: 0
   triggersRomanceness: 0
-  happinessAmount: 0
+  happinessAmount: 1
   spicinessAmount: 0
   romancenessAmount: 0
 --- !u!114 &1285073912
@@ -162288,20 +162617,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80be2b2bc8f7fa04b8a1bcefb40b5175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerResponse: I noticed there is no weight on your account and your pictures
-    only cover your face. Mind telling me a bit about that?
-  playerResponseSecond: 
-  NPCResponse: I... don't weigh much. I know for some it's a deal breaker and stuff
-    but I am quite slim.
-  NPCResponseSecond: You know I can send you some pictures if you want some proof...
-  seconMessagePlayer: 0
-  secondMessageNPC: 1
+  responseDescription: {fileID: 1375278367}
+  mainText:
+  - Compliment
+  - Joke
+  - Pets
+  - Personal
+  - Music
+  - Interests
+  - Animals
+  - Food
+  - Video Games
+  - Sport
+  playerResponses:
+  - You look very good on those photos I saw
+  - Knock knock joke
+  - Do you have any pets?
+  - What do you do in your spare time?
+  - What kind of music do you listen to?
+  - Do you have any hobbies?
+  - Do you like animals?
+  - What do you eat?
+  - What do you play?
+  - What do you excercise?
+  playerResponse: 
+  npcResponses:
+  - Thank youuuuuu
+  - hahahahahahahaah
+  - A few dogs
+  - I read books
+  - Electro, techno etc.
+  - I do have many many hobbies
+  - Of course I do
+  - I eat everything I like...
+  - I play zelda at the moment
+  - I do crunches and pushups
+  NPCResponse: 
   triggersHappiness: 0
   triggersSpiciness: 0
-  triggersRomanceness: 1
-  happinessAmount: 0
+  triggersRomanceness: 0
+  happinessAmount: 1
   spicinessAmount: 0
-  romancenessAmount: 2
+  romancenessAmount: 0
 --- !u!114 &1375278365
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -167720,14 +168077,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80be2b2bc8f7fa04b8a1bcefb40b5175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerResponse: Hello there, i just thought you looked pretty nice and i wanted
-    to say hi
-  playerResponseSecond: 
-  NPCResponse: thanks...
-  NPCResponseSecond: how are you?
-  seconMessagePlayer: 0
-  secondMessageNPC: 1
-  triggersHappiness: 1
+  responseDescription: {fileID: 1426003493}
+  mainText:
+  - Compliment
+  - Joke
+  - Pets
+  - Personal
+  - Music
+  - Interests
+  - Animals
+  - Food
+  - Video Games
+  - Sport
+  playerResponses:
+  - You look very good on those photos I saw
+  - Knock knock joke
+  - Do you have any pets?
+  - What do you do in your spare time?
+  - What kind of music do you listen to?
+  - Do you have any hobbies?
+  - Do you like animals?
+  - What do you eat?
+  - What do you play?
+  - What do you excercise?
+  playerResponse: 
+  npcResponses:
+  - Thank youuuuuu
+  - hahahahahahahaah
+  - A few dogs
+  - I read books
+  - Electro, techno etc.
+  - I do have many many hobbies
+  - Of course I do
+  - I eat everything I like...
+  - I play zelda at the moment
+  - I do crunches and pushups
+  NPCResponse: 
+  triggersHappiness: 0
   triggersSpiciness: 0
   triggersRomanceness: 0
   happinessAmount: 1
@@ -186091,16 +186477,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80be2b2bc8f7fa04b8a1bcefb40b5175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerResponse: Testing fifth choice by the way hehe
-  playerResponseSecond: Might as well
-  NPCResponse: Numero fifto
-  NPCResponseSecond: 
-  seconMessagePlayer: 1
-  secondMessageNPC: 0
+  responseDescription: {fileID: 1590119093}
+  mainText:
+  - Compliment
+  - Joke
+  - Pets
+  - Personal
+  - Music
+  - Interests
+  - Animals
+  - Food
+  - Video Games
+  - Sport
+  playerResponses:
+  - You look very good on those photos I saw
+  - Knock knock joke
+  - Do you have any pets?
+  - What do you do in your spare time?
+  - What kind of music do you listen to?
+  - Do you have any hobbies?
+  - Do you like animals?
+  - What do you eat?
+  - What do you play?
+  - What do you excercise?
+  playerResponse: 
+  npcResponses:
+  - Thank youuuuuu
+  - hahahahahahahaah
+  - A few dogs
+  - I read books
+  - Electro, techno etc.
+  - I do have many many hobbies
+  - Of course I do
+  - I eat everything I like...
+  - I play zelda at the moment
+  - I do crunches and pushups
+  NPCResponse: 
   triggersHappiness: 0
   triggersSpiciness: 0
   triggersRomanceness: 0
-  happinessAmount: 0
+  happinessAmount: 1
   spicinessAmount: 0
   romancenessAmount: 0
 --- !u!114 &1590119091
@@ -194695,16 +195111,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80be2b2bc8f7fa04b8a1bcefb40b5175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerResponse: Testing fifth choice by the way hehe
-  playerResponseSecond: Might as well
-  NPCResponse: Numero fifto
-  NPCResponseSecond: 
-  seconMessagePlayer: 1
-  secondMessageNPC: 0
+  responseDescription: {fileID: 1661832032}
+  mainText:
+  - Compliment
+  - Joke
+  - Pets
+  - Personal
+  - Music
+  - Interests
+  - Animals
+  - Food
+  - Video Games
+  - Sport
+  playerResponses:
+  - You look very good on those photos I saw
+  - Knock knock joke
+  - Do you have any pets?
+  - What do you do in your spare time?
+  - What kind of music do you listen to?
+  - Do you have any hobbies?
+  - Do you like animals?
+  - What do you eat?
+  - What do you play?
+  - What do you excercise?
+  playerResponse: 
+  npcResponses:
+  - Thank youuuuuu
+  - hahahahahahahaah
+  - A few dogs
+  - I read books
+  - Electro, techno etc.
+  - I do have many many hobbies
+  - Of course I do
+  - I eat everything I like...
+  - I play zelda at the moment
+  - I do crunches and pushups
+  NPCResponse: 
   triggersHappiness: 0
   triggersSpiciness: 0
   triggersRomanceness: 0
-  happinessAmount: 0
+  happinessAmount: 1
   spicinessAmount: 0
   romancenessAmount: 0
 --- !u!114 &1661832030
@@ -204362,16 +204808,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80be2b2bc8f7fa04b8a1bcefb40b5175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerResponse: Final choice baby
-  playerResponseSecond: 
-  NPCResponse: This is the end it seems
-  NPCResponseSecond: 
-  seconMessagePlayer: 0
-  secondMessageNPC: 0
+  responseDescription: {fileID: 1720799076}
+  mainText:
+  - Compliment
+  - Joke
+  - Pets
+  - Personal
+  - Music
+  - Interests
+  - Animals
+  - Food
+  - Video Games
+  - Sport
+  playerResponses:
+  - You look very good on those photos I saw
+  - Knock knock joke
+  - Do you have any pets?
+  - What do you do in your spare time?
+  - What kind of music do you listen to?
+  - Do you have any hobbies?
+  - Do you like animals?
+  - What do you eat?
+  - What do you play?
+  - What do you excercise?
+  playerResponse: 
+  npcResponses:
+  - Thank youuuuuu
+  - hahahahahahahaah
+  - A few dogs
+  - I read books
+  - Electro, techno etc.
+  - I do have many many hobbies
+  - Of course I do
+  - I eat everything I like...
+  - I play zelda at the moment
+  - I do crunches and pushups
+  NPCResponse: 
   triggersHappiness: 0
   triggersSpiciness: 0
   triggersRomanceness: 0
-  happinessAmount: 0
+  happinessAmount: 1
   spicinessAmount: 0
   romancenessAmount: 0
 --- !u!114 &1720799074
@@ -214501,16 +214977,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80be2b2bc8f7fa04b8a1bcefb40b5175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerResponse: This is a test 4th choice
-  playerResponseSecond: 
-  NPCResponse: oh baby a quadruple
-  NPCResponseSecond: 
-  seconMessagePlayer: 0
-  secondMessageNPC: 0
+  responseDescription: {fileID: 1806436268}
+  mainText:
+  - Compliment
+  - Joke
+  - Pets
+  - Personal
+  - Music
+  - Interests
+  - Animals
+  - Food
+  - Video Games
+  - Sport
+  playerResponses:
+  - You look very good on those photos I saw
+  - Knock knock joke
+  - Do you have any pets?
+  - What do you do in your spare time?
+  - What kind of music do you listen to?
+  - Do you have any hobbies?
+  - Do you like animals?
+  - What do you eat?
+  - What do you play?
+  - What do you excercise?
+  playerResponse: 
+  npcResponses:
+  - Thank youuuuuu
+  - hahahahahahahaah
+  - A few dogs
+  - I read books
+  - Electro, techno etc.
+  - I do have many many hobbies
+  - Of course I do
+  - I eat everything I like...
+  - I play zelda at the moment
+  - I do crunches and pushups
+  NPCResponse: 
   triggersHappiness: 0
   triggersSpiciness: 0
   triggersRomanceness: 0
-  happinessAmount: 0
+  happinessAmount: 1
   spicinessAmount: 0
   romancenessAmount: 0
 --- !u!114 &1806436266
@@ -220654,7 +221160,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1855515012
 RectTransform:
   m_ObjectHideFlags: 0
@@ -222155,16 +222661,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80be2b2bc8f7fa04b8a1bcefb40b5175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerResponse: Sixth choice in the house
-  playerResponseSecond: 
-  NPCResponse: Okay cool number 6 yeye
-  NPCResponseSecond: 
-  seconMessagePlayer: 0
-  secondMessageNPC: 0
+  responseDescription: {fileID: 1864798276}
+  mainText:
+  - Compliment
+  - Joke
+  - Pets
+  - Personal
+  - Music
+  - Interests
+  - Animals
+  - Food
+  - Video Games
+  - Sport
+  playerResponses:
+  - You look very good on those photos I saw
+  - Knock knock joke
+  - Do you have any pets?
+  - What do you do in your spare time?
+  - What kind of music do you listen to?
+  - Do you have any hobbies?
+  - Do you like animals?
+  - What do you eat?
+  - What do you play?
+  - What do you excercise?
+  playerResponse: 
+  npcResponses:
+  - Thank youuuuuu
+  - hahahahahahahaah
+  - A few dogs
+  - I read books
+  - Electro, techno etc.
+  - I do have many many hobbies
+  - Of course I do
+  - I eat everything I like...
+  - I play zelda at the moment
+  - I do crunches and pushups
+  NPCResponse: 
   triggersHappiness: 0
   triggersSpiciness: 0
   triggersRomanceness: 0
-  happinessAmount: 0
+  happinessAmount: 1
   spicinessAmount: 0
   romancenessAmount: 0
 --- !u!114 &1864798274
@@ -228388,16 +228924,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80be2b2bc8f7fa04b8a1bcefb40b5175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerResponse: This is a test 4th choice
-  playerResponseSecond: 
-  NPCResponse: oh baby a quadruple
-  NPCResponseSecond: 
-  seconMessagePlayer: 0
-  secondMessageNPC: 0
+  responseDescription: {fileID: 1920166417}
+  mainText:
+  - Compliment
+  - Joke
+  - Pets
+  - Personal
+  - Music
+  - Interests
+  - Animals
+  - Food
+  - Video Games
+  - Sport
+  playerResponses:
+  - You look very good on those photos I saw
+  - Knock knock joke
+  - Do you have any pets?
+  - What do you do in your spare time?
+  - What kind of music do you listen to?
+  - Do you have any hobbies?
+  - Do you like animals?
+  - What do you eat?
+  - What do you play?
+  - What do you excercise?
+  playerResponse: 
+  npcResponses:
+  - Thank youuuuuu
+  - hahahahahahahaah
+  - A few dogs
+  - I read books
+  - Electro, techno etc.
+  - I do have many many hobbies
+  - Of course I do
+  - I eat everything I like...
+  - I play zelda at the moment
+  - I do crunches and pushups
+  NPCResponse: 
   triggersHappiness: 0
   triggersSpiciness: 0
   triggersRomanceness: 0
-  happinessAmount: 0
+  happinessAmount: 1
   spicinessAmount: 0
   romancenessAmount: 0
 --- !u!114 &1920166415
@@ -232565,7 +233131,7 @@ GameObject:
   - component: {fileID: 1949311683}
   - component: {fileID: 1949311682}
   m_Layer: 5
-  m_Name: SendButton (2)
+  m_Name: Spiciness
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -233928,16 +234494,46 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80be2b2bc8f7fa04b8a1bcefb40b5175, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerResponse: Final choice baby
-  playerResponseSecond: 
-  NPCResponse: This is the end it seems
-  NPCResponseSecond: 
-  seconMessagePlayer: 0
-  secondMessageNPC: 0
+  responseDescription: {fileID: 1964705848}
+  mainText:
+  - Compliment
+  - Joke
+  - Pets
+  - Personal
+  - Music
+  - Interests
+  - Animals
+  - Food
+  - Video Games
+  - Sport
+  playerResponses:
+  - You look very good on those photos I saw
+  - Knock knock joke
+  - Do you have any pets?
+  - What do you do in your spare time?
+  - What kind of music do you listen to?
+  - Do you have any hobbies?
+  - Do you like animals?
+  - What do you eat?
+  - What do you play?
+  - What do you excercise?
+  playerResponse: 
+  npcResponses:
+  - Thank youuuuuu
+  - hahahahahahahaah
+  - A few dogs
+  - I read books
+  - Electro, techno etc.
+  - I do have many many hobbies
+  - Of course I do
+  - I eat everything I like...
+  - I play zelda at the moment
+  - I do crunches and pushups
+  NPCResponse: 
   triggersHappiness: 0
   triggersSpiciness: 0
   triggersRomanceness: 0
-  happinessAmount: 0
+  happinessAmount: 1
   spicinessAmount: 0
   romancenessAmount: 0
 --- !u!114 &1964705846

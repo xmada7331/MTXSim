@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEngine.GraphicsBuffer;
 //using UnityEngine.UIElements;
 
 public class ThunderManager : MonoBehaviour
@@ -35,6 +34,8 @@ public class ThunderManager : MonoBehaviour
     [Header("Swipe Window")]
     public Animator foundMatchAnimator;
     private int yayCount = 0;
+    private string currentProfileName = "";
+    private Sprite currentProfilePicture;
     public TMP_Text randomName;
     public TMP_Text randomAge;
     public TMP_Text randomGender;
@@ -52,8 +53,10 @@ public class ThunderManager : MonoBehaviour
     public List<string> interest2;
     public List<string> interest3;
 
-    [Header ("Chat Window")]
+    [Header("Chat Window")]
     private bool animationRunning = false;
+    public TMP_Text chat_name;
+    public Image chat_profilePicture;
     public ScrollRect chatScroll;
     public Animator profileAnimator;
     public Animator rejectAnimator;
@@ -95,6 +98,7 @@ public class ThunderManager : MonoBehaviour
     {
         if (yayCount >= 3)
         {
+
             StartCoroutine(FoundMatch());
             yayCount = 0;
         }
@@ -104,12 +108,15 @@ public class ThunderManager : MonoBehaviour
     {
         if (!animationRunning)
         {
-            StartCoroutine(YayTriggered()); 
+            StartCoroutine(YayTriggered());
+            GenerateNewProfile();
         }
     }
 
     private IEnumerator YayTriggered()
     {
+        currentProfileName = randomName.text;
+        currentProfilePicture = profilePicture.sprite;
         yayCount++;
         animationRunning = true;
         profileAnimator.SetTrigger("Yay");
@@ -122,7 +129,8 @@ public class ThunderManager : MonoBehaviour
     {
         if (!animationRunning)
         {
-            StartCoroutine(NayTriggered()); 
+            StartCoroutine(NayTriggered());
+            GenerateNewProfile();
         }
     }
 
@@ -135,15 +143,10 @@ public class ThunderManager : MonoBehaviour
         animationRunning = false;
     }
 
-    public void SelectMessage1 (GameObject target)
+    public void SelectMessage1(GameObject target)
     {
         TMP_Text newText = Instantiate(playerTextPrefab, chatContentParent);
         newText.text = target.GetComponent<ThunderNPCResponse>().playerResponse;
-        if (target.GetComponent<ThunderNPCResponse>().seconMessagePlayer)
-        {
-            TMP_Text newText2 = Instantiate(playerTextPrefab, chatContentParent);
-            newText2.text = target.GetComponent<ThunderNPCResponse>().playerResponseSecond;
-        }
         StartCoroutine(ScrollToBottomAnimated(0.18f));
         GenerateNPCResponse(target);
         StartCoroutine(SelectFirstPath(target));
@@ -152,11 +155,6 @@ public class ThunderManager : MonoBehaviour
     {
         TMP_Text newText = Instantiate(playerTextPrefab, chatContentParent);
         newText.text = target.GetComponent<ThunderNPCResponse>().playerResponse;
-        if (target.GetComponent<ThunderNPCResponse>().seconMessagePlayer)
-        {
-            TMP_Text newText2 = Instantiate(playerTextPrefab, chatContentParent);
-            newText2.text = target.GetComponent<ThunderNPCResponse>().playerResponseSecond;
-        }
         StartCoroutine(ScrollToBottomAnimated(0.18f));
         GenerateNPCResponse(target);
         StartCoroutine(SelectSecondPath(target));
@@ -165,11 +163,6 @@ public class ThunderManager : MonoBehaviour
     {
         TMP_Text newText = Instantiate(playerTextPrefab, chatContentParent);
         newText.text = target.GetComponent<ThunderNPCResponse>().playerResponse;
-        if (target.GetComponent<ThunderNPCResponse>().seconMessagePlayer)
-        {
-            TMP_Text newText2 = Instantiate(playerTextPrefab, chatContentParent);
-            newText2.text = target.GetComponent<ThunderNPCResponse>().playerResponseSecond;
-        }
         StartCoroutine(ScrollToBottomAnimated(0.18f));
         GenerateNPCResponse(target);
         StartCoroutine(SelectThirdPath(target));
@@ -178,11 +171,6 @@ public class ThunderManager : MonoBehaviour
     {
         TMP_Text newText = Instantiate(playerTextPrefab, chatContentParent);
         newText.text = target.GetComponent<ThunderNPCResponse>().playerResponse;
-        if (target.GetComponent<ThunderNPCResponse>().seconMessagePlayer)
-        {
-            TMP_Text newText2 = Instantiate(playerTextPrefab, chatContentParent);
-            newText2.text = target.GetComponent<ThunderNPCResponse>().playerResponseSecond;
-        }
         StartCoroutine(ScrollToBottomAnimated(0.18f));
         GenerateNPCResponse(target);
         StartCoroutine(SelectFourthPath(target));
@@ -191,11 +179,6 @@ public class ThunderManager : MonoBehaviour
     {
         TMP_Text newText = Instantiate(playerTextPrefab, chatContentParent);
         newText.text = target.GetComponent<ThunderNPCResponse>().playerResponse;
-        if (target.GetComponent<ThunderNPCResponse>().seconMessagePlayer)
-        {
-            TMP_Text newText2 = Instantiate(playerTextPrefab, chatContentParent);
-            newText2.text = target.GetComponent<ThunderNPCResponse>().playerResponseSecond;
-        }
         StartCoroutine(ScrollToBottomAnimated(0.18f));
         GenerateNPCResponse(target);
         StartCoroutine(SelectFifthPath(target));
@@ -204,11 +187,6 @@ public class ThunderManager : MonoBehaviour
     {
         TMP_Text newText = Instantiate(playerTextPrefab, chatContentParent);
         newText.text = target.GetComponent<ThunderNPCResponse>().playerResponse;
-        if (target.GetComponent<ThunderNPCResponse>().seconMessagePlayer)
-        {
-            TMP_Text newText2 = Instantiate(playerTextPrefab, chatContentParent);
-            newText2.text = target.GetComponent<ThunderNPCResponse>().playerResponseSecond;
-        }
         StartCoroutine(ScrollToBottomAnimated(0.18f));
         GenerateNPCResponse(target);
         StartCoroutine(SelectSixthPath(target));
@@ -217,17 +195,12 @@ public class ThunderManager : MonoBehaviour
     {
         TMP_Text newText = Instantiate(playerTextPrefab, chatContentParent);
         newText.text = target.GetComponent<ThunderNPCResponse>().playerResponse;
-        if (target.GetComponent<ThunderNPCResponse>().seconMessagePlayer)
-        {
-            TMP_Text newText2 = Instantiate(playerTextPrefab, chatContentParent);
-            newText2.text = target.GetComponent<ThunderNPCResponse>().playerResponseSecond;
-        }
         StartCoroutine(ScrollToBottomAnimated(0.18f));
         GenerateNPCResponse(target);
         StartCoroutine(SelectFinalPath(target));
     }
 
-    public void GenerateNPCResponse (GameObject target)
+    public void GenerateNPCResponse(GameObject target)
     {
         StartCoroutine(ScrollToBottomAnimated(0.18f));
         StartCoroutine(MessageCooldown(target));
@@ -247,19 +220,6 @@ public class ThunderManager : MonoBehaviour
         TMP_Text npcMessage2 = Instantiate(NPCTextPrefab, chatContentParent);
         npcMessage2.text = target.GetComponent<ThunderNPCResponse>().NPCResponse;
         StartCoroutine(ScrollToBottomAnimated(0.18f));
-        if (target.GetComponent<ThunderNPCResponse>().secondMessageNPC)
-        {
-            yield return new WaitForSeconds(1f);
-            TMP_Text npcMessage3 = Instantiate(NPCTextPrefab, chatContentParent);
-            npcMessage3.text = "...";
-            StartCoroutine(ScrollToBottomAnimated(0.18f));
-            yield return new WaitForSeconds(1f);
-            Destroy(npcMessage3.gameObject);
-            yield return new WaitForSeconds(1f);
-            TMP_Text npcMessage4 = Instantiate(NPCTextPrefab, chatContentParent);
-            npcMessage4.text = target.GetComponent<ThunderNPCResponse>().NPCResponseSecond;
-            StartCoroutine(ScrollToBottomAnimated(0.18f));
-        }
         //yield return new WaitForSeconds(1f);
         yield return new WaitForSeconds(1f);
 
@@ -313,6 +273,29 @@ public class ThunderManager : MonoBehaviour
     {
         thunderNPCResponse = target.GetComponent<ThunderNPCResponse>();
         firstPath.SetActive(false);
+        if (Random.value < 0.5f)
+        {
+            thunderNPCResponse.triggersHappiness = true;
+            thunderNPCResponse.happinessAmount = 1;
+        }
+        if (Random.value < 0.5f)
+        {
+            thunderNPCResponse.triggersSpiciness = true;
+            thunderNPCResponse.spicinessAmount = 1;
+        }
+        if (Random.value < 0.5f)
+        {
+            thunderNPCResponse.triggersRomanceness = true;
+            thunderNPCResponse.romancenessAmount = 1;
+        }
+        else
+        {
+            thunderNPCResponse.happinessAmount = 0;
+            thunderNPCResponse.spicinessAmount = 0;
+            thunderNPCResponse.romancenessAmount = 0;
+        }
+
+
         if (thunderNPCResponse.triggersHappiness)
         {
             happinessLevel += thunderNPCResponse.happinessAmount;
@@ -336,6 +319,27 @@ public class ThunderManager : MonoBehaviour
     {
         thunderNPCResponse = target.GetComponent<ThunderNPCResponse>();
         secondPath.SetActive(false);
+        if (Random.value < 0.5f)
+        {
+            thunderNPCResponse.triggersHappiness = true;
+            thunderNPCResponse.happinessAmount = 1;
+        }
+        if (Random.value < 0.5f)
+        {
+            thunderNPCResponse.triggersSpiciness = true;
+            thunderNPCResponse.spicinessAmount = 1;
+        }
+        if (Random.value < 0.5f)
+        {
+            thunderNPCResponse.triggersRomanceness = true;
+            thunderNPCResponse.romancenessAmount = 1;
+        }
+        else
+        {
+            thunderNPCResponse.happinessAmount = 0;
+            thunderNPCResponse.spicinessAmount = 0;
+            thunderNPCResponse.romancenessAmount = 0;
+        }
         if (thunderNPCResponse.triggersHappiness)
         {
             happinessLevel += thunderNPCResponse.happinessAmount;
@@ -359,6 +363,27 @@ public class ThunderManager : MonoBehaviour
     {
         thunderNPCResponse = target.GetComponent<ThunderNPCResponse>();
         thirdPath.SetActive(false);
+        if (Random.value < 0.5f)
+        {
+            thunderNPCResponse.triggersHappiness = true;
+            thunderNPCResponse.happinessAmount = 1;
+        }
+        if (Random.value < 0.5f)
+        {
+            thunderNPCResponse.triggersSpiciness = true;
+            thunderNPCResponse.spicinessAmount = 1;
+        }
+        if (Random.value < 0.5f)
+        {
+            thunderNPCResponse.triggersRomanceness = true;
+            thunderNPCResponse.romancenessAmount = 1;
+        }
+        else
+        {
+            thunderNPCResponse.happinessAmount = 0;
+            thunderNPCResponse.spicinessAmount = 0;
+            thunderNPCResponse.romancenessAmount = 0;
+        }
         if (thunderNPCResponse.triggersHappiness)
         {
             happinessLevel += thunderNPCResponse.happinessAmount;
@@ -383,6 +408,27 @@ public class ThunderManager : MonoBehaviour
     {
         thunderNPCResponse = target.GetComponent<ThunderNPCResponse>();
         fourthPath.SetActive(false);
+        if (Random.value < 0.5f)
+        {
+            thunderNPCResponse.triggersHappiness = true;
+            thunderNPCResponse.happinessAmount = 1;
+        }
+        if (Random.value < 0.5f)
+        {
+            thunderNPCResponse.triggersSpiciness = true;
+            thunderNPCResponse.spicinessAmount = 1;
+        }
+        if (Random.value < 0.5f)
+        {
+            thunderNPCResponse.triggersRomanceness = true;
+            thunderNPCResponse.romancenessAmount = 1;
+        }
+        else
+        {
+            thunderNPCResponse.happinessAmount = 0;
+            thunderNPCResponse.spicinessAmount = 0;
+            thunderNPCResponse.romancenessAmount = 0;
+        }
         if (thunderNPCResponse.triggersHappiness)
         {
             happinessLevel += thunderNPCResponse.happinessAmount;
@@ -406,6 +452,27 @@ public class ThunderManager : MonoBehaviour
     {
         thunderNPCResponse = target.GetComponent<ThunderNPCResponse>();
         fifthPath.SetActive(false);
+        if (Random.value < 0.5f)
+        {
+            thunderNPCResponse.triggersHappiness = true;
+            thunderNPCResponse.happinessAmount = 1;
+        }
+        if (Random.value < 0.5f)
+        {
+            thunderNPCResponse.triggersSpiciness = true;
+            thunderNPCResponse.spicinessAmount = 1;
+        }
+        if (Random.value < 0.5f)
+        {
+            thunderNPCResponse.triggersRomanceness = true;
+            thunderNPCResponse.romancenessAmount = 1;
+        }
+        else
+        {
+            thunderNPCResponse.happinessAmount = 0;
+            thunderNPCResponse.spicinessAmount = 0;
+            thunderNPCResponse.romancenessAmount = 0;
+        }
         if (thunderNPCResponse.triggersHappiness)
         {
             happinessLevel += thunderNPCResponse.happinessAmount;
@@ -428,6 +495,27 @@ public class ThunderManager : MonoBehaviour
     {
         thunderNPCResponse = target.GetComponent<ThunderNPCResponse>();
         sixthPath.SetActive(false);
+        if (Random.value < 0.5f)
+        {
+            thunderNPCResponse.triggersHappiness = true;
+            thunderNPCResponse.happinessAmount = 1;
+        }
+        if (Random.value < 0.5f)
+        {
+            thunderNPCResponse.triggersSpiciness = true;
+            thunderNPCResponse.spicinessAmount = 1;
+        }
+        if (Random.value < 0.5f)
+        {
+            thunderNPCResponse.triggersRomanceness = true;
+            thunderNPCResponse.romancenessAmount = 1;
+        }
+        else
+        {
+            thunderNPCResponse.happinessAmount = 0;
+            thunderNPCResponse.spicinessAmount = 0;
+            thunderNPCResponse.romancenessAmount = 0;
+        }
         if (thunderNPCResponse.triggersHappiness)
         {
             happinessLevel += thunderNPCResponse.happinessAmount;
@@ -451,16 +539,16 @@ public class ThunderManager : MonoBehaviour
         thunderNPCResponse = target.GetComponent<ThunderNPCResponse>();
         seventhPath.SetActive(false);
         yield return new WaitForSeconds(selectDelay + 1);
-        if (thunderNPCResponse.happinessAmount > 8)
+        if (thunderNPCResponse.happinessAmount > 5)
         {
             matchAnimator.SetTrigger("Matched");
         }
-        if (thunderNPCResponse.spicinessAmount > 8)
+        else if (thunderNPCResponse.spicinessAmount > 5)
         {
             matchAnimator.SetTrigger("Matched");
 
         }
-        if (thunderNPCResponse.romancenessAmount > 8)
+        else if (thunderNPCResponse.romancenessAmount > 5)
         {
             matchAnimator.SetTrigger("Matched");
 
@@ -469,9 +557,13 @@ public class ThunderManager : MonoBehaviour
         {
             rejectAnimator.SetTrigger("Rejected");
         }
-            yield return new WaitForSeconds(1.7f);
+        yield return new WaitForSeconds(1.7f);
         chatWindow.SetActive(false);
         swipeWindow.SetActive(true);
+        yield return new WaitForSeconds(1f);
+        rejectAnimator.SetTrigger("Idle");
+        matchAnimator.SetTrigger("Idle");
+
     }
 
     private IEnumerator RandomizeProfile()
@@ -499,23 +591,38 @@ public class ThunderManager : MonoBehaviour
 
     public void GenerateNewProfile()
     {
-               StartCoroutine(RandomizeProfile());
+        StartCoroutine(RandomizeProfile());
     }
 
     private IEnumerator FoundMatch()
     {
+        firstPath.SetActive(true);
+        for (int i = chatContentParent.childCount - 1; i >= 0; i--)
+        {
+            var child = chatContentParent.GetChild(i);
+
+            Destroy(child.gameObject);
+        }
+        happinessLevel = 0;
+        spicinessLevel = 0;
+        romancenessLevel = 0;
+        happinessSlider.value = happinessLevel;
+        spicinessSlider.value = spicinessLevel;
+        romancenessSlider.value = romancenessLevel;
+        chat_name.text = currentProfileName;
+        chat_profilePicture.sprite = currentProfilePicture;
         yayCount = 0;
         foundMatchAnimator.SetTrigger("Found");
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
         swipeWindow.SetActive(false);
         chatWindow.SetActive(true);
+        yield return new WaitForSeconds(1f);
         foundMatchAnimator.SetTrigger("Idle");
-        GenerateNewProfile();
     }
 
     public void FirstRegisterPass()
     {
-        bool requiredMissing = 
+        bool requiredMissing =
             string.IsNullOrEmpty(firstNameInput.text) ||
             string.IsNullOrEmpty(lastNameInput.text) ||
             string.IsNullOrEmpty(countryInput.text) ||
@@ -641,6 +748,11 @@ public class ThunderManager : MonoBehaviour
         afterLoginLoading.SetActive(false);
         afterLoginSuccess.SetActive(true);
         afterLoginUsername.text = "Hello, " + usernameInput.text;
+    }
+
+    public void RefreshFirstChoices()
+    {
+
     }
 
 }
