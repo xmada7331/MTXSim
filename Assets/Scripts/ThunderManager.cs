@@ -8,7 +8,6 @@ using static UnityEngine.GraphicsBuffer;
 
 public class ThunderManager : MonoBehaviour
 {
-    ThunderNPCResponse thunderNPCResponse;
     [Header("Register Window")]
     public GameObject registerWindow;
     public GameObject register2Window;
@@ -87,9 +86,48 @@ public class ThunderManager : MonoBehaviour
 
     private float selectDelay = 3f;
 
+    [Header("NPC Response and selection")]
+    public TMP_Text responseDescription1;
+    public TMP_Text responseDescription2;
+    public TMP_Text responseDescription3;
+    public List<string> mainText;
+    public List<string> playerResponses;
+    private string playerResponse1;
+    private string playerResponse2;
+    private string playerResponse3;
+    public List<string> npcResponses;
+    private string NPCResponse1;
+    private string NPCResponse2;
+    private string NPCResponse3;
+
+    private bool triggersHappiness;
+    private bool triggersSpiciness;
+    private bool triggersRomanceness;
+
+    private int happinessAmount;
+    private int spicinessAmount;
+    private int romancenessAmount;
+
+    private List<string> originalMainText;
+    private List<string> originalPlayerResponses; 
+    private List<string> originalNpcResponses; 
+    private int currentResponse;
+    private List<string> poolMainText;
+    private List<string> poolPlayerResponses;
+    private List<string> poolNpcResponses;
+
+    private int randomIndex1;
+    private int randomIndex2;
+    private int randomIndex3;
+
     public Transform chatContentParent;
     void Start()
     {
+        originalMainText = new List<string>(mainText);
+        originalPlayerResponses = new List<string>(playerResponses);
+        originalNpcResponses = new List<string>(npcResponses);
+        ResetPools();
+        RandomizeChoice();
         GenerateNewProfile();
     }
 
@@ -102,6 +140,64 @@ public class ThunderManager : MonoBehaviour
             StartCoroutine(FoundMatch());
             yayCount = 0;
         }
+    }
+    private void ResetPools()
+    {
+        poolMainText = new List<string>(originalMainText);
+        poolPlayerResponses = new List<string>(originalPlayerResponses);
+        poolNpcResponses = new List<string>(originalNpcResponses);
+    }
+    public void RandomizeChoice()
+    {
+        // ensure pools initialized
+        if (poolMainText == null || poolPlayerResponses == null || poolNpcResponses == null)
+            ResetPools();
+
+        // if there are fewer than 3 entries left, restore full set (you can change this behavior if you prefer)
+        if (poolMainText.Count < 3 || poolPlayerResponses.Count < 3 || poolNpcResponses.Count < 3)
+        {
+            ResetPools();
+        }
+
+        int poolCount = Mathf.Min(poolMainText.Count, poolPlayerResponses.Count, poolNpcResponses.Count);
+        if (poolCount == 0)
+        {
+            responseDescription1.text = "";
+            responseDescription2.text = "";
+            responseDescription3.text = "";
+            playerResponse1 = playerResponse2 = playerResponse3 = "";
+            NPCResponse1 = NPCResponse2 = NPCResponse3 = "";
+            return;
+        }
+
+        // pick three unique indices from the pool
+        List<int> available = new List<int>(poolCount);
+        for (int i = 0; i < poolCount; i++) available.Add(i);
+
+        int pickPos = Random.Range(0, available.Count);
+        randomIndex1 = available[pickPos];
+        available.RemoveAt(pickPos);
+
+        pickPos = Random.Range(0, available.Count);
+        randomIndex2 = available[pickPos];
+        available.RemoveAt(pickPos);
+
+        pickPos = Random.Range(0, available.Count);
+        randomIndex3 = available[pickPos];
+        available.RemoveAt(pickPos);
+
+        // assign texts from pools
+        responseDescription1.text = poolMainText[randomIndex1];
+        responseDescription2.text = poolMainText[randomIndex2];
+        responseDescription3.text = poolMainText[randomIndex3];
+
+        playerResponse1 = poolPlayerResponses[randomIndex1];
+        playerResponse2 = poolPlayerResponses[randomIndex2];
+        playerResponse3 = poolPlayerResponses[randomIndex3];
+
+        NPCResponse1 = poolNpcResponses[randomIndex1];
+        NPCResponse2 = poolNpcResponses[randomIndex2];
+        NPCResponse3 = poolNpcResponses[randomIndex3];
     }
 
     public void TriggerYay()
@@ -143,22 +239,51 @@ public class ThunderManager : MonoBehaviour
         animationRunning = false;
     }
 
-    public void SelectMessage1(GameObject target)
+    public void SelectMessage1()
     {
-        TMP_Text newText = Instantiate(playerTextPrefab, chatContentParent);
-        newText.text = target.GetComponent<ThunderNPCResponse>().playerResponse;
+
+        TMP_Text playerMessage = Instantiate(playerTextPrefab, chatContentParent);
+        playerMessage.text = playerResponse1;
         StartCoroutine(ScrollToBottomAnimated(0.18f));
-        GenerateNPCResponse(target);
-        StartCoroutine(SelectedQuestion(target));
+        GenerateNPCResponse1();
+        StartCoroutine(SelectedQuestion());
+    }
+    public void SelectMessage2()
+    {
+
+        TMP_Text playerMessage = Instantiate(playerTextPrefab, chatContentParent);
+        playerMessage.text = playerResponse2;
+        StartCoroutine(ScrollToBottomAnimated(0.18f));
+        GenerateNPCResponse2();
+        StartCoroutine(SelectedQuestion());
+    }
+    public void SelectMessage3()
+    {
+
+        TMP_Text playerMessage = Instantiate(playerTextPrefab, chatContentParent);
+        playerMessage.text = playerResponse3;
+        StartCoroutine(ScrollToBottomAnimated(0.18f));
+        GenerateNPCResponse3();
+        StartCoroutine(SelectedQuestion());
     }
 
-    public void GenerateNPCResponse(GameObject target)
+    public void GenerateNPCResponse1()
     {
         StartCoroutine(ScrollToBottomAnimated(0.18f));
-        StartCoroutine(MessageCooldown(target));
+        StartCoroutine(MessageCooldown1());
+    }
+    public void GenerateNPCResponse2()
+    {
+        StartCoroutine(ScrollToBottomAnimated(0.18f));
+        StartCoroutine(MessageCooldown2());
+    }
+    public void GenerateNPCResponse3()
+    {
+        StartCoroutine(ScrollToBottomAnimated(0.18f));
+        StartCoroutine(MessageCooldown3());
     }
 
-    private IEnumerator MessageCooldown(GameObject target)
+    private IEnumerator MessageCooldown1()
     {
         yield return new WaitForSeconds(1f);
         TMP_Text npcMessage = Instantiate(NPCTextPrefab, chatContentParent);
@@ -169,21 +294,27 @@ public class ThunderManager : MonoBehaviour
         Destroy(npcMessage.gameObject);
         //yield return new WaitForSeconds(Random.Range(0.2f,1.5f));
         yield return new WaitForSeconds(1f);
+        currentResponse = randomIndex1;
+        if (currentResponse >= 0 && currentResponse < poolMainText.Count)
+        {
+            poolPlayerResponses.RemoveAt(currentResponse);
+            poolMainText.RemoveAt(currentResponse);
+            poolNpcResponses.RemoveAt(currentResponse);
+        }
         if (questionCount < 7)
         {
             TMP_Text npcMessage2 = Instantiate(NPCTextPrefab, chatContentParent);
-            npcMessage2.text = target.GetComponent<ThunderNPCResponse>().NPCResponse;
+            npcMessage2.text = NPCResponse1;
             yield return new WaitForSeconds(.1f);
             firstPath.SetActive(true);
-            choice1.GetComponent<ThunderNPCResponse>().RandomizeChoice();
-            choice2.GetComponent<ThunderNPCResponse>().RandomizeChoice();
-            choice3.GetComponent<ThunderNPCResponse>().RandomizeChoice();
+
+            RandomizeChoice();
         }
-        else if(questionCount >= 7 && happinessLevel > 5 || questionCount >= 7 && spicinessLevel > 5 || questionCount >= 7 && romancenessLevel > 5)
+        else if(questionCount >= 7 && happinessLevel >= 5 || questionCount >= 7 && spicinessLevel >= 5 || questionCount >= 7 && romancenessLevel >= 5)
         {
             firstPath.SetActive(false);
             TMP_Text npcMessage2 = Instantiate(NPCTextPrefab, chatContentParent);
-            npcMessage2.text = "Let's meet up!.";
+            npcMessage2.text = "Let's meet up!";
             CheckEnding();
         }
         else
@@ -196,8 +327,99 @@ public class ThunderManager : MonoBehaviour
         }
         StartCoroutine(ScrollToBottomAnimated(0.18f));
         //yield return new WaitForSeconds(1f);
+    }
+    private IEnumerator MessageCooldown2()
+    {
+        yield return new WaitForSeconds(1f);
+        TMP_Text npcMessage = Instantiate(NPCTextPrefab, chatContentParent);
+        npcMessage.text = "...";
+        StartCoroutine(ScrollToBottomAnimated(0.18f));
+        //yield return new WaitForSeconds(Random.Range(1f,4f));
+        yield return new WaitForSeconds(1f);
+        Destroy(npcMessage.gameObject);
+        //yield return new WaitForSeconds(Random.Range(0.2f,1.5f));
+        yield return new WaitForSeconds(1f);
+        currentResponse = randomIndex2;
+        if (currentResponse >= 0 && currentResponse < poolMainText.Count)
+        {
+            poolPlayerResponses.RemoveAt(currentResponse);
+            poolMainText.RemoveAt(currentResponse);
+            poolNpcResponses.RemoveAt(currentResponse);
+        }
+
+        if (questionCount < 7)
+        {
+            TMP_Text npcMessage2 = Instantiate(NPCTextPrefab, chatContentParent);
+            npcMessage2.text = NPCResponse2;
+            yield return new WaitForSeconds(.1f);
+            firstPath.SetActive(true);
+
+            RandomizeChoice();
+        }
+        else if (questionCount >= 7 && happinessLevel >= 5 || questionCount >= 7 && spicinessLevel >= 5 || questionCount >= 7 && romancenessLevel >= 5)
+        {
+            firstPath.SetActive(false);
+            TMP_Text npcMessage2 = Instantiate(NPCTextPrefab, chatContentParent);
+            npcMessage2.text = "Let's meet up!";
+            CheckEnding();
+        }
+        else
+        {
+            firstPath.SetActive(false);
+            TMP_Text npcMessage2 = Instantiate(NPCTextPrefab, chatContentParent);
+            npcMessage2.text = "I don't think we're a match.";
+            CheckEnding();
+
+        }
+        StartCoroutine(ScrollToBottomAnimated(0.18f));
+        //yield return new WaitForSeconds(1f);
+    }
+    private IEnumerator MessageCooldown3()
+    {
+        yield return new WaitForSeconds(1f);
+        TMP_Text npcMessage = Instantiate(NPCTextPrefab, chatContentParent);
+        npcMessage.text = "...";
+        StartCoroutine(ScrollToBottomAnimated(0.18f));
+        //yield return new WaitForSeconds(Random.Range(1f,4f));
+        yield return new WaitForSeconds(1f);
+        Destroy(npcMessage.gameObject);
+        //yield return new WaitForSeconds(Random.Range(0.2f,1.5f));
+        yield return new WaitForSeconds(1f);
+
+        currentResponse = randomIndex3;
+        if (currentResponse >= 0 && currentResponse < poolMainText.Count)
+        {
+            poolPlayerResponses.RemoveAt(currentResponse);
+            poolMainText.RemoveAt(currentResponse);
+            poolNpcResponses.RemoveAt(currentResponse);
+        }
 
 
+        if (questionCount < 7)
+        {
+            TMP_Text npcMessage2 = Instantiate(NPCTextPrefab, chatContentParent);
+            npcMessage2.text = NPCResponse3;
+            yield return new WaitForSeconds(.1f);
+            firstPath.SetActive(true);
+            RandomizeChoice();
+        }
+        else if (questionCount >= 7 && happinessLevel >= 5 || questionCount >= 7 && spicinessLevel >= 5 || questionCount >= 7 && romancenessLevel >= 5)
+        {
+            firstPath.SetActive(false);
+            TMP_Text npcMessage2 = Instantiate(NPCTextPrefab, chatContentParent);
+            npcMessage2.text = "Let's meet up!";
+            CheckEnding();
+        }
+        else
+        {
+            firstPath.SetActive(false);
+            TMP_Text npcMessage2 = Instantiate(NPCTextPrefab, chatContentParent);
+            npcMessage2.text = "I don't think we're a match.";
+            CheckEnding();
+
+        }
+        StartCoroutine(ScrollToBottomAnimated(0.18f));
+        //yield return new WaitForSeconds(1f);
     }
     private IEnumerator ScrollToBottomAnimated(float duration)
     {
@@ -291,6 +513,10 @@ public class ThunderManager : MonoBehaviour
         chat_profilePicture.sprite = currentProfilePicture;
         yayCount = 0;
         questionCount = 0;
+
+        ResetPools();
+        RandomizeChoice();
+
         foundMatchAnimator.SetTrigger("Found");
         yield return new WaitForSeconds(2f);
         swipeWindow.SetActive(false);
@@ -429,47 +655,46 @@ public class ThunderManager : MonoBehaviour
         afterLoginUsername.text = "Hello, " + usernameInput.text;
     }
 
-    private IEnumerator SelectedQuestion(GameObject target)
+    private IEnumerator SelectedQuestion()
     {
         questionCount++;
-        thunderNPCResponse = target.GetComponent<ThunderNPCResponse>();
         firstPath.SetActive(false);
         if (Random.value < 0.5f)
         {
-            thunderNPCResponse.triggersHappiness = true;
-            thunderNPCResponse.happinessAmount = 1;
+            triggersHappiness = true;
+            happinessAmount = 1;
         }
         if (Random.value < 0.5f)
         {
-            thunderNPCResponse.triggersSpiciness = true;
-            thunderNPCResponse.spicinessAmount = 1;
+            triggersSpiciness = true;
+            spicinessAmount = 1;
         }
         if (Random.value < 0.5f)
         {
-            thunderNPCResponse.triggersRomanceness = true;
-            thunderNPCResponse.romancenessAmount = 1;
+            triggersRomanceness = true;
+            romancenessAmount = 1;
         }
         else
         {
-            thunderNPCResponse.happinessAmount = 0;
-            thunderNPCResponse.spicinessAmount = 0;
-            thunderNPCResponse.romancenessAmount = 0;
+            happinessAmount = 0;
+            spicinessAmount = 0;
+            romancenessAmount = 0;
         }
 
 
-        if (thunderNPCResponse.triggersHappiness)
+        if (triggersHappiness)
         {
-            happinessLevel += thunderNPCResponse.happinessAmount;
+            happinessLevel += happinessAmount;
             happinessSlider.value = happinessLevel;
         }
-        if (thunderNPCResponse.triggersSpiciness)
+        if (triggersSpiciness)
         {
-            spicinessLevel += thunderNPCResponse.spicinessAmount;
+            spicinessLevel += spicinessAmount;
             spicinessSlider.value = spicinessLevel;
         }
-        if (thunderNPCResponse.triggersRomanceness)
+        if (triggersRomanceness)
         {
-            romancenessLevel += thunderNPCResponse.romancenessAmount;
+            romancenessLevel += romancenessAmount;
             romancenessSlider.value = romancenessLevel;
         }
         yield return new WaitForSeconds(selectDelay);
