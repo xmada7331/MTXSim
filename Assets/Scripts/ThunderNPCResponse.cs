@@ -20,6 +20,7 @@ public class ThunderNPCResponse : MonoBehaviour
     public int spicinessAmount;
     public int romancenessAmount;
 
+
     private void Start()
     {
         RandomizeChoice();

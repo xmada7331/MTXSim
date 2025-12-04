@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.GraphicsBuffer;
 //using UnityEngine.UIElements;
 
 public class ThunderManager : MonoBehaviour
@@ -34,6 +35,7 @@ public class ThunderManager : MonoBehaviour
     [Header("Swipe Window")]
     public Animator foundMatchAnimator;
     private int yayCount = 0;
+    public int questionCount = 0;
     private string currentProfileName = "";
     private Sprite currentProfilePicture;
     public TMP_Text randomName;
@@ -65,13 +67,11 @@ public class ThunderManager : MonoBehaviour
     public GameObject chatWindow;
     public GameObject swipeWindow;
 
+    public GameObject choice1;
+    public GameObject choice2;
+    public GameObject choice3;
+
     public GameObject firstPath;
-    public GameObject secondPath;
-    public GameObject thirdPath;
-    public GameObject fourthPath;
-    public GameObject fifthPath;
-    public GameObject sixthPath;
-    public GameObject seventhPath;
 
 
     public TMP_Text playerTextPrefab;
@@ -81,9 +81,9 @@ public class ThunderManager : MonoBehaviour
     public Slider spicinessSlider;
     public Slider romancenessSlider;
 
-    private int happinessLevel = 0;
-    private int spicinessLevel = 0;
-    private int romancenessLevel = 0;
+    public int happinessLevel = 0;
+    public int spicinessLevel = 0;
+    public int romancenessLevel = 0;
 
     private float selectDelay = 3f;
 
@@ -149,55 +149,7 @@ public class ThunderManager : MonoBehaviour
         newText.text = target.GetComponent<ThunderNPCResponse>().playerResponse;
         StartCoroutine(ScrollToBottomAnimated(0.18f));
         GenerateNPCResponse(target);
-        StartCoroutine(SelectFirstPath(target));
-    }
-    public void SelectMessage2(GameObject target)
-    {
-        TMP_Text newText = Instantiate(playerTextPrefab, chatContentParent);
-        newText.text = target.GetComponent<ThunderNPCResponse>().playerResponse;
-        StartCoroutine(ScrollToBottomAnimated(0.18f));
-        GenerateNPCResponse(target);
-        StartCoroutine(SelectSecondPath(target));
-    }
-    public void SelectMessage3(GameObject target)
-    {
-        TMP_Text newText = Instantiate(playerTextPrefab, chatContentParent);
-        newText.text = target.GetComponent<ThunderNPCResponse>().playerResponse;
-        StartCoroutine(ScrollToBottomAnimated(0.18f));
-        GenerateNPCResponse(target);
-        StartCoroutine(SelectThirdPath(target));
-    }
-    public void SelectMessage4(GameObject target)
-    {
-        TMP_Text newText = Instantiate(playerTextPrefab, chatContentParent);
-        newText.text = target.GetComponent<ThunderNPCResponse>().playerResponse;
-        StartCoroutine(ScrollToBottomAnimated(0.18f));
-        GenerateNPCResponse(target);
-        StartCoroutine(SelectFourthPath(target));
-    }
-    public void SelectMessage5(GameObject target)
-    {
-        TMP_Text newText = Instantiate(playerTextPrefab, chatContentParent);
-        newText.text = target.GetComponent<ThunderNPCResponse>().playerResponse;
-        StartCoroutine(ScrollToBottomAnimated(0.18f));
-        GenerateNPCResponse(target);
-        StartCoroutine(SelectFifthPath(target));
-    }
-    public void SelectMessage6(GameObject target)
-    {
-        TMP_Text newText = Instantiate(playerTextPrefab, chatContentParent);
-        newText.text = target.GetComponent<ThunderNPCResponse>().playerResponse;
-        StartCoroutine(ScrollToBottomAnimated(0.18f));
-        GenerateNPCResponse(target);
-        StartCoroutine(SelectSixthPath(target));
-    }
-    public void SelectMessage7(GameObject target)
-    {
-        TMP_Text newText = Instantiate(playerTextPrefab, chatContentParent);
-        newText.text = target.GetComponent<ThunderNPCResponse>().playerResponse;
-        StartCoroutine(ScrollToBottomAnimated(0.18f));
-        GenerateNPCResponse(target);
-        StartCoroutine(SelectFinalPath(target));
+        StartCoroutine(SelectedQuestion(target));
     }
 
     public void GenerateNPCResponse(GameObject target)
@@ -217,11 +169,34 @@ public class ThunderManager : MonoBehaviour
         Destroy(npcMessage.gameObject);
         //yield return new WaitForSeconds(Random.Range(0.2f,1.5f));
         yield return new WaitForSeconds(1f);
-        TMP_Text npcMessage2 = Instantiate(NPCTextPrefab, chatContentParent);
-        npcMessage2.text = target.GetComponent<ThunderNPCResponse>().NPCResponse;
+        if (questionCount < 7)
+        {
+            TMP_Text npcMessage2 = Instantiate(NPCTextPrefab, chatContentParent);
+            npcMessage2.text = target.GetComponent<ThunderNPCResponse>().NPCResponse;
+            yield return new WaitForSeconds(.1f);
+            firstPath.SetActive(true);
+            choice1.GetComponent<ThunderNPCResponse>().RandomizeChoice();
+            choice2.GetComponent<ThunderNPCResponse>().RandomizeChoice();
+            choice3.GetComponent<ThunderNPCResponse>().RandomizeChoice();
+        }
+        else if(questionCount >= 7 && happinessLevel > 5 || questionCount >= 7 && spicinessLevel > 5 || questionCount >= 7 && romancenessLevel > 5)
+        {
+            firstPath.SetActive(false);
+            TMP_Text npcMessage2 = Instantiate(NPCTextPrefab, chatContentParent);
+            npcMessage2.text = "Let's meet up!.";
+            CheckEnding();
+        }
+        else
+        {
+            firstPath.SetActive(false);
+            TMP_Text npcMessage2 = Instantiate(NPCTextPrefab, chatContentParent);
+            npcMessage2.text = "I don't think we're a match.";
+            CheckEnding();
+
+        }
         StartCoroutine(ScrollToBottomAnimated(0.18f));
         //yield return new WaitForSeconds(1f);
-        yield return new WaitForSeconds(1f);
+
 
     }
     private IEnumerator ScrollToBottomAnimated(float duration)
@@ -267,303 +242,6 @@ public class ThunderManager : MonoBehaviour
         // ensure final state
         chatScroll.verticalNormalizedPosition = target;
         chatScroll.velocity = Vector2.zero;
-    }
-
-    private IEnumerator SelectFirstPath(GameObject target)
-    {
-        thunderNPCResponse = target.GetComponent<ThunderNPCResponse>();
-        firstPath.SetActive(false);
-        if (Random.value < 0.5f)
-        {
-            thunderNPCResponse.triggersHappiness = true;
-            thunderNPCResponse.happinessAmount = 1;
-        }
-        if (Random.value < 0.5f)
-        {
-            thunderNPCResponse.triggersSpiciness = true;
-            thunderNPCResponse.spicinessAmount = 1;
-        }
-        if (Random.value < 0.5f)
-        {
-            thunderNPCResponse.triggersRomanceness = true;
-            thunderNPCResponse.romancenessAmount = 1;
-        }
-        else
-        {
-            thunderNPCResponse.happinessAmount = 0;
-            thunderNPCResponse.spicinessAmount = 0;
-            thunderNPCResponse.romancenessAmount = 0;
-        }
-
-
-        if (thunderNPCResponse.triggersHappiness)
-        {
-            happinessLevel += thunderNPCResponse.happinessAmount;
-            happinessSlider.value = happinessLevel;
-        }
-        if (thunderNPCResponse.triggersSpiciness)
-        {
-            spicinessLevel += thunderNPCResponse.spicinessAmount;
-            spicinessSlider.value = spicinessLevel;
-        }
-        if (thunderNPCResponse.triggersRomanceness)
-        {
-            romancenessLevel += thunderNPCResponse.romancenessAmount;
-            romancenessSlider.value = romancenessLevel;
-        }
-        yield return new WaitForSeconds(selectDelay);
-        secondPath.SetActive(true);
-
-    }
-    private IEnumerator SelectSecondPath(GameObject target)
-    {
-        thunderNPCResponse = target.GetComponent<ThunderNPCResponse>();
-        secondPath.SetActive(false);
-        if (Random.value < 0.5f)
-        {
-            thunderNPCResponse.triggersHappiness = true;
-            thunderNPCResponse.happinessAmount = 1;
-        }
-        if (Random.value < 0.5f)
-        {
-            thunderNPCResponse.triggersSpiciness = true;
-            thunderNPCResponse.spicinessAmount = 1;
-        }
-        if (Random.value < 0.5f)
-        {
-            thunderNPCResponse.triggersRomanceness = true;
-            thunderNPCResponse.romancenessAmount = 1;
-        }
-        else
-        {
-            thunderNPCResponse.happinessAmount = 0;
-            thunderNPCResponse.spicinessAmount = 0;
-            thunderNPCResponse.romancenessAmount = 0;
-        }
-        if (thunderNPCResponse.triggersHappiness)
-        {
-            happinessLevel += thunderNPCResponse.happinessAmount;
-            happinessSlider.value = happinessLevel;
-        }
-        if (thunderNPCResponse.triggersSpiciness)
-        {
-            spicinessLevel += thunderNPCResponse.spicinessAmount;
-            spicinessSlider.value = spicinessLevel;
-        }
-        if (thunderNPCResponse.triggersRomanceness)
-        {
-            romancenessLevel += thunderNPCResponse.romancenessAmount;
-            romancenessSlider.value = romancenessLevel;
-        }
-        yield return new WaitForSeconds(selectDelay);
-        thirdPath.SetActive(true);
-
-    }
-    private IEnumerator SelectThirdPath(GameObject target)
-    {
-        thunderNPCResponse = target.GetComponent<ThunderNPCResponse>();
-        thirdPath.SetActive(false);
-        if (Random.value < 0.5f)
-        {
-            thunderNPCResponse.triggersHappiness = true;
-            thunderNPCResponse.happinessAmount = 1;
-        }
-        if (Random.value < 0.5f)
-        {
-            thunderNPCResponse.triggersSpiciness = true;
-            thunderNPCResponse.spicinessAmount = 1;
-        }
-        if (Random.value < 0.5f)
-        {
-            thunderNPCResponse.triggersRomanceness = true;
-            thunderNPCResponse.romancenessAmount = 1;
-        }
-        else
-        {
-            thunderNPCResponse.happinessAmount = 0;
-            thunderNPCResponse.spicinessAmount = 0;
-            thunderNPCResponse.romancenessAmount = 0;
-        }
-        if (thunderNPCResponse.triggersHappiness)
-        {
-            happinessLevel += thunderNPCResponse.happinessAmount;
-            happinessSlider.value = happinessLevel;
-        }
-        if (thunderNPCResponse.triggersSpiciness)
-        {
-            spicinessLevel += thunderNPCResponse.spicinessAmount;
-            spicinessSlider.value = spicinessLevel;
-        }
-        if (thunderNPCResponse.triggersRomanceness)
-        {
-            romancenessLevel += thunderNPCResponse.romancenessAmount;
-            romancenessSlider.value = romancenessLevel;
-        }
-        yield return new WaitForSeconds(selectDelay);
-        fourthPath.SetActive(true);
-
-
-    }
-    private IEnumerator SelectFourthPath(GameObject target)
-    {
-        thunderNPCResponse = target.GetComponent<ThunderNPCResponse>();
-        fourthPath.SetActive(false);
-        if (Random.value < 0.5f)
-        {
-            thunderNPCResponse.triggersHappiness = true;
-            thunderNPCResponse.happinessAmount = 1;
-        }
-        if (Random.value < 0.5f)
-        {
-            thunderNPCResponse.triggersSpiciness = true;
-            thunderNPCResponse.spicinessAmount = 1;
-        }
-        if (Random.value < 0.5f)
-        {
-            thunderNPCResponse.triggersRomanceness = true;
-            thunderNPCResponse.romancenessAmount = 1;
-        }
-        else
-        {
-            thunderNPCResponse.happinessAmount = 0;
-            thunderNPCResponse.spicinessAmount = 0;
-            thunderNPCResponse.romancenessAmount = 0;
-        }
-        if (thunderNPCResponse.triggersHappiness)
-        {
-            happinessLevel += thunderNPCResponse.happinessAmount;
-            happinessSlider.value = happinessLevel;
-        }
-        if (thunderNPCResponse.triggersSpiciness)
-        {
-            spicinessLevel += thunderNPCResponse.spicinessAmount;
-            spicinessSlider.value = spicinessLevel;
-        }
-        if (thunderNPCResponse.triggersRomanceness)
-        {
-            romancenessLevel += thunderNPCResponse.romancenessAmount;
-            romancenessSlider.value = romancenessLevel;
-        }
-        yield return new WaitForSeconds(selectDelay);
-        fifthPath.SetActive(true);
-
-    }
-    private IEnumerator SelectFifthPath(GameObject target)
-    {
-        thunderNPCResponse = target.GetComponent<ThunderNPCResponse>();
-        fifthPath.SetActive(false);
-        if (Random.value < 0.5f)
-        {
-            thunderNPCResponse.triggersHappiness = true;
-            thunderNPCResponse.happinessAmount = 1;
-        }
-        if (Random.value < 0.5f)
-        {
-            thunderNPCResponse.triggersSpiciness = true;
-            thunderNPCResponse.spicinessAmount = 1;
-        }
-        if (Random.value < 0.5f)
-        {
-            thunderNPCResponse.triggersRomanceness = true;
-            thunderNPCResponse.romancenessAmount = 1;
-        }
-        else
-        {
-            thunderNPCResponse.happinessAmount = 0;
-            thunderNPCResponse.spicinessAmount = 0;
-            thunderNPCResponse.romancenessAmount = 0;
-        }
-        if (thunderNPCResponse.triggersHappiness)
-        {
-            happinessLevel += thunderNPCResponse.happinessAmount;
-            happinessSlider.value = happinessLevel;
-        }
-        if (thunderNPCResponse.triggersSpiciness)
-        {
-            spicinessLevel += thunderNPCResponse.spicinessAmount;
-            spicinessSlider.value = spicinessLevel;
-        }
-        if (thunderNPCResponse.triggersRomanceness)
-        {
-            romancenessLevel += thunderNPCResponse.romancenessAmount;
-            romancenessSlider.value = romancenessLevel;
-        }
-        yield return new WaitForSeconds(selectDelay);
-        sixthPath.SetActive(true);
-    }
-    private IEnumerator SelectSixthPath(GameObject target)
-    {
-        thunderNPCResponse = target.GetComponent<ThunderNPCResponse>();
-        sixthPath.SetActive(false);
-        if (Random.value < 0.5f)
-        {
-            thunderNPCResponse.triggersHappiness = true;
-            thunderNPCResponse.happinessAmount = 1;
-        }
-        if (Random.value < 0.5f)
-        {
-            thunderNPCResponse.triggersSpiciness = true;
-            thunderNPCResponse.spicinessAmount = 1;
-        }
-        if (Random.value < 0.5f)
-        {
-            thunderNPCResponse.triggersRomanceness = true;
-            thunderNPCResponse.romancenessAmount = 1;
-        }
-        else
-        {
-            thunderNPCResponse.happinessAmount = 0;
-            thunderNPCResponse.spicinessAmount = 0;
-            thunderNPCResponse.romancenessAmount = 0;
-        }
-        if (thunderNPCResponse.triggersHappiness)
-        {
-            happinessLevel += thunderNPCResponse.happinessAmount;
-            happinessSlider.value = happinessLevel;
-        }
-        if (thunderNPCResponse.triggersSpiciness)
-        {
-            spicinessLevel += thunderNPCResponse.spicinessAmount;
-            spicinessSlider.value = spicinessLevel;
-        }
-        if (thunderNPCResponse.triggersRomanceness)
-        {
-            romancenessLevel += thunderNPCResponse.romancenessAmount;
-            romancenessSlider.value = romancenessLevel;
-        }
-        yield return new WaitForSeconds(selectDelay);
-        seventhPath.SetActive(true);
-    }
-    private IEnumerator SelectFinalPath(GameObject target)
-    {
-        thunderNPCResponse = target.GetComponent<ThunderNPCResponse>();
-        seventhPath.SetActive(false);
-        yield return new WaitForSeconds(selectDelay + 1);
-        if (thunderNPCResponse.happinessAmount > 5)
-        {
-            matchAnimator.SetTrigger("Matched");
-        }
-        else if (thunderNPCResponse.spicinessAmount > 5)
-        {
-            matchAnimator.SetTrigger("Matched");
-
-        }
-        else if (thunderNPCResponse.romancenessAmount > 5)
-        {
-            matchAnimator.SetTrigger("Matched");
-
-        }
-        else
-        {
-            rejectAnimator.SetTrigger("Rejected");
-        }
-        yield return new WaitForSeconds(1.7f);
-        chatWindow.SetActive(false);
-        swipeWindow.SetActive(true);
-        yield return new WaitForSeconds(1f);
-        rejectAnimator.SetTrigger("Idle");
-        matchAnimator.SetTrigger("Idle");
-
     }
 
     private IEnumerator RandomizeProfile()
@@ -612,6 +290,7 @@ public class ThunderManager : MonoBehaviour
         chat_name.text = currentProfileName;
         chat_profilePicture.sprite = currentProfilePicture;
         yayCount = 0;
+        questionCount = 0;
         foundMatchAnimator.SetTrigger("Found");
         yield return new WaitForSeconds(2f);
         swipeWindow.SetActive(false);
@@ -750,8 +429,98 @@ public class ThunderManager : MonoBehaviour
         afterLoginUsername.text = "Hello, " + usernameInput.text;
     }
 
-    public void RefreshFirstChoices()
+    private IEnumerator SelectedQuestion(GameObject target)
     {
+        questionCount++;
+        thunderNPCResponse = target.GetComponent<ThunderNPCResponse>();
+        firstPath.SetActive(false);
+        if (Random.value < 0.5f)
+        {
+            thunderNPCResponse.triggersHappiness = true;
+            thunderNPCResponse.happinessAmount = 1;
+        }
+        if (Random.value < 0.5f)
+        {
+            thunderNPCResponse.triggersSpiciness = true;
+            thunderNPCResponse.spicinessAmount = 1;
+        }
+        if (Random.value < 0.5f)
+        {
+            thunderNPCResponse.triggersRomanceness = true;
+            thunderNPCResponse.romancenessAmount = 1;
+        }
+        else
+        {
+            thunderNPCResponse.happinessAmount = 0;
+            thunderNPCResponse.spicinessAmount = 0;
+            thunderNPCResponse.romancenessAmount = 0;
+        }
+
+
+        if (thunderNPCResponse.triggersHappiness)
+        {
+            happinessLevel += thunderNPCResponse.happinessAmount;
+            happinessSlider.value = happinessLevel;
+        }
+        if (thunderNPCResponse.triggersSpiciness)
+        {
+            spicinessLevel += thunderNPCResponse.spicinessAmount;
+            spicinessSlider.value = spicinessLevel;
+        }
+        if (thunderNPCResponse.triggersRomanceness)
+        {
+            romancenessLevel += thunderNPCResponse.romancenessAmount;
+            romancenessSlider.value = romancenessLevel;
+        }
+        yield return new WaitForSeconds(selectDelay);
+        
+
+    }
+
+    private void CheckEnding()
+    {
+        if (happinessLevel >= 5 || spicinessLevel >= 5 || romancenessLevel >= 5)
+        {
+            StartCoroutine(MatchedAnimation());
+        }
+        else
+        {
+            StartCoroutine(RejectionAnimation());
+        }
+    }
+
+    private IEnumerator RejectionAnimation()
+    {
+        questionCount = 0;
+        yield return new WaitForSeconds(1f);
+        firstPath.SetActive(false);
+        rejectAnimator.SetTrigger("Rejected");
+        yield return new WaitForSeconds(1f);
+        chatWindow.SetActive(false);
+        swipeWindow.SetActive(true);
+        yield return new WaitForSeconds(1f);
+        firstPath.SetActive(true);
+        yield return new WaitForSeconds(5f);
+        rejectAnimator.ResetTrigger("Rejected");
+        rejectAnimator.SetTrigger("Idle");
+        yield return null;
+
+    }
+    private IEnumerator MatchedAnimation()
+    {
+        questionCount = 0;
+        yield return new WaitForSeconds(1f);
+        firstPath.SetActive(false);
+        matchAnimator.SetTrigger("Matched");
+        yield return new WaitForSeconds(1f);
+        chatWindow.SetActive(false);
+        swipeWindow.SetActive(true);
+        yield return new WaitForSeconds(1f);
+        firstPath.SetActive(true);
+        yield return new WaitForSeconds(5f);
+        matchAnimator.ResetTrigger("Matched");
+        matchAnimator.SetTrigger("Idle");
+        yield return null;
 
     }
 
