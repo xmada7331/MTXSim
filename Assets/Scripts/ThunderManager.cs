@@ -8,6 +8,17 @@ using static UnityEngine.GraphicsBuffer;
 
 public class ThunderManager : MonoBehaviour
 {
+
+    public TMP_Text usernameHome;
+    public AudioSource thunderAudioSource;
+    public AudioClip foundMatch;
+    public AudioClip messageAppear;
+    public AudioClip register;
+    public AudioClip rejected;
+    public AudioClip matched;
+    public AudioClip sendMessage;
+    public AudioClip swipeNay;
+    public AudioClip swipeYay;
     [Header("Register Window")]
     public GameObject registerWindow;
     public GameObject register2Window;
@@ -134,6 +145,7 @@ public class ThunderManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        usernameHome.text = usernameInput.text;
         if (yayCount >= 3)
         {
 
@@ -211,6 +223,7 @@ public class ThunderManager : MonoBehaviour
 
     private IEnumerator YayTriggered()
     {
+        thunderAudioSource.PlayOneShot(swipeYay);
         currentProfileName = randomName.text;
         currentProfilePicture = profilePicture.sprite;
         yayCount++;
@@ -232,6 +245,7 @@ public class ThunderManager : MonoBehaviour
 
     private IEnumerator NayTriggered()
     {
+        thunderAudioSource.PlayOneShot(swipeNay);
         animationRunning = true;
         profileAnimator.SetTrigger("Nay");
         yield return new WaitForSeconds(2f);
@@ -241,7 +255,7 @@ public class ThunderManager : MonoBehaviour
 
     public void SelectMessage1()
     {
-
+        thunderAudioSource.PlayOneShot(sendMessage);
         TMP_Text playerMessage = Instantiate(playerTextPrefab, chatContentParent);
         playerMessage.text = playerResponse1;
         StartCoroutine(ScrollToBottomAnimated(0.18f));
@@ -250,7 +264,8 @@ public class ThunderManager : MonoBehaviour
     }
     public void SelectMessage2()
     {
-
+        
+        thunderAudioSource.PlayOneShot(sendMessage);
         TMP_Text playerMessage = Instantiate(playerTextPrefab, chatContentParent);
         playerMessage.text = playerResponse2;
         StartCoroutine(ScrollToBottomAnimated(0.18f));
@@ -259,7 +274,7 @@ public class ThunderManager : MonoBehaviour
     }
     public void SelectMessage3()
     {
-
+        thunderAudioSource.PlayOneShot(sendMessage);
         TMP_Text playerMessage = Instantiate(playerTextPrefab, chatContentParent);
         playerMessage.text = playerResponse3;
         StartCoroutine(ScrollToBottomAnimated(0.18f));
@@ -287,6 +302,7 @@ public class ThunderManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
         TMP_Text npcMessage = Instantiate(NPCTextPrefab, chatContentParent);
+        thunderAudioSource.PlayOneShot(messageAppear);
         npcMessage.text = "...";
         StartCoroutine(ScrollToBottomAnimated(0.18f));
         //yield return new WaitForSeconds(Random.Range(1f,4f));
@@ -303,6 +319,7 @@ public class ThunderManager : MonoBehaviour
         }
         if (questionCount < 7)
         {
+            thunderAudioSource.PlayOneShot(messageAppear);
             TMP_Text npcMessage2 = Instantiate(NPCTextPrefab, chatContentParent);
             npcMessage2.text = NPCResponse1;
             yield return new WaitForSeconds(.1f);
@@ -312,6 +329,7 @@ public class ThunderManager : MonoBehaviour
         }
         else if(questionCount >= 7 && happinessLevel >= 5 || questionCount >= 7 && spicinessLevel >= 5 || questionCount >= 7 && romancenessLevel >= 5)
         {
+            thunderAudioSource.PlayOneShot(messageAppear);
             firstPath.SetActive(false);
             TMP_Text npcMessage2 = Instantiate(NPCTextPrefab, chatContentParent);
             npcMessage2.text = "Let's meet up!";
@@ -319,6 +337,7 @@ public class ThunderManager : MonoBehaviour
         }
         else
         {
+            thunderAudioSource.PlayOneShot(messageAppear);
             firstPath.SetActive(false);
             TMP_Text npcMessage2 = Instantiate(NPCTextPrefab, chatContentParent);
             npcMessage2.text = "I don't think we're a match.";
@@ -332,6 +351,7 @@ public class ThunderManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
         TMP_Text npcMessage = Instantiate(NPCTextPrefab, chatContentParent);
+        thunderAudioSource.PlayOneShot(messageAppear);
         npcMessage.text = "...";
         StartCoroutine(ScrollToBottomAnimated(0.18f));
         //yield return new WaitForSeconds(Random.Range(1f,4f));
@@ -349,6 +369,7 @@ public class ThunderManager : MonoBehaviour
 
         if (questionCount < 7)
         {
+            thunderAudioSource.PlayOneShot(messageAppear);
             TMP_Text npcMessage2 = Instantiate(NPCTextPrefab, chatContentParent);
             npcMessage2.text = NPCResponse2;
             yield return new WaitForSeconds(.1f);
@@ -358,6 +379,7 @@ public class ThunderManager : MonoBehaviour
         }
         else if (questionCount >= 7 && happinessLevel >= 5 || questionCount >= 7 && spicinessLevel >= 5 || questionCount >= 7 && romancenessLevel >= 5)
         {
+            thunderAudioSource.PlayOneShot(messageAppear);
             firstPath.SetActive(false);
             TMP_Text npcMessage2 = Instantiate(NPCTextPrefab, chatContentParent);
             npcMessage2.text = "Let's meet up!";
@@ -365,6 +387,7 @@ public class ThunderManager : MonoBehaviour
         }
         else
         {
+            thunderAudioSource.PlayOneShot(messageAppear);
             firstPath.SetActive(false);
             TMP_Text npcMessage2 = Instantiate(NPCTextPrefab, chatContentParent);
             npcMessage2.text = "I don't think we're a match.";
@@ -378,6 +401,7 @@ public class ThunderManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
         TMP_Text npcMessage = Instantiate(NPCTextPrefab, chatContentParent);
+        thunderAudioSource.PlayOneShot(messageAppear);
         npcMessage.text = "...";
         StartCoroutine(ScrollToBottomAnimated(0.18f));
         //yield return new WaitForSeconds(Random.Range(1f,4f));
@@ -397,6 +421,7 @@ public class ThunderManager : MonoBehaviour
 
         if (questionCount < 7)
         {
+            thunderAudioSource.PlayOneShot(messageAppear);
             TMP_Text npcMessage2 = Instantiate(NPCTextPrefab, chatContentParent);
             npcMessage2.text = NPCResponse3;
             yield return new WaitForSeconds(.1f);
@@ -405,6 +430,7 @@ public class ThunderManager : MonoBehaviour
         }
         else if (questionCount >= 7 && happinessLevel >= 5 || questionCount >= 7 && spicinessLevel >= 5 || questionCount >= 7 && romancenessLevel >= 5)
         {
+            thunderAudioSource.PlayOneShot(messageAppear);
             firstPath.SetActive(false);
             TMP_Text npcMessage2 = Instantiate(NPCTextPrefab, chatContentParent);
             npcMessage2.text = "Let's meet up!";
@@ -412,6 +438,7 @@ public class ThunderManager : MonoBehaviour
         }
         else
         {
+            thunderAudioSource.PlayOneShot(messageAppear);
             firstPath.SetActive(false);
             TMP_Text npcMessage2 = Instantiate(NPCTextPrefab, chatContentParent);
             npcMessage2.text = "I don't think we're a match.";
@@ -496,6 +523,7 @@ public class ThunderManager : MonoBehaviour
 
     private IEnumerator FoundMatch()
     {
+        thunderAudioSource.PlayOneShot(foundMatch);
         firstPath.SetActive(true);
         for (int i = chatContentParent.childCount - 1; i >= 0; i--)
         {
@@ -720,6 +748,7 @@ public class ThunderManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         firstPath.SetActive(false);
         rejectAnimator.SetTrigger("Rejected");
+        thunderAudioSource.PlayOneShot(rejected);
         yield return new WaitForSeconds(1f);
         chatWindow.SetActive(false);
         swipeWindow.SetActive(true);
@@ -737,6 +766,7 @@ public class ThunderManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         firstPath.SetActive(false);
         matchAnimator.SetTrigger("Matched");
+        thunderAudioSource.PlayOneShot(matched);
         yield return new WaitForSeconds(1f);
         chatWindow.SetActive(false);
         swipeWindow.SetActive(true);
