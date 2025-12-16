@@ -157,6 +157,9 @@ public class FreeCoinSystem : MonoBehaviour
                 coinAudioSource.PlayOneShot(coinWinClip);
                 failedCoinFlips = 0f;
                 gameManager.incomeAmount += betAmount;
+                yield return new WaitForSeconds(1f);
+                flipResult.text = "";
+                flipResultWidget.text = "";
             }
             else
             {
@@ -167,6 +170,9 @@ public class FreeCoinSystem : MonoBehaviour
                 coinAudioSource.PlayOneShot(coinLoseClip);
                 failedCoinFlips += 1f;
                 gameManager.expensesAmount += betAmount;
+                yield return new WaitForSeconds(1f);
+                flipResult.text = "";
+                flipResultWidget.text = "";
 
             }
             coinAnimator.SetTrigger("Idle");

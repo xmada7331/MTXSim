@@ -70,6 +70,7 @@ public class GameManager : MonoBehaviour
     public GameObject freeCoinIcon;
     public GameObject feetPicsIcon;
     public GameObject gaymTesterIcon;
+    public GameObject thunderIcon;
     [Header("BankingApp")]
     public TMP_Text incomeText;
     public float incomeAmount = 0;
@@ -377,6 +378,22 @@ public class GameManager : MonoBehaviour
         if (playerMoney >= shopPurchasable.itemPrice)
         {
             gaymTesterIcon.SetActive(true);
+            shopPurchasable.PurchaseItem();
+            gameTabUnlocker.purchaseSound.PlayOneShot(gameTabUnlocker.purchaseClip2);
+        }
+        else
+        {
+            shopPurchasable.WiggleItem();
+            gameTabUnlocker.denyPurchaseSound.PlayOneShot(gameTabUnlocker.denyPurchaseClip);
+        }
+
+    }
+    public void UnlockThunder(GameObject target)
+    {
+        shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (playerMoney >= shopPurchasable.itemPrice)
+        {
+            thunderIcon.SetActive(true);
             shopPurchasable.PurchaseItem();
             gameTabUnlocker.purchaseSound.PlayOneShot(gameTabUnlocker.purchaseClip2);
         }
