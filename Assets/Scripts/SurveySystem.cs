@@ -43,6 +43,12 @@ public class SurveySystem : MonoBehaviour
     public GameObject surveyCooldownWindow;
     public Slider surveyCooldown;
 
+    [Header("Cooldown Settings")]
+    public float cooldownDuration = 25f;
+    private float currentCooldown = 0f;
+    private bool isCooldownActive = false;
+    private Coroutine cooldownCoroutine = null;
+
     private List<QuestionsAndAnswers> originalMathQuestions;
     private List<QuestionsAndAnswers> originalCelebsQuestions;
     private List<QuestionsAndAnswers> originalLanguageQuestions;
@@ -53,9 +59,42 @@ public class SurveySystem : MonoBehaviour
 
     public GameObject happyEmoji;
     public GameObject unhappyEmoji;
+
+    [Header("Category Selection Info")]
+    public TMP_Text categoryTitleText;
+    public TMP_Text categoryDescriptionText;
+
+    private string defaultCategoryTitle = "Choose category";
+    private string defaultCategoryDescription = "Every category provides the same amount of money upon completion";
+
+    private readonly Dictionary<string, (string title, string description)> categoryData = new Dictionary<string, (string, string)>(System.StringComparer.OrdinalIgnoreCase)
+    {
+        { "Mythology", ("Mythology", "How well do you know ancient tales and myths?") },
+        { "Math", ("Math", "Test your calculation skills with numbers, algebra, and logic!") },
+        { "Languages", ("Language", "Explore words, meanings, and linguistics from around the world!") },
+        { "Language", ("Language", "Explore words, meanings, and linguistics from around the world!") },
+        { "Sports", ("Sports", "Show off your knowledge of athletics, rules, and famous games!") },
+        { "Video games", ("Video Games", "How well do you know gaming history, consoles, and classic titles?") },
+        { "Animals", ("Animals", "Discover fascinating facts about the animal kingdom and wildlife!") },
+        { "Popculture", ("Pop Culture", "Test your knowledge of movies, celebrities, music, and media!") },
+        { "Celebs", ("Pop Culture", "Test your knowledge of movies, celebrities, music, and media!") }
+    };
     private void Awake()
     {
         gameManager = FindObjectOfType<GameManager>();
+    }
+
+    private void Update()
+    {
+        // Safety check: if cooldown finished, ensure wait/cooldown screen is hidden and main menu is restored
+        if (!isCooldownActive && surveyCooldownWindow != null && surveyCooldownWindow.activeSelf)
+        {
+            surveyCooldownWindow.SetActive(false);
+            if (mainMenu != null && (endPanel == null || !endPanel.activeSelf) && (quizPanel == null || !quizPanel.activeSelf))
+            {
+                mainMenu.SetActive(true);
+            }
+        }
     }
 
     private void Start()
@@ -68,7 +107,12 @@ public class SurveySystem : MonoBehaviour
         originalAnimalsQuestions = new List<QuestionsAndAnswers>(AnimalsQuestions);
         originalMythologyQuestions = new List<QuestionsAndAnswers>(MythologyQuestions);
 
+        SetupButtonHoverEffects();
+    }
 
+    private void OnEnable()
+    {
+        SetupButtonHoverEffects();
     }
     public void correct()
     {
@@ -196,6 +240,7 @@ public class SurveySystem : MonoBehaviour
         StopAllCoroutines();
         quizPanel.SetActive(false);
         endPanel.SetActive(true);
+        ResetCategoryHoverText();
         mathCat = false;
         celebsCat = false;
         languageCat = false;
@@ -221,9 +266,13 @@ public class SurveySystem : MonoBehaviour
             unhappyEmoji.SetActive(true);
             happyEmoji.SetActive(false);
         }
+
+        // Start cooldown count immediately when quiz is finished
+        StartSurveyCooldown();
     }
     public void ChooseMath()
     {
+        ResetCategoryHoverText();
         correctAnswers = 0;
         mathCat = true;
         GenerateQuestion(MathQuestions, originalMathQuestions);
@@ -233,6 +282,7 @@ public class SurveySystem : MonoBehaviour
     }
     public void ChooseLang()
     {
+        ResetCategoryHoverText();
         correctAnswers = 0;
         languageCat = true;
         GenerateQuestion(LanguageQuestions, originalLanguageQuestions);
@@ -244,6 +294,7 @@ public class SurveySystem : MonoBehaviour
     }
     public void ChooseCelebs()
     {
+        ResetCategoryHoverText();
         correctAnswers = 0;
         celebsCat = true;
         GenerateQuestion(CelebsQuestions, originalCelebsQuestions);
@@ -253,6 +304,7 @@ public class SurveySystem : MonoBehaviour
     }
     public void ChooseSports()
     {
+        ResetCategoryHoverText();
         correctAnswers = 0;
         sportsCat = true;
         GenerateQuestion(SportsQuestions, originalSportsQuestions);
@@ -262,6 +314,7 @@ public class SurveySystem : MonoBehaviour
     }
     public void ChooseVideoGames()
     {
+        ResetCategoryHoverText();
         correctAnswers = 0;
         videoGamesCat = true;
         GenerateQuestion(VideoGamesQuestions, originalVideoGamesQuestions);
@@ -271,6 +324,7 @@ public class SurveySystem : MonoBehaviour
     }
     public void ChooseAnimals()
     {
+        ResetCategoryHoverText();
         correctAnswers = 0;
         animalsCat = true;
         GenerateQuestion(AnimalsQuestions, originalAnimalsQuestions);
@@ -280,6 +334,7 @@ public class SurveySystem : MonoBehaviour
     }
     public void ChooseMythology()
     {
+        ResetCategoryHoverText();
         correctAnswers = 0;
         mythologyCat = true;
         GenerateQuestion(MythologyQuestions, originalMythologyQuestions);
@@ -330,23 +385,206 @@ public class SurveySystem : MonoBehaviour
             EndSurvey();
         }
     }
-    public void TriggerSurveyCooldown()
+    public void StartSurveyCooldown()
     {
-        StartCoroutine(SurveyCooldown());
+        if (cooldownCoroutine != null)
+        {
+            StopCoroutine(cooldownCoroutine);
+        }
+        cooldownCoroutine = StartCoroutine(SurveyCooldownRoutine());
     }
 
-    private IEnumerator SurveyCooldown()
+    private IEnumerator SurveyCooldownRoutine()
     {
-        surveyCooldownWindow.SetActive(true);
-        surveyCooldown.maxValue = 25f;
-        surveyCooldown.value = 25f;
-        mainMenu.SetActive(false);
-        while (surveyCooldown.value > 0)
+        isCooldownActive = true;
+        currentCooldown = cooldownDuration;
+        if (surveyCooldown != null)
         {
-            surveyCooldown.value -= Time.deltaTime;
+            surveyCooldown.maxValue = cooldownDuration;
+            surveyCooldown.value = cooldownDuration;
+        }
+
+        while (currentCooldown > 0f)
+        {
+            currentCooldown -= Time.deltaTime;
+            if (surveyCooldown != null)
+            {
+                surveyCooldown.value = currentCooldown;
+            }
             yield return null;
         }
-        surveyCooldownWindow.SetActive(false);
-        mainMenu.SetActive(true);
+
+        currentCooldown = 0f;
+        isCooldownActive = false;
+        cooldownCoroutine = null;
+
+        // If wait/cooldown screen is currently showing, close it and return to main menu
+        if (surveyCooldownWindow != null && surveyCooldownWindow.activeSelf)
+        {
+            surveyCooldownWindow.SetActive(false);
+            if (mainMenu != null) mainMenu.SetActive(true);
+        }
+    }
+
+    public void TriggerSurveyCooldown()
+    {
+        OnBackButtonClicked();
+    }
+
+    public void OnBackButtonClicked()
+    {
+        if (endPanel != null) endPanel.SetActive(false);
+
+        if (isCooldownActive && currentCooldown > 0f)
+        {
+            // Cooldown is still in progress, show the cooldown/wait screen with remaining time
+            if (mainMenu != null) mainMenu.SetActive(false);
+            if (surveyCooldownWindow != null) surveyCooldownWindow.SetActive(true);
+        }
+        else
+        {
+            // Cooldown already finished while on endPanel, go straight to main menu
+            if (surveyCooldownWindow != null) surveyCooldownWindow.SetActive(false);
+            if (mainMenu != null) mainMenu.SetActive(true);
+        }
+    }
+public void SetupButtonHoverEffects()
+    {
+        // 1. Start button in mainMenu
+        if (mainMenu != null)
+        {
+            Transform startBt = mainMenu.transform.Find("Start_bt");
+            if (startBt != null)
+            {
+                ApplyHoverEffect(startBt.gameObject, withScale: true);
+            }
+        }
+
+        // 2. Categories under Surveys_window/Categories
+        Transform surveyWin = null;
+        if (mainMenu != null && mainMenu.transform.parent != null)
+            surveyWin = mainMenu.transform.parent;
+        else if (quizPanel != null && quizPanel.transform.parent != null && quizPanel.transform.parent.parent != null)
+            surveyWin = quizPanel.transform.parent.parent;
+
+        if (surveyWin != null)
+        {
+            Transform catParent = surveyWin.Find("Categories");
+            if (catParent != null)
+            {
+                // Auto-wire UI references if null
+                if (categoryTitleText == null)
+                {
+                    Transform chooseImg = catParent.Find("Choose image");
+                    if (chooseImg != null) categoryTitleText = chooseImg.GetComponentInChildren<TMP_Text>();
+                }
+                if (categoryDescriptionText == null)
+                {
+                    Transform catDesc = catParent.Find("Cat_description");
+                    if (catDesc != null) categoryDescriptionText = catDesc.GetComponent<TMP_Text>();
+                }
+
+                if (categoryTitleText != null && !string.IsNullOrEmpty(categoryTitleText.text))
+                    defaultCategoryTitle = categoryTitleText.text;
+                if (categoryDescriptionText != null && !string.IsNullOrEmpty(categoryDescriptionText.text))
+                    defaultCategoryDescription = categoryDescriptionText.text;
+
+                for (int i = 0; i < catParent.childCount; i++)
+                {
+                    Transform cTr = catParent.GetChild(i);
+                    // Add hover and scale pop to any category with an Image and EventTrigger or Button
+                    if (cTr.GetComponent<UnityEngine.UI.Image>() != null &&
+                        (cTr.GetComponent<UnityEngine.EventSystems.EventTrigger>() != null || cTr.GetComponent<Button>() != null))
+                    {
+                        ApplyHoverEffect(cTr.gameObject, withScale: true);
+
+                        UIHoverEffect hover = cTr.GetComponent<UIHoverEffect>();
+                        if (hover != null)
+                        {
+                            string cName = cTr.name;
+                            hover.onHoverEnterAction = () => OnCategoryHoverEnter(cName);
+                            hover.onHoverExitAction = () => OnCategoryHoverExit(cName);
+                        }
+                    }
+                }
+            }
+        }
+
+        // 3. Quiz answer options
+        if (options != null)
+        {
+            foreach (var opt in options)
+            {
+                if (opt != null)
+                    ApplyHoverEffect(opt, withScale: false);
+            }
+        }
+
+        // 4. Back button in endPanel
+        if (endPanel != null)
+        {
+            Transform backBt = endPanel.transform.Find("Back_bt");
+            if (backBt != null)
+            {
+                ApplyHoverEffect(backBt.gameObject, withScale: false);
+            }
+        }
+    }
+
+    public void OnCategoryHoverEnter(string categoryName)
+    {
+        if (categoryData.TryGetValue(categoryName, out var info))
+        {
+            if (categoryTitleText != null)
+                categoryTitleText.text = info.title;
+            if (categoryDescriptionText != null)
+                categoryDescriptionText.text = info.description;
+        }
+        else
+        {
+            if (categoryTitleText != null)
+                categoryTitleText.text = categoryName;
+        }
+    }
+
+    public void OnCategoryHoverExit(string categoryName)
+    {
+        if (categoryData.TryGetValue(categoryName, out var info))
+        {
+            if (categoryTitleText != null && categoryTitleText.text == info.title)
+                categoryTitleText.text = defaultCategoryTitle;
+            if (categoryDescriptionText != null && categoryDescriptionText.text == info.description)
+                categoryDescriptionText.text = defaultCategoryDescription;
+        }
+        else
+        {
+            if (categoryTitleText != null && categoryTitleText.text == categoryName)
+                categoryTitleText.text = defaultCategoryTitle;
+        }
+    }
+
+    public void ResetCategoryHoverText()
+    {
+        if (categoryTitleText != null)
+            categoryTitleText.text = defaultCategoryTitle;
+        if (categoryDescriptionText != null)
+            categoryDescriptionText.text = defaultCategoryDescription;
+    }
+
+    private void ApplyHoverEffect(GameObject go, bool withScale = false)
+    {
+        if (go == null) return;
+        UIHoverEffect h = go.GetComponent<UIHoverEffect>() ?? go.AddComponent<UIHoverEffect>();
+        h.useExplicitHoverColor = true;
+        h.hoverColor = new Color(0.88f, 0.94f, 1f, 1f);
+        h.useExplicitPressedColor = true;
+        h.pressedColor = new Color(0.75f, 0.85f, 0.95f, 1f);
+        if (withScale)
+        {
+            h.enableScaleEffect = true;
+            h.hoverScaleMultiplier = 1.08f;
+            h.pressedScaleMultiplier = 1.02f;
+            h.scaleAnimationDuration = 0.1f;
+        }
     }
 }

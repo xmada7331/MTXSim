@@ -13,6 +13,8 @@ public class ShopPurchasable : MonoBehaviour
     public Transform transformToWiggle;
     public bool itemPurchased = false;
     public bool isPurchasable = false;
+    public string purchaseDescription;
+    private bool hasRecorded = false;
 
 
     private void Awake()
@@ -40,6 +42,11 @@ public class ShopPurchasable : MonoBehaviour
             itemPurchased = true;
             itemImage.color = purchasedColor;
             gameManager.playerMoney -= itemPrice;
+            if (!hasRecorded)
+            {
+                hasRecorded = true;
+                PurchaseHistoryManager.RecordPurchase(itemPrice, GetPurchaseDescription());
+            }
         }
         else if (!itemPurchased)
         {
@@ -111,7 +118,7 @@ public class ShopPurchasable : MonoBehaviour
             gameManager.bankWidgetImage.sprite = gameManager.bankWidgetPurchased;
             gameManager.mainAudioSource.PlayOneShot(gameManager.purchaseWidget);
             gameManager.expensesAmount += itemPrice;
-
+            PurchaseHistoryManager.RecordPurchase(itemPrice, "Bank widget");
         }
         else if (!itemPurchased)
         {
@@ -130,8 +137,7 @@ public class ShopPurchasable : MonoBehaviour
             gameManager.stockWidgetImage.sprite = gameManager.stockWidgetPurchased;
             gameManager.mainAudioSource.PlayOneShot(gameManager.purchaseWidget);
             gameManager.expensesAmount += itemPrice;
-
-
+            PurchaseHistoryManager.RecordPurchase(itemPrice, "Stock widget");
         }
         else if (!itemPurchased)
         {
@@ -150,8 +156,7 @@ public class ShopPurchasable : MonoBehaviour
             gameManager.freeCoinWidgetImage.sprite = gameManager.freeCoinWidgetPurchased;
             gameManager.mainAudioSource.PlayOneShot(gameManager.purchaseWidget);
             gameManager.expensesAmount += itemPrice;
-
-
+            PurchaseHistoryManager.RecordPurchase(itemPrice, "FreeCoin widget");
         }
         else if (!itemPurchased)
         {
@@ -184,6 +189,11 @@ public class ShopPurchasable : MonoBehaviour
     {
         itemPurchased = true;
         itemImage.color = new Color32(255, 255, 255, 105);
+        if (!hasRecorded)
+        {
+            hasRecorded = true;
+            PurchaseHistoryManager.RecordPurchase(itemPrice, GetPurchaseDescription());
+        }
     }
 
     public void HoverWithPrice(TMP_Text priceText)
@@ -218,5 +228,66 @@ public class ShopPurchasable : MonoBehaviour
         gameManager.shopDescription.gameObject.SetActive(false);
     }
 
+    public string GetPurchaseDescription()
+    {
+        if (!string.IsNullOrEmpty(purchaseDescription))
+            return purchaseDescription;
 
+        if (IsInsideParent("Mtx_window"))
+        {
+            return "MTX setting";
+        }
+
+        if (IsInsideParent("DigiStore_window"))
+        {
+            Transform p = transform;
+            while (p != null && p.name != "DigiStore_window")
+            {
+                string n = p.name.ToLowerInvariant();
+                if (n.Contains("freecoin")) return "FreeCoin app";
+                if (n.Contains("survey")) return "Surveys app";
+                if (n.Contains("bank")) return "Bank app";
+                if (n.Contains("stock")) return "Stock app";
+                if (n.Contains("camera")) return "Camera app";
+                if (n.Contains("shop")) return "Shop app";
+                if (n.Contains("gt") || n.Contains("gaym")) return "GaymTester app";
+                if (n.Contains("thunder")) return "Thunder app";
+                if (n.Contains("pic")) return "FeetPics app";
+                p = p.parent;
+            }
+            return "DigiStore app";
+        }
+
+        if (IsInsideParent("Shop_window"))
+        {
+            string n = gameObject.name.ToLowerInvariant();
+            string parentN = transform.parent != null ? transform.parent.name.ToLowerInvariant() : "";
+            if (n.Contains("webcam") || parentN.Contains("webcam")) return "DigiStore camera";
+            if (n.Contains("antivirus")) return "Antivirus";
+            if (n.Contains("pause")) return "Pause menu";
+            if (n.Contains("wallpaper") || n.Contains("wp")) return "Wallpaper";
+            if (n.Contains("cursor")) return "Cursor";
+            if (n.Contains("power")) return "Power app";
+            if (n.Contains("feet")) return "FeetPics pack";
+            return "Shop item";
+        }
+
+        if (IsInsideParent("FreeCoin_window"))
+        {
+            return "FreeCoin upgrade";
+        }
+
+        return gameObject.name;
+    }
+
+    private bool IsInsideParent(string parentName)
+    {
+        Transform curr = transform;
+        while (curr != null)
+        {
+            if (curr.name == parentName) return true;
+            curr = curr.parent;
+        }
+        return false;
+    }
 }

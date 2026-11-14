@@ -63,9 +63,6 @@ public class GaymTesterManager : MonoBehaviour
     [Header("Survey Form")]
     public TMP_Dropdown languageDropdown;
     public TMP_InputField nameInput;
-    public TMP_InputField dateDD;
-    public TMP_InputField dateMM;
-    public TMP_InputField dateYY;
     public TMP_InputField playersNumber;
     public TMP_InputField mostEnjoyable;
     public TMP_InputField leastEnjoyable;
@@ -75,16 +72,38 @@ public class GaymTesterManager : MonoBehaviour
     public TMP_InputField bug4;
     public TMP_InputField bug5;
     public TMP_InputField bug6;
-    public TMP_InputField bug7;
-    public TMP_InputField bug8;
-    public TMP_InputField bug9;
     public TMP_InputField feedback;
     [Header("Success Window")]
     public Slider successSlider;
     public TMP_Text moneyMessage;
+    [Tooltip("Duration in seconds for the MoneyCalc slider to fill up.")]
+    public float calculationDuration = 3f;
     private float moneyEarned;
     public Image successImage1;
     public Image successImage2;
+    private Coroutine successCoroutine;
+
+    [Header("Payout Balancing")]
+    [Tooltip("Global multiplier applied to the final calculated payout.")]
+    public float globalPayoutMultiplier = 1f;
+    [Tooltip("Base payout for completing the QA testing.")]
+    public float basePayout = 3.0f;
+    [Tooltip("Bonus payout for filling out tester profile info.")]
+    public float profileCompletionBonus = 1.0f;
+    [Tooltip("Bonus payout per non-empty bug report (up to 6 bugs).")]
+    public float bugReportMultiplier = 0.90f;
+    [Tooltip("Bonus payout per character across feedback and bug descriptions.")]
+    public float textCharacterMultiplier = 0.035f;
+    [Tooltip("Maximum allowed total payout cap.")]
+    public float maxPayoutCap = 25f;
+
+    [Header("Minigame Multipliers")]
+    [Tooltip("Money earned per score point in Cookie Clicker.")]
+    public float cookieScoreMultiplier = 0.18f;
+    [Tooltip("Money earned per score point in Bananamania.")]
+    public float bananaScoreMultiplier = 0.18f;
+    [Tooltip("Money earned per score point in Screamer.")]
+    public float screamerScoreMultiplier = 0.035f;
 
     private void Awake()
     {
@@ -144,8 +163,28 @@ public class GaymTesterManager : MonoBehaviour
                 break;
         }
     }
+    private void OnDisable()
+    {
+        if (successCoroutine != null)
+        {
+            StopCoroutine(successCoroutine);
+            successCoroutine = null;
+        }
+    }
+
     public void ResetAllGames()
     {
+        if (successCoroutine != null)
+        {
+            StopCoroutine(successCoroutine);
+            successCoroutine = null;
+        }
+
+        if (successSlider != null)
+        {
+            successSlider.value = successSlider.maxValue;
+        }
+
         gaymAudioSourceMain.pitch = 1f;
         screamerWindow.SetActive(false);
         bananamaniaWindow.SetActive(false);
@@ -185,22 +224,85 @@ public class GaymTesterManager : MonoBehaviour
     {
         StartCoroutine(GameTimeCountdown());
     }
+
     public void SuccessTrigger()
     {
-        float dropdownIndexPlusOne = (languageDropdown != null) ? (languageDropdown.value + 1f) : 1f;
-        float multiplier = 1f + 0.01f * dropdownIndexPlusOne;
-
-        StartCoroutine(SuccessCountdown());
-        float baseAmount = (mostEnjoyable.text.Length + leastEnjoyable.text.Length
-            + bug1.text.Length + bug2.text.Length + bug3.text.Length
-            + bug4.text.Length + bug5.text.Length + bug6.text.Length
-            + bug7.text.Length + bug8.text.Length + bug9.text.Length
-            + feedback.text.Length + (screamerScoreInt/10) + (bananaScoreInt/5) + (clicksShown/5)) * 0.03f;
-
-        moneyEarned = baseAmount * multiplier;
-        if (moneyEarned > 15f)
+        // Prevent starting if the form window is still active (e.g. validation failed)
+        if (formWindow != null && formWindow.activeSelf)
         {
-            moneyEarned = 15f;
+            return;
+        }
+
+        if (successCoroutine == null)
+        {
+            StartSuccessCalculation();
+        }
+    }
+
+    public void StartSuccessCalculation()
+    {
+        if (successCoroutine != null)
+        {
+            StopCoroutine(successCoroutine);
+            successCoroutine = null;
+        }
+
+        CalculatePayout();
+        successCoroutine = StartCoroutine(SuccessCountdown());
+    }
+
+    public void CalculatePayout()
+    {
+        float dropdownIndexPlusOne = (languageDropdown != null) ? (languageDropdown.value + 1f) : 1f;
+        float multiplier = 1f + 0.02f * dropdownIndexPlusOne;
+
+        // Base reward for completing QA testing
+        float baseReward = basePayout;
+
+        // Profile completion bonus
+        bool profileComplete = (nameInput != null && !string.IsNullOrWhiteSpace(nameInput.text))
+            && (playersNumber == null || !string.IsNullOrWhiteSpace(playersNumber.text));
+        float profileBonus = profileComplete ? profileCompletionBonus : 0f;
+
+        // Bugs reported bonus (up to 6 bugs)
+        TMP_InputField[] bugs = new[]
+        {
+            bug1, bug2, bug3, bug4, bug5, bug6
+        };
+        int bugCount = 0;
+        int bugChars = 0;
+        foreach (var b in bugs)
+        {
+            if (b != null && !string.IsNullOrWhiteSpace(b.text))
+            {
+                bugCount++;
+                bugChars += b.text.Trim().Length;
+            }
+        }
+        float bugBonus = bugCount * bugReportMultiplier;
+
+        // Feedback character length bonus
+        int textChars = 0;
+        if (mostEnjoyable != null) textChars += mostEnjoyable.text.Trim().Length;
+        if (leastEnjoyable != null) textChars += leastEnjoyable.text.Trim().Length;
+        if (feedback != null) textChars += feedback.text.Trim().Length;
+        textChars += bugChars;
+        float textBonus = textChars * textCharacterMultiplier;
+
+        // Minigame score rewards
+        float cookieBonus = clicksShown * cookieScoreMultiplier;
+        float bananaBonus = Mathf.Max(0, bananaScoreInt) * bananaScoreMultiplier;
+        float screamerBonus = Mathf.Max(0, screamerScoreInt) * screamerScoreMultiplier;
+
+        float minigameBonus = cookieBonus + bananaBonus + screamerBonus;
+
+        float subtotal = baseReward + profileBonus + bugBonus + textBonus + minigameBonus;
+        moneyEarned = subtotal * multiplier * globalPayoutMultiplier;
+
+        float cap = Mathf.Max(0f, maxPayoutCap);
+        if (moneyEarned > cap)
+        {
+            moneyEarned = cap;
         }
         if (moneyEarned <= 0f)
         {
@@ -226,38 +328,64 @@ public class GaymTesterManager : MonoBehaviour
         endScreen.SetActive(true);
         ClearAllInputs();
     }
+
     public IEnumerator SuccessCountdown()
     {
-        float timeLeft = 15f;
-        successSlider.maxValue = timeLeft;
-        successSlider.value = timeLeft;
-        while (timeLeft > 0)
+        float duration = Mathf.Max(0.5f, calculationDuration);
+        if (successSlider != null)
         {
-            moneyMessage.text = "Calculating...";
-            successImage2.gameObject.SetActive(false);
-            successImage1.gameObject.SetActive(true);
-            yield return new WaitForSeconds(1f);
-            timeLeft--;
-            successSlider.value = timeLeft;
+            successSlider.maxValue = duration;
+            successSlider.minValue = 0f;
+            successSlider.value = duration;
         }
-        successImage2.gameObject.SetActive(true);
-        successImage1.gameObject.SetActive(false);
-        backButton.SetActive(true);
-        moneyMessage.text = "You have earned $" + moneyEarned.ToString("F2") + " for your feedback!";
-        gameManager.playerMoney += moneyEarned;
-        gameManager.incomeAmount += moneyEarned;
+
+        if (moneyMessage != null) moneyMessage.text = "Calculating...";
+        if (successImage2 != null) successImage2.gameObject.SetActive(false);
+        if (successImage1 != null) successImage1.gameObject.SetActive(true);
+        if (backButton != null) backButton.SetActive(false);
+
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float progress = Mathf.Clamp01(elapsed / duration);
+            if (successSlider != null)
+            {
+                // Smoothly counts down to 0, which visually fills the inverted slider
+                successSlider.value = (1f - progress) * duration;
+            }
+            yield return null;
+        }
+
+        if (successSlider != null)
+        {
+            successSlider.value = 0f;
+        }
+
+        if (successImage2 != null) successImage2.gameObject.SetActive(true);
+        if (successImage1 != null) successImage1.gameObject.SetActive(false);
+        if (backButton != null) backButton.SetActive(true);
+
+        if (moneyMessage != null)
+        {
+            moneyMessage.text = "You have earned $" + moneyEarned.ToString("F2") + " for your feedback!";
+        }
+
+        if (gameManager != null)
+        {
+            gameManager.playerMoney += moneyEarned;
+            gameManager.incomeAmount += moneyEarned;
+        }
+
+        successCoroutine = null;
     }
 
     public void SendForm()
     {
         bool requiredMissing =
-            string.IsNullOrWhiteSpace(nameInput.text) ||
-            string.IsNullOrWhiteSpace(dateDD.text) ||
-            string.IsNullOrWhiteSpace(dateMM.text) ||
-            string.IsNullOrWhiteSpace(dateYY.text) ||
-            string.IsNullOrWhiteSpace(playersNumber.text) ||
-            string.IsNullOrWhiteSpace(mostEnjoyable.text) ||
-            string.IsNullOrWhiteSpace(leastEnjoyable.text);
+            (nameInput == null || string.IsNullOrWhiteSpace(nameInput.text)) ||
+            (mostEnjoyable == null || string.IsNullOrWhiteSpace(mostEnjoyable.text)) ||
+            (leastEnjoyable == null || string.IsNullOrWhiteSpace(leastEnjoyable.text));
 
         if (requiredMissing)
         {
@@ -277,13 +405,15 @@ public class GaymTesterManager : MonoBehaviour
         formWindow.SetActive(false);
         successWindow.SetActive(true);
         backButton.SetActive(false);
+
+        StartSuccessCalculation();
     }
 
     private bool AnyBugFilled()
     {
         TMP_InputField[] bugs = new[]
         {
-            bug1, bug2, bug3, bug4, bug5, bug6, bug7, bug8, bug9
+            bug1, bug2, bug3, bug4, bug5, bug6
         };
 
         foreach (var b in bugs)
@@ -426,9 +556,9 @@ public class GaymTesterManager : MonoBehaviour
         StartCoroutine(ResetAudioSource());
         TMP_InputField[] inputs = new TMP_InputField[]
         {
-            nameInput, dateDD, dateMM, dateYY, playersNumber,
+            nameInput, playersNumber,
             mostEnjoyable, leastEnjoyable,
-            bug1, bug2, bug3, bug4, bug5, bug6, bug7, bug8, bug9,
+            bug1, bug2, bug3, bug4, bug5, bug6,
             feedback
         };
         foreach (var input in inputs)
@@ -442,7 +572,12 @@ public class GaymTesterManager : MonoBehaviour
 
     public void StopCoroutines()
     {
-               StopAllCoroutines();
+        if (successCoroutine != null)
+        {
+            StopCoroutine(successCoroutine);
+            successCoroutine = null;
+        }
+        StopAllCoroutines();
     }
 
     private IEnumerator ResetAudioSource()

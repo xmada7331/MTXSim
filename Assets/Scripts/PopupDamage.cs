@@ -15,7 +15,7 @@ public class PopupDamage : MonoBehaviour
     }
     void Start()
     {
-        rb.velocity = new Vector2(Random.Range(-2, 3), Random.Range(5, 10));
+        rb.linearVelocity = new Vector2(Random.Range(-2, 3), Random.Range(5, 10));
         Destroy(gameObject, lifetime);
         damageText.text = game_Behaviour.clickDmg.ToString("F0");
     }

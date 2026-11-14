@@ -29,6 +29,11 @@ public class StockSystem : MonoBehaviour
     public TMP_Text cCoinWidget;
     public TMP_Text walletAmountWidget;
 
+    public TMP_Text yourWalletValue;
+    public TMP_Text ddcText;
+    public TMP_Text bbcText;
+    public TMP_Text bgcText;
+
     private bool isBuyingA;
     private bool isBuyingB;
     private bool isBuyingC;
@@ -46,6 +51,22 @@ public class StockSystem : MonoBehaviour
     private void Awake()
     {
         gameManager = FindObjectOfType<GameManager>();
+        FindMissingReferences();
+    }
+
+    private void FindMissingReferences()
+    {
+        if (yourWalletValue == null || ddcText == null || bbcText == null || bgcText == null)
+        {
+            TMP_Text[] allTexts = Resources.FindObjectsOfTypeAll<TMP_Text>();
+            foreach (var t in allTexts)
+            {
+                if (yourWalletValue == null && t.gameObject.name == "YourWallet") yourWalletValue = t;
+                else if (ddcText == null && t.gameObject.name == "DDCText") ddcText = t;
+                else if (bbcText == null && t.gameObject.name == "BBCText") bbcText = t;
+                else if (bgcText == null && t.gameObject.name == "BGCText") bgcText = t;
+            }
+        }
     }
     void Start()
     {
@@ -64,7 +85,19 @@ public class StockSystem : MonoBehaviour
         aCoinWidget.text = "$" + aStockPrice.ToString("F4");
         bCoinWidget.text = "$" + bStockPrice.ToString("F4");
         cCoinWidget.text = "$" + cStockPrice.ToString("F4");
-        
+
+        if (ddcText != null)
+        {
+            ddcText.text = "DDC (" + aCoinAmount.ToString("F0") + "):";
+        }
+        if (bbcText != null)
+        {
+            bbcText.text = "BBC (" + bCoinAmount.ToString("F0") + "):";
+        }
+        if (bgcText != null)
+        {
+            bgcText.text = "BGC (" + cCoinAmount.ToString("F0") + "):";
+        }
 
         amountInWallet = ((aStockPrice * aCoinAmount) + (bStockPrice * bCoinAmount) + (cStockPrice * cCoinAmount));
         wallet.text = "$" + amountInWallet.ToString("F4");
@@ -76,7 +109,11 @@ public class StockSystem : MonoBehaviour
 
         if (isBuyingA)
         {
-            coinValue.text = aStockPrice.ToString("F4");
+            coinValue.text = "Coin Value: $" + aStockPrice.ToString("F4");
+            if (yourWalletValue != null)
+            {
+                yourWalletValue.text = "Your value: $" + (aCoinAmount * aStockPrice).ToString("F4");
+            }
             if (aStockPrice <= 0)
             {
                 aStockPrice = Random.Range(0.01f, 0.4f);
@@ -84,7 +121,11 @@ public class StockSystem : MonoBehaviour
         }
         else if (isBuyingB)
         {
-            coinValue.text = bStockPrice.ToString("F4");
+            coinValue.text = "Coin Value: $" + bStockPrice.ToString("F4");
+            if (yourWalletValue != null)
+            {
+                yourWalletValue.text = "Your value: $" + (bCoinAmount * bStockPrice).ToString("F4");
+            }
             if (bStockPrice <= 0)
             {
                 bStockPrice = Random.Range(0.01f, 0.4f);
@@ -92,7 +133,11 @@ public class StockSystem : MonoBehaviour
         }
         else if (isBuyingC)
         {
-            coinValue.text = cStockPrice.ToString("F4");
+            coinValue.text = "Coin Value: $" + cStockPrice.ToString("F4");
+            if (yourWalletValue != null)
+            {
+                yourWalletValue.text = "Your value: $" + (cCoinAmount * cStockPrice).ToString("F4");
+            }
             if (cStockPrice <= 0)
             {
                 cStockPrice = Random.Range(0.01f, 0.4f);
@@ -173,6 +218,7 @@ public class StockSystem : MonoBehaviour
                 aCoinAmount++;
                 stockAudioSource.PlayOneShot(buyCoin);
                 gameManager.expensesAmount += aStockPrice;
+                PurchaseHistoryManager.RecordPurchase(aStockPrice, "Stock coin A");
                 //Debug.Log("bought A stock");
             }
             else
@@ -189,6 +235,7 @@ public class StockSystem : MonoBehaviour
                 gameManager.playerMoney -= bStockPrice;
                 stockAudioSource.PlayOneShot(buyCoin);
                 gameManager.expensesAmount += bStockPrice;
+                PurchaseHistoryManager.RecordPurchase(bStockPrice, "Stock coin B");
 
 
                 //Debug.Log("bought B stock");
@@ -207,6 +254,7 @@ public class StockSystem : MonoBehaviour
                 gameManager.playerMoney -= cStockPrice;
                 stockAudioSource.PlayOneShot(buyCoin);
                 gameManager.expensesAmount += cStockPrice;
+                PurchaseHistoryManager.RecordPurchase(cStockPrice, "Stock coin C");
 
                 //Debug.Log("bought C stock");
             }

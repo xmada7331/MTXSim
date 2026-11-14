@@ -195,8 +195,10 @@ public class GameManager : MonoBehaviour
     {
         foreach (GameObject obj in antiClickObject)
         {
-            obj.SetActive(false);
+            if (obj != null)
+                obj.SetActive(false);
         }
+        IconMove.DeselectAllIcons();
     }
     public void UnlockShop(float amount)
     {
@@ -206,6 +208,7 @@ public class GameManager : MonoBehaviour
             playerMoney -= amount;
             contentChecker.unlockedMainShop = true;
             expensesAmount += amount;
+            PurchaseHistoryManager.RecordPurchase(amount, "Shop unlock");
         }
         else
         {

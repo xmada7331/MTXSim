@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: crt_material
-  m_Shader: {fileID: -6465566751694194690, guid: 7cc3f0031f93a6242a3ddf037569ee0a, type: 3}
+  m_Shader: {fileID: 4800000, guid: 39785a35f7594336aa7734f4643103d3, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -37,9 +37,26 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BlurOffset: 0.002
-    - _Number_Of_Scan_Lines: 800
-    - _ScanLinesSpeed: 0
+    - _Brightness: 1
+    - _ChromaticAberration: 0.00152
+    - _Contrast: 1.2
+    - _CornerRounding: 0.0049
+    - _CornerSmoothness: 0.0087
+    - _Curvature: 0.0055
+    - _FlickerIntensity: 0.0025
+    - _GlowIntensity: 0.06
+    - _GlowOffset: 0.00071
+    - _MaskIntensity: 0.02
+    - _MaskScale: 0
+    - _NoiseIntensity: 0.0099
+    - _ScanlineCount: 0
+    - _ScanlineIntensity: 0.1
+    - _ScanlineSharpness: 1.02
+    - _ScanlineSpeed: 0.05
+    - _VignetteIntensity: 0.072
+    - _VignetteSmoothness: 0.91
     m_Colors:
-    - _Color: {r: 13.501924, g: 13.501924, b: 13.501924, a: 0}
+    - _BezelColor: {r: 0.02, g: 0.02, b: 0.02, a: 1}
+    - _ScreenTint: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1
