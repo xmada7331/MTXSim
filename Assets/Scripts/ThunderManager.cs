@@ -57,6 +57,27 @@ public class ThunderManager : MonoBehaviour
     public TMP_Text randomInterest3;
     public Image profilePicture;
     public List<Sprite> profilePictures;
+
+    [Header("Profile Picture Sprite Arrays")]
+    public Sprite[] additionalBgSprites;
+    public Sprite[] bodySprites;
+    public Sprite[] headSprites;
+    public Sprite[] faceSprites;
+    public Sprite[] hairSprites;
+
+    [Header("Profile Picture Layers")]
+    public Image additionalBgImage;
+    public Image bodyImage;
+    public Image headImage;
+    public Image faceImage;
+    public Image hairImage;
+
+    private Sprite currentAdditionalBg;
+    private Sprite currentBody;
+    private Sprite currentHead;
+    private Sprite currentFace;
+    private Sprite currentHair;
+
     public List<string> names;
     public List<string> ages;
     public List<string> genders;
@@ -171,6 +192,8 @@ public class ThunderManager : MonoBehaviour
         originalNpcResponses = new List<string>(npcResponses);
         ResetPools();
         RandomizeChoice();
+        EnsureProfileImageReferences();
+        RandomizeProfileParts();
         GenerateNewProfile();
     }
 
@@ -271,7 +294,12 @@ public class ThunderManager : MonoBehaviour
     {
         thunderAudioSource.PlayOneShot(swipeYay);
         currentProfileName = randomName.text;
-        currentProfilePicture = profilePicture.sprite;
+        currentProfilePicture = (headImage != null && headImage.sprite != null) ? headImage.sprite : (profilePicture != null ? profilePicture.sprite : null);
+        currentAdditionalBg = additionalBgImage != null ? additionalBgImage.sprite : null;
+        currentBody = bodyImage != null ? bodyImage.sprite : null;
+        currentHead = headImage != null ? headImage.sprite : null;
+        currentFace = faceImage != null ? faceImage.sprite : null;
+        currentHair = hairImage != null ? hairImage.sprite : null;
         if (randomAge != null) currentProfileAge = randomAge.text;
         if (randomDescription != null) currentProfileDescription = randomDescription.text;
         yayCount++;
@@ -632,27 +660,130 @@ public class ThunderManager : MonoBehaviour
         chatScroll.velocity = Vector2.zero;
     }
 
+    public void EnsureProfileImageReferences()
+    {
+        if (additionalBgImage == null || bodyImage == null || headImage == null || faceImage == null || hairImage == null)
+        {
+            Transform root = null;
+            if (profilePicture != null)
+            {
+                if (profilePicture.transform.parent != null && profilePicture.transform.parent.name == "ProfilePicture")
+                    root = profilePicture.transform.parent;
+                else if (profilePicture.name == "ProfilePicture")
+                    root = profilePicture.transform;
+                else if (profilePicture.transform.parent != null)
+                {
+                    Transform pp = profilePicture.transform.parent.Find("ProfilePicture");
+                    if (pp != null) root = pp;
+                    else root = profilePicture.transform.parent;
+                }
+            }
+
+            if (root == null)
+            {
+                GameObject ppObj = GameObject.Find("ProfilePicture");
+                if (ppObj != null) root = ppObj.transform;
+            }
+
+            if (root != null)
+            {
+                if (additionalBgImage == null)
+                {
+                    Transform t = root.Find("AddBackground") ?? root.Find("AdditionalBg");
+                    if (t != null) additionalBgImage = t.GetComponent<Image>();
+                }
+                if (bodyImage == null)
+                {
+                    Transform t = root.Find("Body");
+                    if (t != null) bodyImage = t.GetComponent<Image>();
+                }
+                if (headImage == null)
+                {
+                    Transform t = root.Find("Head");
+                    if (t != null) headImage = t.GetComponent<Image>();
+                }
+                if (faceImage == null)
+                {
+                    Transform t = root.Find("Face");
+                    if (t != null) faceImage = t.GetComponent<Image>();
+                }
+                if (hairImage == null)
+                {
+                    Transform t = root.Find("Hair");
+                    if (t != null) hairImage = t.GetComponent<Image>();
+                }
+            }
+        }
+    }
+
+    public void RandomizeProfileParts()
+    {
+        EnsureProfileImageReferences();
+
+        if (additionalBgSprites != null && additionalBgSprites.Length > 0 && additionalBgImage != null)
+        {
+            currentAdditionalBg = additionalBgSprites[Random.Range(0, additionalBgSprites.Length)];
+            additionalBgImage.sprite = currentAdditionalBg;
+        }
+
+        if (bodySprites != null && bodySprites.Length > 0 && bodyImage != null)
+        {
+            currentBody = bodySprites[Random.Range(0, bodySprites.Length)];
+            bodyImage.sprite = currentBody;
+        }
+
+        if (headSprites != null && headSprites.Length > 0 && headImage != null)
+        {
+            currentHead = headSprites[Random.Range(0, headSprites.Length)];
+            headImage.sprite = currentHead;
+        }
+
+        if (faceSprites != null && faceSprites.Length > 0 && faceImage != null)
+        {
+            currentFace = faceSprites[Random.Range(0, faceSprites.Length)];
+            faceImage.sprite = currentFace;
+        }
+
+        if (hairSprites != null && hairSprites.Length > 0 && hairImage != null)
+        {
+            currentHair = hairSprites[Random.Range(0, hairSprites.Length)];
+            hairImage.sprite = currentHair;
+        }
+
+        if (headImage != null && headImage.sprite != null)
+        {
+            currentProfilePicture = headImage.sprite;
+        }
+        else if (profilePicture != null && profilePicture.sprite != null)
+        {
+            currentProfilePicture = profilePicture.sprite;
+        }
+    }
+
     private IEnumerator RandomizeProfile()
     {
-        int randomPictureIndex = Random.Range(0, profilePictures.Count);
-        int randomNameIndex = Random.Range(0, names.Count);
-        int randomAgeIndex = Random.Range(0, ages.Count);
-        int randomGenderIndex = Random.Range(0, genders.Count);
-        int randomDescriptionIndex = Random.Range(0, descriptions.Count);
-        int randomInterest1Index = Random.Range(0, interest1.Count);
-        int randomInterest2Index = Random.Range(0, interest2.Count);
-        int randomInterest3Index = Random.Range(0, interest3.Count);
+        int randomPictureIndex = (profilePictures != null && profilePictures.Count > 0) ? Random.Range(0, profilePictures.Count) : 0;
+        int randomNameIndex = names != null && names.Count > 0 ? Random.Range(0, names.Count) : 0;
+        int randomAgeIndex = ages != null && ages.Count > 0 ? Random.Range(0, ages.Count) : 0;
+        int randomGenderIndex = genders != null && genders.Count > 0 ? Random.Range(0, genders.Count) : 0;
+        int randomDescriptionIndex = descriptions != null && descriptions.Count > 0 ? Random.Range(0, descriptions.Count) : 0;
+        int randomInterest1Index = interest1 != null && interest1.Count > 0 ? Random.Range(0, interest1.Count) : 0;
+        int randomInterest2Index = interest2 != null && interest2.Count > 0 ? Random.Range(0, interest2.Count) : 0;
+        int randomInterest3Index = interest3 != null && interest3.Count > 0 ? Random.Range(0, interest3.Count) : 0;
         yield return new WaitForSeconds(.7f);
-        int index = Random.Range(0, names.Count);
-        randomName.text = names[randomNameIndex];
-        randomAge.text = ages[randomAgeIndex];
-        randomGender.text = genders[randomGenderIndex];
-        randomDescription.text = descriptions[randomDescriptionIndex];
-        randomInterest1.text = interest1[randomInterest1Index];
-        randomInterest2.text = interest2[randomInterest2Index];
-        randomInterest3.text = interest3[randomInterest3Index];
-        profilePicture.sprite = profilePictures[randomPictureIndex];
+        if (names != null && names.Count > 0 && randomName != null) randomName.text = names[randomNameIndex];
+        if (ages != null && ages.Count > 0 && randomAge != null) randomAge.text = ages[randomAgeIndex];
+        if (genders != null && genders.Count > 0 && randomGender != null) randomGender.text = genders[randomGenderIndex];
+        if (descriptions != null && descriptions.Count > 0 && randomDescription != null) randomDescription.text = descriptions[randomDescriptionIndex];
+        if (interest1 != null && interest1.Count > 0 && randomInterest1 != null) randomInterest1.text = interest1[randomInterest1Index];
+        if (interest2 != null && interest2.Count > 0 && randomInterest2 != null) randomInterest2.text = interest2[randomInterest2Index];
+        if (interest3 != null && interest3.Count > 0 && randomInterest3 != null) randomInterest3.text = interest3[randomInterest3Index];
+        if (profilePictures != null && profilePictures.Count > 0 && profilePicture != null)
+        {
+            profilePicture.sprite = profilePictures[randomPictureIndex];
+        }
 
+        RandomizeProfileParts();
     }
 
     public void GenerateNewProfile()
@@ -691,6 +822,11 @@ public class ThunderManager : MonoBehaviour
             activeContact = existing;
             existing.age = currentProfileAge;
             existing.profilePicture = currentProfilePicture;
+            existing.additionalBgSprite = currentAdditionalBg;
+            existing.bodySprite = currentBody;
+            existing.headSprite = currentHead;
+            existing.faceSprite = currentFace;
+            existing.hairSprite = currentHair;
             existing.description = currentProfileDescription;
             existing.happinessLevel = 0;
             existing.spicinessLevel = 0;
@@ -718,6 +854,11 @@ public class ThunderManager : MonoBehaviour
                 name = currentProfileName,
                 age = currentProfileAge,
                 profilePicture = currentProfilePicture,
+                additionalBgSprite = currentAdditionalBg,
+                bodySprite = currentBody,
+                headSprite = currentHead,
+                faceSprite = currentFace,
+                hairSprite = currentHair,
                 description = currentProfileDescription,
                 happinessLevel = 0,
                 spicinessLevel = 0,
@@ -1327,6 +1468,11 @@ public class ThunderManager : MonoBehaviour
                     name = pName,
                     age = !string.IsNullOrEmpty(currentProfileAge) ? currentProfileAge : "21",
                     profilePicture = currentProfilePicture != null ? currentProfilePicture : (chat_profilePicture != null ? chat_profilePicture.sprite : null),
+                    additionalBgSprite = currentAdditionalBg,
+                    bodySprite = currentBody,
+                    headSprite = currentHead,
+                    faceSprite = currentFace,
+                    hairSprite = currentHair,
                     description = currentProfileDescription,
                     happinessLevel = happinessLevel,
                     spicinessLevel = spicinessLevel,
@@ -1477,6 +1623,11 @@ public class ThunderContact
     public string name;
     public string age;
     public Sprite profilePicture;
+    public Sprite additionalBgSprite;
+    public Sprite bodySprite;
+    public Sprite headSprite;
+    public Sprite faceSprite;
+    public Sprite hairSprite;
     public string description;
 
     public int happinessLevel;
