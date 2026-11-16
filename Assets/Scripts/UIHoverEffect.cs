@@ -58,6 +58,16 @@ public class UIHoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public System.Action onHoverEnterAction;
     public System.Action onHoverExitAction;
 
+    [Header("Purchasable / Selectable Support")]
+    [Tooltip("Optional ShopPurchasable reference. If null, automatically detected.")]
+    public ShopPurchasable shopPurchasable;
+
+    [Tooltip("Optional Selectable reference (Button, etc.). If null, automatically detected.")]
+    public Selectable targetSelectable;
+
+    [Tooltip("Color to display when the item is purchased / disabled.")]
+    public Color purchasedColor = new Color(1f, 1f, 1f, 0.2f);
+
     private Color normalColor;
     private Vector3 normalScale = Vector3.one;
     private bool isHovered;
@@ -74,6 +84,9 @@ public class UIHoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         if (initialized) return;
         if (targetGraphic == null) targetGraphic = GetComponent<Graphic>();
         if (targetTransform == null) targetTransform = transform;
+        if (shopPurchasable == null) shopPurchasable = GetComponent<ShopPurchasable>();
+        if (shopPurchasable == null) shopPurchasable = GetComponentInParent<ShopPurchasable>();
+        if (targetSelectable == null) targetSelectable = GetComponent<Selectable>();
 
         if (targetGraphic != null)
         {
@@ -87,21 +100,67 @@ public class UIHoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         }
 
         initialized = true;
+
+        if (IsPurchased())
+        {
+            ApplyPurchasedVisuals();
+        }
+    }
+
+    public bool IsPurchased()
+    {
+        return shopPurchasable != null && shopPurchasable.itemPurchased;
+    }
+
+    public bool CanInteract()
+    {
+        if (!enabled || !gameObject.activeInHierarchy) return false;
+        if (targetSelectable != null && !targetSelectable.interactable) return false;
+        if (IsPurchased()) return false;
+        return true;
     }
 
     private void OnEnable()
     {
         if (!initialized) Initialize();
-        ResetVisuals();
+        if (IsPurchased())
+        {
+            ApplyPurchasedVisuals();
+        }
+        else
+        {
+            ResetVisuals();
+        }
     }
 
     private void OnDisable()
     {
-        ResetVisuals(true);
+        if (IsPurchased())
+        {
+            isHovered = false;
+            isPressed = false;
+            if (targetTransform != null && enableScaleEffect)
+            {
+                targetTransform.localScale = normalScale;
+            }
+        }
+        else
+        {
+            ResetVisuals(true);
+        }
     }
 
     private void Update()
     {
+        if (IsPurchased())
+        {
+            if (enableScaleEffect && targetTransform != null && initialized && targetTransform.localScale != normalScale)
+            {
+                targetTransform.localScale = normalScale;
+            }
+            return;
+        }
+
         if (!enableScaleEffect || targetTransform == null) return;
 
         Vector3 targetScale = normalScale;
@@ -140,7 +199,7 @@ public class UIHoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        if (!enabled) return;
+        if (!CanInteract()) return;
         if (!initialized) Initialize();
 
         isHovered = true;
@@ -152,13 +211,18 @@ public class UIHoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     {
         isHovered = false;
         isPressed = false;
+        if (IsPurchased())
+        {
+            ApplyPurchasedVisuals();
+            return;
+        }
         ApplyColor();
         onHoverExitAction?.Invoke();
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (!enabled) return;
+        if (!CanInteract()) return;
         if (!initialized) Initialize();
 
         isPressed = true;
@@ -168,12 +232,23 @@ public class UIHoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     public void OnPointerUp(PointerEventData eventData)
     {
         isPressed = false;
+        if (IsPurchased())
+        {
+            ApplyPurchasedVisuals();
+            return;
+        }
         ApplyColor();
     }
 
     private void ApplyColor()
     {
         if (targetGraphic == null) return;
+
+        if (IsPurchased())
+        {
+            targetGraphic.color = purchasedColor;
+            return;
+        }
 
         float alpha = normalColor.a;
 
@@ -239,7 +314,14 @@ public class UIHoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         isPressed = false;
         if (targetGraphic != null && initialized)
         {
-            targetGraphic.color = normalColor;
+            if (IsPurchased())
+            {
+                targetGraphic.color = purchasedColor;
+            }
+            else
+            {
+                targetGraphic.color = normalColor;
+            }
         }
         if (enableScaleEffect && targetTransform != null && initialized)
         {
@@ -249,6 +331,29 @@ public class UIHoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         {
             onHoverExitAction?.Invoke();
         }
+    }
+
+    public void ApplyPurchasedVisuals()
+    {
+        isHovered = false;
+        isPressed = false;
+        if (targetGraphic != null)
+        {
+            targetGraphic.color = purchasedColor;
+        }
+        if (enableScaleEffect && targetTransform != null && initialized)
+        {
+            targetTransform.localScale = normalScale;
+        }
+    }
+
+    public void SetPurchased(Color? newPurchasedColor = null)
+    {
+        if (newPurchasedColor.HasValue)
+        {
+            purchasedColor = newPurchasedColor.Value;
+        }
+        ApplyPurchasedVisuals();
     }
 
     public void SetNormalColor(Color c)

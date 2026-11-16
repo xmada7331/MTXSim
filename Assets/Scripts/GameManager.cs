@@ -219,6 +219,7 @@ public class GameManager : MonoBehaviour
     public void PurchaseAntivirus(GameObject target)
     {
         shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (shopPurchasable == null || shopPurchasable.itemPurchased) return;
         if (playerMoney >= shopPurchasable.itemPrice)
         {
             adsSystem.GetComponent<AdsSystem>().enabled = false;
@@ -238,6 +239,7 @@ public class GameManager : MonoBehaviour
     public void PurchaseCamera(GameObject target)
     {
         shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (shopPurchasable == null || shopPurchasable.itemPurchased) return;
         if (playerMoney >= shopPurchasable.itemPrice)
         {
             hasCamera = true;
@@ -255,6 +257,7 @@ public class GameManager : MonoBehaviour
     public void UnlockSurveys(GameObject target)
     {
         shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (shopPurchasable == null || shopPurchasable.itemPurchased) return;
         if (playerMoney >= shopPurchasable.itemPrice)
         {
             surveysIcon.SetActive(true);
@@ -272,6 +275,7 @@ public class GameManager : MonoBehaviour
     public void UnlockBank(GameObject target)
     {
         shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (shopPurchasable == null || shopPurchasable.itemPurchased) return;
         if (playerMoney >= shopPurchasable.itemPrice)
         {
             bankIcon.SetActive(true);
@@ -290,6 +294,7 @@ public class GameManager : MonoBehaviour
     public void UnlockStock(GameObject target)
     {
         shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (shopPurchasable == null || shopPurchasable.itemPurchased) return;
         if (playerMoney >= shopPurchasable.itemPrice)
         {
             stockIcon.SetActive(true);
@@ -307,6 +312,7 @@ public class GameManager : MonoBehaviour
     public void UnlockFeetPics(GameObject target)
     {
         shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (shopPurchasable == null || shopPurchasable.itemPurchased) return;
         if (playerMoney >= shopPurchasable.itemPrice)
         {
             feetPicsIcon.SetActive(true);
@@ -324,6 +330,7 @@ public class GameManager : MonoBehaviour
     public void UnlockFreeCoin(GameObject target)
     {
         shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (shopPurchasable == null || shopPurchasable.itemPurchased) return;
         if (playerMoney >= shopPurchasable.itemPrice)
         {
             freeCoinIcon.SetActive(true);
@@ -342,6 +349,7 @@ public class GameManager : MonoBehaviour
     public void UnlockCamera(GameObject target)
     {
         shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (shopPurchasable == null || shopPurchasable.itemPurchased) return;
         if (playerMoney >= shopPurchasable.itemPrice)
         {
             cameraIcon.SetActive(true);
@@ -360,6 +368,7 @@ public class GameManager : MonoBehaviour
     public void UnlockShopDigiStore(GameObject target)
     {
         shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (shopPurchasable == null || shopPurchasable.itemPurchased) return;
         if (playerMoney >= shopPurchasable.itemPrice)
         {
             shopIcon.SetActive(true);
@@ -378,6 +387,7 @@ public class GameManager : MonoBehaviour
     public void UnlockGaymTester(GameObject target)
     {
         shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (shopPurchasable == null || shopPurchasable.itemPurchased) return;
         if (playerMoney >= shopPurchasable.itemPrice)
         {
             gaymTesterIcon.SetActive(true);
@@ -394,6 +404,7 @@ public class GameManager : MonoBehaviour
     public void UnlockThunder(GameObject target)
     {
         shopPurchasable = target.GetComponent<ShopPurchasable>();
+        if (shopPurchasable == null || shopPurchasable.itemPurchased) return;
         if (playerMoney >= shopPurchasable.itemPrice)
         {
             thunderIcon.SetActive(true);

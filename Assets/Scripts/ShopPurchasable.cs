@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.EventSystems;
 
 public class ShopPurchasable : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class ShopPurchasable : MonoBehaviour
     public bool itemPurchased = false;
     public bool isPurchasable = false;
     public string purchaseDescription;
+    public Color purchasedColor = new Color(1f, 1f, 1f, 0.2f);
     private bool hasRecorded = false;
 
 
@@ -26,7 +28,18 @@ public class ShopPurchasable : MonoBehaviour
     }
     void Start()
     {
-        
+        if (itemPurchased)
+        {
+            ApplyPurchasedState();
+        }
+    }
+
+    private void OnEnable()
+    {
+        if (itemPurchased)
+        {
+            ApplyPurchasedState();
+        }
     }
 
     // Update is called once per frame
@@ -34,13 +47,52 @@ public class ShopPurchasable : MonoBehaviour
     {
 
     }
+
+    public void ApplyPurchasedState()
+    {
+        itemPurchased = true;
+        if (itemImage == null) itemImage = GetComponent<Image>();
+        if (itemImage != null)
+        {
+            itemImage.color = purchasedColor;
+            itemImage.raycastTarget = false;
+        }
+
+        foreach (Graphic g in GetComponentsInChildren<Graphic>(true))
+        {
+            g.raycastTarget = false;
+            if (g != itemImage)
+            {
+                Color c = g.color;
+                c.a = Mathf.Min(c.a, 0.2f);
+                g.color = c;
+            }
+        }
+
+        EventTrigger et = GetComponent<EventTrigger>();
+        if (et != null)
+        {
+            et.enabled = false;
+        }
+
+        Button btn = GetComponent<Button>();
+        if (btn != null)
+        {
+            btn.interactable = false;
+        }
+
+        UIHoverEffect hover = GetComponent<UIHoverEffect>();
+        if (hover != null)
+        {
+            hover.SetPurchased(purchasedColor);
+        }
+    }
+
     public void PurchaseItem()
     {
         if (gameManager.playerMoney >= itemPrice && !itemPurchased && isPurchasable)
         {
-            Color purchasedColor = new Color(1, 1, 1, 0.2f);
-            itemPurchased = true;
-            itemImage.color = purchasedColor;
+            ApplyPurchasedState();
             gameManager.playerMoney -= itemPrice;
             if (!hasRecorded)
             {
@@ -57,9 +109,7 @@ public class ShopPurchasable : MonoBehaviour
     {
         if (gameManager.playerGems >= itemPrice && !itemPurchased && isPurchasable && contentChecker.hasCurrencyGems)
         {
-            Color purchasedColor = new Color(1, 1, 1, 0.2f);
-            itemPurchased = true;
-            itemImage.color = purchasedColor;
+            ApplyPurchasedState();
             gameManager.playerGems -= itemPrice;
         }
     }
@@ -67,9 +117,7 @@ public class ShopPurchasable : MonoBehaviour
     {
         if (gameManager.playerDiamonds >= itemPrice && !itemPurchased && isPurchasable && contentChecker.hasCurrencyDiamonds)
         {
-            Color purchasedColor = new Color(1, 1, 1, 0.2f);
-            itemPurchased = true;
-            itemImage.color = purchasedColor;
+            ApplyPurchasedState();
             gameManager.playerDiamonds -= itemPrice;
         }
         else if (!itemPurchased)
@@ -187,8 +235,7 @@ public class ShopPurchasable : MonoBehaviour
 
     public void PurchasedItem()
     {
-        itemPurchased = true;
-        itemImage.color = new Color32(255, 255, 255, 105);
+        ApplyPurchasedState();
         if (!hasRecorded)
         {
             hasRecorded = true;
