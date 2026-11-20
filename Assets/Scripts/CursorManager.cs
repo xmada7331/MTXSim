@@ -53,21 +53,58 @@ public class CursorManager : MonoBehaviour
 
     void Start()
     {
+        if (cursorSpriteDefault == null && cursorSprites != null && cursorSprites.Count > 0)
+        {
+            cursorSpriteDefault = cursorSprites[0];
+        }
         currentCursorTexture = cursorSpriteDefault;
         SetCursor(cursorSpriteDefault);
+    }
+
+    public bool IsMouseInsideWindow()
+    {
+        if (!Application.isFocused) return false;
+
+        Vector3 mousePos = Input.mousePosition;
+        return mousePos.x >= 0 && mousePos.x <= Screen.width &&
+               mousePos.y >= 0 && mousePos.y <= Screen.height;
     }
 
     void Update()
     {
         if (useSoftwareCursor)
         {
-            if (softwareCursorImage != null)
+            bool isInside = IsMouseInsideWindow();
+
+            if (isInside)
             {
-                softwareCursorImage.transform.position = Input.mousePosition;
+                if (Cursor.visible)
+                    Cursor.visible = false;
+
+                if (softwareCursorImage != null)
+                {
+                    if (!softwareCursorImage.gameObject.activeSelf)
+                        softwareCursorImage.gameObject.SetActive(true);
+
+                    softwareCursorImage.transform.position = Input.mousePosition;
+                }
+            }
+            else
+            {
+                if (!Cursor.visible)
+                    Cursor.visible = true;
+
+                if (softwareCursorImage != null && softwareCursorImage.gameObject.activeSelf)
+                {
+                    softwareCursorImage.gameObject.SetActive(false);
+                }
             }
         }
         else if (scaleHardwareCursor)
         {
+            if (!Cursor.visible)
+                Cursor.visible = true;
+
             if (Screen.width != lastScreenWidth || Screen.height != lastScreenHeight)
             {
                 lastScreenWidth = Screen.width;
@@ -77,15 +114,57 @@ public class CursorManager : MonoBehaviour
         }
     }
 
+    private void OnApplicationFocus(bool hasFocus)
+    {
+        if (!hasFocus)
+        {
+            Cursor.visible = true;
+            if (softwareCursorImage != null)
+            {
+                softwareCursorImage.gameObject.SetActive(false);
+            }
+        }
+    }
+
+    private void OnApplicationPause(bool pauseStatus)
+    {
+        if (pauseStatus)
+        {
+            Cursor.visible = true;
+            if (softwareCursorImage != null)
+            {
+                softwareCursorImage.gameObject.SetActive(false);
+            }
+        }
+    }
+
+    private void OnDisable()
+    {
+        Cursor.visible = true;
+        if (softwareCursorCanvas != null)
+        {
+            softwareCursorCanvas.gameObject.SetActive(false);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        Cursor.visible = true;
+    }
+
     /// <summary>
     /// Gets the pixel-perfect hotspot for each cursor texture.
-    /// In all arrow cursors in this project, the tip is located at y=0, and x=6 or 7.
+    /// In the default arrow cursor, the tip is located at (0, 0).
+    /// In other stylized/shop cursors, the tip is located at y=0, and x=6 or 7.
     /// </summary>
     public Vector2 GetHotspot(Texture2D tex)
     {
         if (tex == null) return Vector2.zero;
 
-        if (tex == cursorSpriteDefault || tex == cursorSpriteFuck || tex == cursorSpriteShop1)
+        if (tex == cursorSpriteDefault)
+            return Vector2.zero;
+
+        if (tex == cursorSpriteFuck || tex == cursorSpriteShop1)
             return new Vector2(6, 0);
 
         if (tex == cursorSpriteHand || tex == cursorSpriteBrown || tex == cursorSpriteShop2 || tex == cursorSpriteShop3)
@@ -106,7 +185,7 @@ public class CursorManager : MonoBehaviour
             }
         }
 
-        return new Vector2(6, 0);
+        return Vector2.zero;
     }
 
     /// <summary>
@@ -130,14 +209,15 @@ public class CursorManager : MonoBehaviour
     private void ApplySoftwareCursor(Texture2D tex)
     {
         EnsureSoftwareCursorUI();
-        Cursor.visible = false;
+        bool isInside = IsMouseInsideWindow();
+        Cursor.visible = !isInside;
 
         if (softwareCursorCanvas != null)
             softwareCursorCanvas.gameObject.SetActive(true);
 
         if (softwareCursorImage != null)
         {
-            softwareCursorImage.gameObject.SetActive(true);
+            softwareCursorImage.gameObject.SetActive(isInside);
 
             Vector2 hotspot = GetHotspot(tex);
             Vector2 pivot = new Vector2(hotspot.x / (float)tex.width, (tex.height - hotspot.y) / (float)tex.height);

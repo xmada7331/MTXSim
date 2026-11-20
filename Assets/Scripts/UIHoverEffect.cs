@@ -129,25 +129,34 @@ public class UIHoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         }
         else
         {
+            if (targetGraphic != null && !isHovered && !isPressed)
+            {
+                normalColor = targetGraphic.color;
+            }
             ResetVisuals();
         }
     }
 
     private void OnDisable()
     {
-        if (IsPurchased())
+        if (targetGraphic != null && initialized && !IsPurchased())
         {
-            isHovered = false;
-            isPressed = false;
-            if (targetTransform != null && enableScaleEffect)
+            if (isHovered || isPressed)
             {
-                targetTransform.localScale = normalScale;
+                targetGraphic.color = normalColor;
+            }
+            else
+            {
+                normalColor = targetGraphic.color;
             }
         }
-        else
+        isHovered = false;
+        isPressed = false;
+        if (targetTransform != null && enableScaleEffect && initialized)
         {
-            ResetVisuals(true);
+            targetTransform.localScale = normalScale;
         }
+        onHoverExitAction?.Invoke();
     }
 
     private void Update()
@@ -159,6 +168,12 @@ public class UIHoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                 targetTransform.localScale = normalScale;
             }
             return;
+        }
+
+        // Keep normalColor dynamically in sync with targetGraphic.color whenever resting
+        if (!isHovered && !isPressed && targetGraphic != null)
+        {
+            normalColor = targetGraphic.color;
         }
 
         if (!enableScaleEffect || targetTransform == null) return;
@@ -202,6 +217,11 @@ public class UIHoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         if (!CanInteract()) return;
         if (!initialized) Initialize();
 
+        if (!isHovered && !isPressed && !IsPurchased() && targetGraphic != null)
+        {
+            normalColor = targetGraphic.color;
+        }
+
         isHovered = true;
         ApplyColor();
         onHoverEnterAction?.Invoke();
@@ -224,6 +244,11 @@ public class UIHoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
     {
         if (!CanInteract()) return;
         if (!initialized) Initialize();
+
+        if (!isHovered && !isPressed && !IsPurchased() && targetGraphic != null)
+        {
+            normalColor = targetGraphic.color;
+        }
 
         isPressed = true;
         ApplyColor();
@@ -260,12 +285,27 @@ public class UIHoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             }
             else
             {
-                targetGraphic.color = new Color(
-                    Mathf.Clamp01(normalColor.r * pressedBrightness),
-                    Mathf.Clamp01(normalColor.g * pressedBrightness),
-                    Mathf.Clamp01(normalColor.b * pressedBrightness),
-                    alpha
-                );
+                float maxRgb = Mathf.Max(normalColor.r, normalColor.g, normalColor.b);
+                if (maxRgb < 0.25f)
+                {
+                    // Dark button press: subtle lightening
+                    float pressBoost = 0.10f * (pressedBrightness >= 0.5f ? pressedBrightness : 0.8f);
+                    targetGraphic.color = new Color(
+                        Mathf.Clamp01(normalColor.r + pressBoost),
+                        Mathf.Clamp01(normalColor.g + pressBoost),
+                        Mathf.Clamp01(normalColor.b + pressBoost),
+                        alpha
+                    );
+                }
+                else
+                {
+                    targetGraphic.color = new Color(
+                        Mathf.Clamp01(normalColor.r * pressedBrightness),
+                        Mathf.Clamp01(normalColor.g * pressedBrightness),
+                        Mathf.Clamp01(normalColor.b * pressedBrightness),
+                        alpha
+                    );
+                }
             }
         }
         else if (isHovered)
@@ -273,17 +313,31 @@ public class UIHoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
             if (hoverAlphaOverride > 0f)
                 alpha = Mathf.Clamp01(hoverAlphaOverride);
 
-            if (useExplicitHoverColor)
+            bool shouldUseExplicit = useExplicitHoverColor;
+            float maxNormal = Mathf.Max(normalColor.r, normalColor.g, normalColor.b);
+
+            // If explicit hover color was configured (e.g. for a dark button) but the button
+            // has become bright/white, or explicit hover color is noticeably darker than normalColor,
+            // calculate the hover dynamically from the current bright color instead.
+            if (shouldUseExplicit && maxNormal >= 0.7f)
+            {
+                float maxHover = Mathf.Max(hoverColor.r, hoverColor.g, hoverColor.b);
+                if (maxHover < maxNormal - 0.15f)
+                {
+                    shouldUseExplicit = false;
+                }
+            }
+
+            if (shouldUseExplicit)
             {
                 targetGraphic.color = new Color(hoverColor.r, hoverColor.g, hoverColor.b, alpha);
             }
             else
             {
-                // If the normal color is already white/near-white, multiplying by >1 won't show!
-                // So apply a subtle Windows highlight tint (cool light-blue tint).
-                float maxRgb = Mathf.Max(normalColor.r, normalColor.g, normalColor.b);
-                if (maxRgb >= 0.9f && hoverBrightness >= 1f)
+                // Dynamic hover based on the current color:
+                if (maxNormal >= 0.85f && hoverBrightness >= 1f)
                 {
+                    // Light / white button: subtle Windows highlight tint (cool light-blue tint)
                     targetGraphic.color = new Color(
                         normalColor.r * 0.88f,
                         normalColor.g * 0.94f,
@@ -291,8 +345,21 @@ public class UIHoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
                         alpha
                     );
                 }
+                else if (maxNormal < 0.35f)
+                {
+                    // Dark / black button: multiplying by hoverBrightness won't brighten enough (0 * 1.15 = 0).
+                    // Add an offset boost so dark/black buttons visibly brighten to grey on hover!
+                    float darkBoost = 0.22f * (hoverBrightness >= 1f ? hoverBrightness : 1f);
+                    targetGraphic.color = new Color(
+                        Mathf.Clamp01(normalColor.r + darkBoost),
+                        Mathf.Clamp01(normalColor.g + darkBoost),
+                        Mathf.Clamp01(normalColor.b + darkBoost),
+                        alpha
+                    );
+                }
                 else
                 {
+                    // Mid-tone button
                     targetGraphic.color = new Color(
                         Mathf.Clamp01(normalColor.r * hoverBrightness),
                         Mathf.Clamp01(normalColor.g * hoverBrightness),
@@ -310,19 +377,23 @@ public class UIHoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
 
     public void ResetVisuals(bool invokeExitCallback = false)
     {
-        isHovered = false;
-        isPressed = false;
         if (targetGraphic != null && initialized)
         {
             if (IsPurchased())
             {
                 targetGraphic.color = purchasedColor;
             }
-            else
+            else if (isHovered || isPressed)
             {
                 targetGraphic.color = normalColor;
             }
+            else
+            {
+                normalColor = targetGraphic.color;
+            }
         }
+        isHovered = false;
+        isPressed = false;
         if (enableScaleEffect && targetTransform != null && initialized)
         {
             targetTransform.localScale = normalScale;
@@ -330,6 +401,18 @@ public class UIHoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerExitHa
         if (invokeExitCallback)
         {
             onHoverExitAction?.Invoke();
+        }
+    }
+
+    /// <summary>
+    /// Explicitly refreshes the cached normal color from the target graphic's current color.
+    /// Useful if an external script modifies the graphic's color while active.
+    /// </summary>
+    public void RefreshBaseColor()
+    {
+        if (targetGraphic != null && !isHovered && !isPressed && !IsPurchased())
+        {
+            normalColor = targetGraphic.color;
         }
     }
 
