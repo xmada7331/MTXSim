@@ -130,11 +130,14 @@ public class Win95WindowFrame : MonoBehaviour
                         float closeX = refCenterX + (targetWidth * 0.5f) - closeMargin - (closeW * 0.5f);
                         closeRect.anchoredPosition = new Vector2(closeX, topY);
 
-                        UIHoverEffect closeHover = closeTransform.GetComponent<UIHoverEffect>() ?? closeTransform.gameObject.AddComponent<UIHoverEffect>();
-                        closeHover.useExplicitHoverColor = true;
-                        closeHover.hoverColor = new Color(1f, 0.70f, 0.70f, 1f);
-                        closeHover.useExplicitPressedColor = true;
-                        closeHover.pressedColor = new Color(0.85f, 0.50f, 0.50f, 1f);
+                        UIHoverEffect closeHover = closeTransform.GetComponent<UIHoverEffect>();
+                        if (closeHover == null)
+                        {
+                            closeHover = closeTransform.gameObject.AddComponent<UIHoverEffect>();
+                            closeHover.hoverBrightness = 0.75f;
+                        }
+                        closeHover.useExplicitHoverColor = false;
+                        closeHover.useExplicitPressedColor = false;
                     }
                 }
             }

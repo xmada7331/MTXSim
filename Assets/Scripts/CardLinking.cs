@@ -15,12 +15,14 @@ public class CardLinking : MonoBehaviour
     public TMP_InputField cardName;
     public TMP_InputField securityCode;
 
-    public TMP_Text errorMessage;
+    public GameObject errorMessage;
     public GameObject parentWindow;
     public GameObject mainWindow;
     public GameObject successWindow;
     public GameObject linkCardBlock;
     public GameObject settingsBlock;
+
+    private Coroutine hideErrorCoroutine;
 
     private void Awake()
     {
@@ -37,9 +39,46 @@ public class CardLinking : MonoBehaviour
 
     }
 
+    private void ShowError(string message)
+    {
+        if (errorMessage == null) return;
+
+        if (hideErrorCoroutine != null)
+        {
+            StopCoroutine(hideErrorCoroutine);
+        }
+
+        errorMessage.SetActive(true);
+        TMP_Text errorText = errorMessage.GetComponentInChildren<TMP_Text>(true);
+        if (errorText != null)
+        {
+            errorText.text = message;
+        }
+
+        hideErrorCoroutine = StartCoroutine(HideErrorAfterDelay(2f));
+    }
+
+    private IEnumerator HideErrorAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (errorMessage != null)
+        {
+            errorMessage.SetActive(false);
+        }
+        hideErrorCoroutine = null;
+    }
+
     public void ConfirmCardInfo()
     {
-        errorMessage.gameObject.SetActive(false);
+        if (hideErrorCoroutine != null)
+        {
+            StopCoroutine(hideErrorCoroutine);
+            hideErrorCoroutine = null;
+        }
+        if (errorMessage != null)
+        {
+            errorMessage.SetActive(false);
+        }
 
         string cardNum = cardNumber.text.Trim();
         string monthText = expiryDateMonth.text.Trim();
@@ -49,37 +88,32 @@ public class CardLinking : MonoBehaviour
 
         if (cardNum.Length == 0 || monthText.Length == 0 || yearText.Length == 0 || nameText.Length == 0 || cvvText.Length == 0)
         {
-            errorMessage.gameObject.SetActive(true);
-            errorMessage.text = "Please fill in all fields.";
+            ShowError("Please fill in all fields.");
             return;
         }
 
         if (cardNum.Length != 16)
         {
-            errorMessage.gameObject.SetActive(true);
-            errorMessage.text = "Card number must be 16 digits.";
+            ShowError("Card number must be 16 digits.");
             return;
         }
 
         if (monthText.Length != 2 || yearText.Length != 2)
         {
-            errorMessage.gameObject.SetActive(true);
-            errorMessage.text = "Expiry date must be in MM/YY format.";
+            ShowError("Expiry date must be in MM/YY format.");
             return;
         }
 
         // Validate month numeric value and range (01..12). Reject "00" and >12.
         if (!int.TryParse(monthText, out int month) || month < 1 || month > 12)
         {
-            errorMessage.gameObject.SetActive(true);
-            errorMessage.text = "Please enter correct month.";
+            ShowError("Please enter correct month.");
             return;
         }
 
         if (cvvText.Length != 3)
         {
-            errorMessage.gameObject.SetActive(true);
-            errorMessage.text = "Security code must be 3 digits.";
+            ShowError("Security code must be 3 digits.");
             return;
         }
 

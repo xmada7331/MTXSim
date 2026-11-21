@@ -19,6 +19,16 @@ public class Game_behaviour : MonoBehaviour
     private int lastBossIndex = -1;
     private float dropRateMult = 1f;
 
+    [Header("Boss Gem Drop Chances (%)")]
+    [Tooltip("Chance (%) for a boss to drop 2 gems.")]
+    public float chance2Gems = 70f;
+    [Tooltip("Chance (%) for a boss to drop 3 gems.")]
+    public float chance3Gems = 15f;
+    [Tooltip("Chance (%) for a boss to drop 4 gems.")]
+    public float chance4Gems = 10f;
+    [Tooltip("Chance (%) for a boss to drop 5 gems.")]
+    public float chance5Gems = 5f;
+
     public float clicks;
     public float monstersSlain;
 
@@ -175,19 +185,35 @@ public class Game_behaviour : MonoBehaviour
         gameTabUnlocker.scoreText.text = monstersSlain.ToString("F0");
     }
 
+    private int RollBossGemDrop()
+    {
+        float w5 = Mathf.Max(0f, chance5Gems);
+        float w4 = Mathf.Max(0f, chance4Gems);
+        float w3 = Mathf.Max(0f, chance3Gems);
+        float w2 = Mathf.Max(0f, chance2Gems);
+        float total = w5 + w4 + w3 + w2;
+
+        if (total <= 0f) return 2;
+
+        float roll = Random.Range(0f, total);
+        if (roll < w5) return 5;
+        roll -= w5;
+        if (roll < w4) return 4;
+        roll -= w4;
+        if (roll < w3) return 3;
+        return 2;
+    }
+
     private void GetBossMoney()
     {
-        if (Random.value <= 0.99f * dropRateMult && contentChecker.hasCurrencyGems)
+        if (contentChecker.hasCurrencyGems)
         {
+            int gemsDropped = RollBossGemDrop();
             if (contentChecker.hasGemDrop)
             {
                 gameTabUnlocker.playAudioSource.PlayOneShot(gameTabUnlocker.gemDrop);
-                gameManager.playerGems += 1;
             }
-            else
-            {
-                gameManager.playerGems += 1;
-            }
+            gameManager.playerGems += gemsDropped;
         }
         if (Random.value <= .005f && contentChecker.hasCurrencyDiamonds)
         {

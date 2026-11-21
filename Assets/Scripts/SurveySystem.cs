@@ -42,6 +42,7 @@ public class SurveySystem : MonoBehaviour
     public Slider questionTimer;
     public GameObject surveyCooldownWindow;
     public Slider surveyCooldown;
+    public TMP_Text surveyCooldownTimerText;
 
     [Header("Cooldown Settings")]
     public float cooldownDuration = 25f;
@@ -394,6 +395,26 @@ public class SurveySystem : MonoBehaviour
         cooldownCoroutine = StartCoroutine(SurveyCooldownRoutine());
     }
 
+    private void UpdateCooldownTimerText(float remainingSeconds)
+    {
+        if (surveyCooldownTimerText == null && surveyCooldownWindow != null)
+        {
+            Transform timerTr = surveyCooldownWindow.transform.Find("Timer");
+            if (timerTr != null)
+            {
+                surveyCooldownTimerText = timerTr.GetComponent<TMP_Text>();
+            }
+        }
+
+        if (surveyCooldownTimerText == null) return;
+
+        int totalSeconds = Mathf.CeilToInt(Mathf.Max(0f, remainingSeconds));
+        int hours = totalSeconds / 3600;
+        int minutes = (totalSeconds % 3600) / 60;
+        int seconds = totalSeconds % 60;
+        surveyCooldownTimerText.text = string.Format("{0:00}:{1:00}:{2:00}", hours, minutes, seconds);
+    }
+
     private IEnumerator SurveyCooldownRoutine()
     {
         isCooldownActive = true;
@@ -403,6 +424,7 @@ public class SurveySystem : MonoBehaviour
             surveyCooldown.maxValue = cooldownDuration;
             surveyCooldown.value = cooldownDuration;
         }
+        UpdateCooldownTimerText(currentCooldown);
 
         while (currentCooldown > 0f)
         {
@@ -411,10 +433,12 @@ public class SurveySystem : MonoBehaviour
             {
                 surveyCooldown.value = currentCooldown;
             }
+            UpdateCooldownTimerText(currentCooldown);
             yield return null;
         }
 
         currentCooldown = 0f;
+        UpdateCooldownTimerText(0f);
         isCooldownActive = false;
         cooldownCoroutine = null;
 
@@ -440,6 +464,7 @@ public class SurveySystem : MonoBehaviour
             // Cooldown is still in progress, show the cooldown/wait screen with remaining time
             if (mainMenu != null) mainMenu.SetActive(false);
             if (surveyCooldownWindow != null) surveyCooldownWindow.SetActive(true);
+            UpdateCooldownTimerText(currentCooldown);
         }
         else
         {

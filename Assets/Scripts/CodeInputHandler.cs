@@ -81,8 +81,8 @@ public class CodeInputHandler : MonoBehaviour
         if (gameManager != null)
         {
             TriggerCheatImage();
-            gameManager.playerMoney += 100;
-            //Debug.Log("Cheat code activated: Gave $100");
+            gameManager.playerMoney += 200;
+            //Debug.Log("Cheat code activated: Gave $200");
         }
     }
     private void GiveGems()
@@ -91,8 +91,8 @@ public class CodeInputHandler : MonoBehaviour
         if (gameManager != null)
         {
             TriggerCheatImage();
-            gameManager.playerGems += 50;
-            //Debug.Log("Cheat code activated: Gave 5 Gems");
+            gameManager.playerGems += 200;
+            //Debug.Log("Cheat code activated: Gave 200 Gems");
         }
     }
 }

@@ -106,6 +106,7 @@ public class AppWindow : MonoBehaviour
 
         Button btn = go.GetComponent<Button>() ?? go.AddComponent<Button>();
         btn.targetGraphic = img;
+        btn.transition = Selectable.Transition.None;
         btn.onClick.RemoveAllListeners();
         btn.onClick.AddListener(Minimise);
 
@@ -127,22 +128,31 @@ public class AppWindow : MonoBehaviour
 
     private void SetupButtonHoverEffects()
     {
+        float targetHoverBrightness = 0.75f;
+
         if (closeRect != null)
         {
-            UIHoverEffect closeHover = closeRect.GetComponent<UIHoverEffect>() ?? closeRect.gameObject.AddComponent<UIHoverEffect>();
-            closeHover.useExplicitHoverColor = true;
-            closeHover.hoverColor = new Color(1f, 0.70f, 0.70f, 1f);
-            closeHover.useExplicitPressedColor = true;
-            closeHover.pressedColor = new Color(0.85f, 0.50f, 0.50f, 1f);
+            UIHoverEffect closeHover = closeRect.GetComponent<UIHoverEffect>();
+            if (closeHover == null)
+            {
+                closeHover = closeRect.gameObject.AddComponent<UIHoverEffect>();
+                closeHover.hoverBrightness = targetHoverBrightness;
+            }
+            closeHover.useExplicitHoverColor = false;
+            closeHover.useExplicitPressedColor = false;
+            targetHoverBrightness = closeHover.hoverBrightness;
         }
 
         if (minimiseRect != null)
         {
-            UIHoverEffect minHover = minimiseRect.GetComponent<UIHoverEffect>() ?? minimiseRect.gameObject.AddComponent<UIHoverEffect>();
-            minHover.useExplicitHoverColor = true;
-            minHover.hoverColor = new Color(0.85f, 0.92f, 1f, 1f);
-            minHover.useExplicitPressedColor = true;
-            minHover.pressedColor = new Color(0.72f, 0.82f, 0.95f, 1f);
+            UIHoverEffect minHover = minimiseRect.GetComponent<UIHoverEffect>();
+            if (minHover == null)
+            {
+                minHover = minimiseRect.gameObject.AddComponent<UIHoverEffect>();
+                minHover.hoverBrightness = targetHoverBrightness;
+            }
+            minHover.useExplicitHoverColor = false;
+            minHover.useExplicitPressedColor = false;
         }
     }
 

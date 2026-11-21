@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static UnityEngine.GraphicsBuffer;
 //using UnityEngine.UIElements;
@@ -35,6 +36,9 @@ public class ThunderManager : MonoBehaviour
     public TMP_InputField yearDateInput;
     public TMP_InputField pronouns1Input;
     public TMP_InputField pronouns2Input;
+    public TMP_Dropdown interest1Dropdown;
+    public TMP_Dropdown interest2Dropdown;
+    public TMP_Dropdown interest3Dropdown;
     public TMP_Text errorMessage;
 
     public TMP_InputField usernameInput;
@@ -90,6 +94,12 @@ public class ThunderManager : MonoBehaviour
     private bool animationRunning = false;
     public TMP_Text chat_name;
     public Image chat_profilePicture;
+    [Header("Chat Window Profile Picture Layers")]
+    public Image chatAdditionalBgImage;
+    public Image chatBodyImage;
+    public Image chatHeadImage;
+    public Image chatFaceImage;
+    public Image chatHairImage;
     public ScrollRect chatScroll;
     public Animator profileAnimator;
     public Animator rejectAnimator;
@@ -106,6 +116,55 @@ public class ThunderManager : MonoBehaviour
     public GameObject chatListWindow;
     public Transform contactListParent;
     public GameObject contactItemPrefab;
+
+    [Header("Player Profile Window")]
+    public GameObject playerProfileWindow;
+    public GameObject myProfileButton;
+    public TMP_Text playerProfileNameText;
+    public TMP_Text playerProfileUsernameText;
+    public TMP_Text playerProfileMailText;
+    public TMP_Text playerProfileAgeText;
+    public TMP_Text playerProfileGenderText;
+    public TMP_Text playerProfileInterest1Text;
+    public TMP_Text playerProfileInterest2Text;
+    public TMP_Text playerProfileInterest3Text;
+
+    [Header("Player Profile Picture Layers")]
+    public Image playerAdditionalBgImage;
+    public Image playerBodyImage;
+    public Image playerHeadImage;
+    public Image playerFaceImage;
+    public Image playerHairImage;
+
+    [Header("Player Profile Picture Buttons")]
+    public GameObject playerBgButton;
+    public GameObject playerBodyButton;
+    public GameObject playerHeadButton;
+    public GameObject playerFaceButton;
+    public GameObject playerHairButton;
+
+    [Header("Player Stats UI")]
+    public TMP_Text statSwipedLeftText;
+    public TMP_Text statSwipedRightText;
+    public TMP_Text statMatchesText;
+    public TMP_Text statFailedMatchesText;
+    public TMP_Text statAbandonedMatchesText;
+    public TMP_Text statMoneySentText;
+
+    [Header("Player Stats Counters")]
+    public int swipedLeftCount = 0;
+    public int swipedRightCount = 0;
+    public int successfulMatchesCount = 0;
+    public int failedMatchesCount = 0;
+    public int abandonedMatchesCount = 0;
+    public float totalMoneySent = 0f;
+
+    private int playerBgIndex = 0;
+    private int playerBodyIndex = 0;
+    private int playerHeadIndex = 0;
+    private int playerFaceIndex = 0;
+    private int playerHairIndex = 0;
+    private bool playerProfileButtonsBound = false;
 
     [Header("Contacts Database")]
     public List<ThunderContact> contacts = new List<ThunderContact>();
@@ -193,6 +252,8 @@ public class ThunderManager : MonoBehaviour
         ResetPools();
         RandomizeChoice();
         EnsureProfileImageReferences();
+        EnsureChatProfileImageReferences();
+        SetupPlayerProfileSystem();
         RandomizeProfileParts();
         GenerateNewProfile();
     }
@@ -293,6 +354,7 @@ public class ThunderManager : MonoBehaviour
     private IEnumerator YayTriggered()
     {
         thunderAudioSource.PlayOneShot(swipeYay);
+        EnsureProfileImageReferences();
         currentProfileName = randomName.text;
         currentProfilePicture = (headImage != null && headImage.sprite != null) ? headImage.sprite : (profilePicture != null ? profilePicture.sprite : null);
         currentAdditionalBg = additionalBgImage != null ? additionalBgImage.sprite : null;
@@ -303,6 +365,8 @@ public class ThunderManager : MonoBehaviour
         if (randomAge != null) currentProfileAge = randomAge.text;
         if (randomDescription != null) currentProfileDescription = randomDescription.text;
         yayCount++;
+        swipedRightCount++;
+        RefreshPlayerStatsUI();
         animationRunning = true;
         profileAnimator.SetTrigger("Yay");
         yield return new WaitForSeconds(2f);
@@ -322,6 +386,8 @@ public class ThunderManager : MonoBehaviour
     private IEnumerator NayTriggered()
     {
         thunderAudioSource.PlayOneShot(swipeNay);
+        swipedLeftCount++;
+        RefreshPlayerStatsUI();
         animationRunning = true;
         profileAnimator.SetTrigger("Nay");
         yield return new WaitForSeconds(2f);
@@ -716,6 +782,99 @@ public class ThunderManager : MonoBehaviour
         }
     }
 
+    public void EnsureChatProfileImageReferences()
+    {
+        if (chatAdditionalBgImage != null && chatBodyImage != null && chatHeadImage != null && chatFaceImage != null && chatHairImage != null)
+            return;
+
+        Transform root = null;
+        if (chatWindow != null)
+        {
+            root = chatWindow.transform.Find("ProfilePicture");
+        }
+
+        if (root == null) return;
+
+        if (chatAdditionalBgImage == null)
+        {
+            Transform t = root.Find("AddBackground") ?? root.Find("AdditionalBg");
+            if (t != null) chatAdditionalBgImage = t.GetComponent<Image>();
+        }
+        if (chatBodyImage == null)
+        {
+            Transform t = root.Find("Body");
+            if (t != null) chatBodyImage = t.GetComponent<Image>();
+        }
+        if (chatHeadImage == null)
+        {
+            Transform t = root.Find("Head");
+            if (t != null) chatHeadImage = t.GetComponent<Image>();
+        }
+        if (chatFaceImage == null)
+        {
+            Transform t = root.Find("Face");
+            if (t != null) chatFaceImage = t.GetComponent<Image>();
+        }
+        if (chatHairImage == null)
+        {
+            Transform t = root.Find("Hair");
+            if (t != null) chatHairImage = t.GetComponent<Image>();
+        }
+    }
+
+    private void ApplyLayerSprite(Image targetImage, Sprite sprite)
+    {
+        if (targetImage == null) return;
+        if (sprite != null)
+        {
+            targetImage.sprite = sprite;
+            targetImage.enabled = true;
+        }
+    }
+
+    private void ApplyProfileLayersToContainer(Transform profileRoot, Sprite addBg, Sprite body, Sprite head, Sprite face, Sprite hair, bool disableRaycast = false)
+    {
+        if (profileRoot == null) return;
+
+        Transform addBgTr = profileRoot.Find("AddBackground") ?? profileRoot.Find("AdditionalBg");
+        Transform bodyTr = profileRoot.Find("Body");
+        Transform headTr = profileRoot.Find("Head");
+        Transform faceTr = profileRoot.Find("Face");
+        Transform hairTr = profileRoot.Find("Hair");
+
+        if (addBgTr != null) ApplyLayerSprite(addBgTr.GetComponent<Image>(), addBg);
+        if (bodyTr != null) ApplyLayerSprite(bodyTr.GetComponent<Image>(), body);
+        if (headTr != null) ApplyLayerSprite(headTr.GetComponent<Image>(), head);
+        if (faceTr != null) ApplyLayerSprite(faceTr.GetComponent<Image>(), face);
+        if (hairTr != null) ApplyLayerSprite(hairTr.GetComponent<Image>(), hair);
+
+        if (disableRaycast)
+        {
+            Image[] childImages = profileRoot.GetComponentsInChildren<Image>(true);
+            foreach (var img in childImages)
+            {
+                img.raycastTarget = false;
+            }
+        }
+    }
+
+    private void ApplyContactToChatProfile(ThunderContact contact)
+    {
+        if (contact == null) return;
+        EnsureChatProfileImageReferences();
+
+        ApplyLayerSprite(chatAdditionalBgImage, contact.additionalBgSprite);
+        ApplyLayerSprite(chatBodyImage, contact.bodySprite);
+        ApplyLayerSprite(chatHeadImage, contact.headSprite);
+        ApplyLayerSprite(chatFaceImage, contact.faceSprite);
+        ApplyLayerSprite(chatHairImage, contact.hairSprite);
+
+        if (chat_profilePicture != null && contact.profilePicture != null)
+        {
+            chat_profilePicture.sprite = contact.profilePicture;
+        }
+    }
+
     public void RandomizeProfileParts()
     {
         EnsureProfileImageReferences();
@@ -793,6 +952,8 @@ public class ThunderManager : MonoBehaviour
 
     private IEnumerator FoundMatch()
     {
+        successfulMatchesCount++;
+        RefreshPlayerStatsUI();
         thunderAudioSource.PlayOneShot(foundMatch);
         firstPath.SetActive(true);
         for (int i = chatContentParent.childCount - 1; i >= 0; i--)
@@ -807,8 +968,8 @@ public class ThunderManager : MonoBehaviour
         happinessSlider.value = happinessLevel;
         spicinessSlider.value = spicinessLevel;
         romancenessSlider.value = romancenessLevel;
-        chat_name.text = currentProfileName;
-        chat_profilePicture.sprite = currentProfilePicture;
+        if (chat_name != null) chat_name.text = currentProfileName;
+        if (chat_profilePicture != null) chat_profilePicture.sprite = currentProfilePicture;
         yayCount = 0;
         questionCount = 0;
 
@@ -879,6 +1040,8 @@ public class ThunderManager : MonoBehaviour
             activeContact = newContact;
         }
 
+        ApplyContactToChatProfile(activeContact);
+
         isDonatingMoney = false;
         if (sendMoneyButton != null) sendMoneyButton.interactable = true;
         foundMatchAnimator.SetTrigger("Found");
@@ -922,6 +1085,7 @@ public class ThunderManager : MonoBehaviour
         }
         else
         {
+            RefreshPlayerProfileUI();
             registerWindow.SetActive(false);
             register2Window.SetActive(true);
         }
@@ -943,10 +1107,20 @@ public class ThunderManager : MonoBehaviour
         errorMessage.gameObject.SetActive(false);
     }
 
+    private int NormalizeBirthYear(int year)
+    {
+        if (year >= 0 && year < 100)
+        {
+            return year > 26 ? 1900 + year : 2000 + year;
+        }
+        return year;
+    }
+
     private bool IsAtLeastAge(int year, int month, int day, int requiredYears = 18)
     {
         try
         {
+            year = NormalizeBirthYear(year);
             var dob = new System.DateTime(year, month, day);
             var today = System.DateTime.Today;
             int age = today.Year - dob.Year;
@@ -982,6 +1156,7 @@ public class ThunderManager : MonoBehaviour
             StartCoroutine(ShowError2Email());
             return;
         }
+        RefreshPlayerProfileUI();
         register2Window.SetActive(false);
         afterLoginWindow.SetActive(true);
         StartCoroutine(AfterLoginSuccess());
@@ -1096,6 +1271,8 @@ public class ThunderManager : MonoBehaviour
         }
         else
         {
+            failedMatchesCount++;
+            RefreshPlayerStatsUI();
             StartCoroutine(RejectionAnimation());
         }
     }
@@ -1108,6 +1285,14 @@ public class ThunderManager : MonoBehaviour
         {
             activeContact.isAbandonedOrRejected = true;
             activeContact.firstPathActive = false;
+            contacts.Remove(activeContact);
+            activeContact = null;
+        }
+        contacts.RemoveAll(c => c == null || c.isMatchedSuccess || c.isAbandonedOrRejected);
+        currentProfileName = "";
+        if (chatListWindow != null && chatListWindow.activeInHierarchy)
+        {
+            RefreshChatListUI();
         }
         questionCount = 0;
         yield return new WaitForSeconds(1f);
@@ -1169,6 +1354,8 @@ public class ThunderManager : MonoBehaviour
 
     public void OnAbandonButtonClicked()
     {
+        abandonedMatchesCount++;
+        RefreshPlayerStatsUI();
         isDonatingMoney = false;
         if (sendMoneyButton != null) sendMoneyButton.interactable = true;
         EnsureActiveContact();
@@ -1176,6 +1363,14 @@ public class ThunderManager : MonoBehaviour
         {
             activeContact.isAbandonedOrRejected = true;
             activeContact.firstPathActive = false;
+            contacts.Remove(activeContact);
+            activeContact = null;
+        }
+        contacts.RemoveAll(c => c == null || c.isMatchedSuccess || c.isAbandonedOrRejected);
+        currentProfileName = "";
+        if (chatListWindow != null && chatListWindow.activeInHierarchy)
+        {
+            RefreshChatListUI();
         }
         if (firstPath != null) firstPath.SetActive(false);
         StopAllCoroutines();
@@ -1207,6 +1402,8 @@ public class ThunderManager : MonoBehaviour
         // Deduct money
         gameManager.playerMoney -= 10f;
         gameManager.expensesAmount += 10f;
+        totalMoneySent += 10f;
+        RefreshPlayerStatsUI();
         PurchaseHistoryManager.RecordPurchase(10f, "Thunder donation");
 
         if (thunderAudioSource != null && sendMessage != null)
@@ -1327,6 +1524,7 @@ public class ThunderManager : MonoBehaviour
         SaveCurrentConversationState();
         if (chatWindow != null) chatWindow.SetActive(false);
         if (chatListWindow != null) chatListWindow.SetActive(false);
+        if (playerProfileWindow != null) playerProfileWindow.SetActive(false);
         if (swipeWindow != null) swipeWindow.SetActive(true);
     }
 
@@ -1347,6 +1545,7 @@ public class ThunderManager : MonoBehaviour
         SaveCurrentConversationState();
         if (chatWindow != null) chatWindow.SetActive(false);
         if (swipeWindow != null) swipeWindow.SetActive(false);
+        if (playerProfileWindow != null) playerProfileWindow.SetActive(false);
         if (chatListWindow != null)
         {
             chatListWindow.SetActive(true);
@@ -1357,7 +1556,322 @@ public class ThunderManager : MonoBehaviour
     public void BackToSwipeFromChatList()
     {
         if (chatListWindow != null) chatListWindow.SetActive(false);
+        if (playerProfileWindow != null) playerProfileWindow.SetActive(false);
         if (swipeWindow != null) swipeWindow.SetActive(true);
+    }
+
+    // ==================== PLAYER PROFILE WINDOW ====================
+
+    public void OpenPlayerProfile()
+    {
+        OnProfileButtonClicked();
+    }
+
+    public void OnProfileButtonClicked()
+    {
+        isDonatingMoney = false;
+        if (sendMoneyButton != null) sendMoneyButton.interactable = true;
+        SaveCurrentConversationState();
+        if (chatWindow != null) chatWindow.SetActive(false);
+        if (chatListWindow != null) chatListWindow.SetActive(false);
+        if (swipeWindow != null) swipeWindow.SetActive(false);
+        if (playerProfileWindow != null)
+        {
+            playerProfileWindow.SetActive(true);
+            RefreshPlayerProfileUI();
+        }
+    }
+
+    private void SetupPlayerProfileSystem()
+    {
+        EnsurePlayerProfileReferences();
+        InitializePlayerProfilePictureIndices();
+
+        if (!playerProfileButtonsBound)
+        {
+            BindProfileClick(myProfileButton, OpenPlayerProfile);
+            BindProfileClick(playerBgButton, CyclePlayerBackground);
+            BindProfileClick(playerBodyButton, CyclePlayerBody);
+            BindProfileClick(playerHeadButton, CyclePlayerHead);
+            BindProfileClick(playerFaceButton, CyclePlayerFace);
+            BindProfileClick(playerHairButton, CyclePlayerHair);
+            playerProfileButtonsBound = true;
+        }
+
+        RefreshPlayerProfileUI();
+    }
+
+    private void BindProfileClick(GameObject targetObj, UnityEngine.Events.UnityAction callback)
+    {
+        if (targetObj == null || callback == null) return;
+
+        Button btn = targetObj.GetComponent<Button>();
+        if (btn != null)
+        {
+            btn.onClick.AddListener(callback);
+            return;
+        }
+
+        EventTrigger trigger = targetObj.GetComponent<EventTrigger>();
+        if (trigger == null)
+        {
+            trigger = targetObj.AddComponent<EventTrigger>();
+        }
+
+        EventTrigger.Entry entry = new EventTrigger.Entry
+        {
+            eventID = EventTriggerType.PointerClick
+        };
+        entry.callback.AddListener((_) => callback());
+        trigger.triggers.Add(entry);
+    }
+
+    private void EnsurePlayerProfileReferences()
+    {
+        if (registerWindow != null && (interest1Dropdown == null || interest2Dropdown == null || interest3Dropdown == null))
+        {
+            Transform interestsTr = registerWindow.transform.Find("Interests");
+            if (interestsTr != null)
+            {
+                if (interest1Dropdown == null) interest1Dropdown = interestsTr.Find("Dropdown")?.GetComponent<TMP_Dropdown>();
+                if (interest2Dropdown == null) interest2Dropdown = interestsTr.Find("Dropdown (1)")?.GetComponent<TMP_Dropdown>();
+                if (interest3Dropdown == null) interest3Dropdown = interestsTr.Find("Dropdown (2)")?.GetComponent<TMP_Dropdown>();
+            }
+        }
+
+        if (myProfileButton == null && swipeWindow != null)
+        {
+            Transform myProfTr = swipeWindow.transform.Find("MyProfile_bt");
+            if (myProfTr != null) myProfileButton = myProfTr.gameObject;
+        }
+
+        if (playerProfileWindow == null && swipeWindow != null && swipeWindow.transform.parent != null)
+        {
+            Transform ppWinTr = swipeWindow.transform.parent.Find("PlayerProfile_window");
+            if (ppWinTr != null) playerProfileWindow = ppWinTr.gameObject;
+        }
+
+        if (playerProfileWindow == null) return;
+        Transform root = playerProfileWindow.transform;
+
+        if (playerProfileNameText == null) playerProfileNameText = root.Find("Name")?.GetComponent<TMP_Text>();
+        if (playerProfileUsernameText == null) playerProfileUsernameText = root.Find("Username")?.GetComponent<TMP_Text>();
+        if (playerProfileMailText == null) playerProfileMailText = (root.Find("mail") ?? root.Find("Mail"))?.GetComponent<TMP_Text>();
+        if (playerProfileAgeText == null) playerProfileAgeText = root.Find("Age")?.GetComponent<TMP_Text>();
+        if (playerProfileGenderText == null) playerProfileGenderText = root.Find("Gender")?.GetComponent<TMP_Text>();
+
+        Transform interestsRoot = root.Find("Interests");
+        if (interestsRoot != null)
+        {
+            if (playerProfileInterest1Text == null) playerProfileInterest1Text = interestsRoot.Find("Interest1")?.GetComponentInChildren<TMP_Text>(true);
+            if (playerProfileInterest2Text == null) playerProfileInterest2Text = interestsRoot.Find("Interest2")?.GetComponentInChildren<TMP_Text>(true);
+            if (playerProfileInterest3Text == null) playerProfileInterest3Text = interestsRoot.Find("Interest3")?.GetComponentInChildren<TMP_Text>(true);
+        }
+
+        Transform picRoot = root.Find("ProfilePicture (1)") ?? root.Find("ProfilePicture");
+        if (picRoot != null)
+        {
+            if (playerAdditionalBgImage == null) playerAdditionalBgImage = (picRoot.Find("AddBackground") ?? picRoot.Find("AdditionalBg"))?.GetComponent<Image>();
+            if (playerBodyImage == null) playerBodyImage = picRoot.Find("Body")?.GetComponent<Image>();
+            if (playerHeadImage == null) playerHeadImage = picRoot.Find("Head")?.GetComponent<Image>();
+            if (playerFaceImage == null) playerFaceImage = picRoot.Find("Face")?.GetComponent<Image>();
+            if (playerHairImage == null) playerHairImage = picRoot.Find("Hair")?.GetComponent<Image>();
+        }
+
+        Transform btnRoot = root.Find("PPictureButtons");
+        if (btnRoot != null)
+        {
+            if (playerBgButton == null) playerBgButton = (btnRoot.Find("Background_Bt") ?? btnRoot.Find("Background_bt"))?.gameObject;
+            if (playerBodyButton == null) playerBodyButton = btnRoot.Find("Body_bt")?.gameObject;
+            if (playerHeadButton == null) playerHeadButton = btnRoot.Find("Head_bt")?.gameObject;
+            if (playerFaceButton == null) playerFaceButton = btnRoot.Find("Face_bt")?.gameObject;
+            if (playerHairButton == null) playerHairButton = btnRoot.Find("Hair_bt")?.gameObject;
+        }
+
+        Transform statsRoot = root.Find("PlayerStats");
+        if (statsRoot != null)
+        {
+            if (statSwipedLeftText == null) statSwipedLeftText = statsRoot.Find("SwLeft")?.GetComponent<TMP_Text>();
+            if (statSwipedRightText == null) statSwipedRightText = statsRoot.Find("SwRight")?.GetComponent<TMP_Text>();
+            if (statMatchesText == null) statMatchesText = statsRoot.Find("matches")?.GetComponent<TMP_Text>();
+            if (statFailedMatchesText == null) statFailedMatchesText = statsRoot.Find("Failmatches")?.GetComponent<TMP_Text>();
+            if (statAbandonedMatchesText == null) statAbandonedMatchesText = statsRoot.Find("Abandonmatches")?.GetComponent<TMP_Text>();
+            if (statMoneySentText == null) statMoneySentText = statsRoot.Find("moneysent")?.GetComponent<TMP_Text>();
+        }
+    }
+
+    private int FindSpriteIndex(Sprite[] sprites, Sprite current)
+    {
+        if (sprites == null || sprites.Length == 0 || current == null) return 0;
+        for (int i = 0; i < sprites.Length; i++)
+        {
+            if (sprites[i] == current) return i;
+        }
+        return 0;
+    }
+
+    private void InitializePlayerProfilePictureIndices()
+    {
+        playerBgIndex = FindSpriteIndex(additionalBgSprites, playerAdditionalBgImage != null ? playerAdditionalBgImage.sprite : null);
+        playerBodyIndex = FindSpriteIndex(bodySprites, playerBodyImage != null ? playerBodyImage.sprite : null);
+        playerHeadIndex = FindSpriteIndex(headSprites, playerHeadImage != null ? playerHeadImage.sprite : null);
+        playerFaceIndex = FindSpriteIndex(faceSprites, playerFaceImage != null ? playerFaceImage.sprite : null);
+        playerHairIndex = FindSpriteIndex(hairSprites, playerHairImage != null ? playerHairImage.sprite : null);
+
+        if (additionalBgSprites != null && additionalBgSprites.Length > 0 && playerAdditionalBgImage != null && playerAdditionalBgImage.sprite == null)
+            playerAdditionalBgImage.sprite = additionalBgSprites[playerBgIndex];
+        if (bodySprites != null && bodySprites.Length > 0 && playerBodyImage != null && playerBodyImage.sprite == null)
+            playerBodyImage.sprite = bodySprites[playerBodyIndex];
+        if (headSprites != null && headSprites.Length > 0 && playerHeadImage != null && playerHeadImage.sprite == null)
+            playerHeadImage.sprite = headSprites[playerHeadIndex];
+        if (faceSprites != null && faceSprites.Length > 0 && playerFaceImage != null && playerFaceImage.sprite == null)
+            playerFaceImage.sprite = faceSprites[playerFaceIndex];
+        if (hairSprites != null && hairSprites.Length > 0 && playerHairImage != null && playerHairImage.sprite == null)
+            playerHairImage.sprite = hairSprites[playerHairIndex];
+    }
+
+    public void CyclePlayerBackground()
+    {
+        EnsurePlayerProfileReferences();
+        if (additionalBgSprites == null || additionalBgSprites.Length == 0 || playerAdditionalBgImage == null) return;
+        playerBgIndex = (playerBgIndex + 1) % additionalBgSprites.Length;
+        playerAdditionalBgImage.sprite = additionalBgSprites[playerBgIndex];
+    }
+
+    public void CyclePlayerBody()
+    {
+        EnsurePlayerProfileReferences();
+        if (bodySprites == null || bodySprites.Length == 0 || playerBodyImage == null) return;
+        playerBodyIndex = (playerBodyIndex + 1) % bodySprites.Length;
+        playerBodyImage.sprite = bodySprites[playerBodyIndex];
+    }
+
+    public void CyclePlayerHead()
+    {
+        EnsurePlayerProfileReferences();
+        if (headSprites == null || headSprites.Length == 0 || playerHeadImage == null) return;
+        playerHeadIndex = (playerHeadIndex + 1) % headSprites.Length;
+        playerHeadImage.sprite = headSprites[playerHeadIndex];
+    }
+
+    public void CyclePlayerFace()
+    {
+        EnsurePlayerProfileReferences();
+        if (faceSprites == null || faceSprites.Length == 0 || playerFaceImage == null) return;
+        playerFaceIndex = (playerFaceIndex + 1) % faceSprites.Length;
+        playerFaceImage.sprite = faceSprites[playerFaceIndex];
+    }
+
+    public void CyclePlayerHair()
+    {
+        EnsurePlayerProfileReferences();
+        if (hairSprites == null || hairSprites.Length == 0 || playerHairImage == null) return;
+        playerHairIndex = (playerHairIndex + 1) % hairSprites.Length;
+        playerHairImage.sprite = hairSprites[playerHairIndex];
+    }
+
+    private string GetDropdownSelectedText(TMP_Dropdown dropdown)
+    {
+        if (dropdown == null || dropdown.options == null || dropdown.options.Count == 0) return "";
+        int idx = Mathf.Clamp(dropdown.value, 0, dropdown.options.Count - 1);
+        return dropdown.options[idx].text;
+    }
+
+    private int CalculatePlayerAge()
+    {
+        if (yearDateInput == null || monthDateInput == null || dayDateInput == null) return 0;
+        if (!int.TryParse(yearDateInput.text.Trim(), out int year) ||
+            !int.TryParse(monthDateInput.text.Trim(), out int month) ||
+            !int.TryParse(dayDateInput.text.Trim(), out int day))
+        {
+            return 0;
+        }
+
+        try
+        {
+            year = NormalizeBirthYear(year);
+            var dob = new System.DateTime(year, month, day);
+            var today = System.DateTime.Today;
+            int age = today.Year - dob.Year;
+            if (today < dob.AddYears(age)) age--;
+            return Mathf.Max(0, age);
+        }
+        catch
+        {
+            return 0;
+        }
+    }
+
+    public void RefreshPlayerProfileUI()
+    {
+        EnsurePlayerProfileReferences();
+
+        if (playerProfileNameText != null)
+        {
+            string first = firstNameInput != null ? firstNameInput.text.Trim() : "";
+            string last = lastNameInput != null ? lastNameInput.text.Trim() : "";
+            string fullName = (first + " " + last).Trim();
+            if (!string.IsNullOrEmpty(fullName))
+                playerProfileNameText.text = fullName;
+        }
+
+        if (playerProfileUsernameText != null && usernameInput != null && !string.IsNullOrEmpty(usernameInput.text.Trim()))
+        {
+            playerProfileUsernameText.text = usernameInput.text.Trim();
+        }
+
+        if (playerProfileMailText != null && emailInput != null && !string.IsNullOrEmpty(emailInput.text.Trim()))
+        {
+            playerProfileMailText.text = emailInput.text.Trim();
+        }
+
+        if (playerProfileAgeText != null)
+        {
+            int age = CalculatePlayerAge();
+            if (age > 0)
+                playerProfileAgeText.text = age.ToString();
+        }
+
+        if (playerProfileGenderText != null && genderInput != null && !string.IsNullOrEmpty(genderInput.text.Trim()))
+        {
+            playerProfileGenderText.text = genderInput.text.Trim();
+        }
+
+        if (playerProfileInterest1Text != null)
+        {
+            string val = GetDropdownSelectedText(interest1Dropdown);
+            if (!string.IsNullOrEmpty(val)) playerProfileInterest1Text.text = val;
+        }
+        if (playerProfileInterest2Text != null)
+        {
+            string val = GetDropdownSelectedText(interest2Dropdown);
+            if (!string.IsNullOrEmpty(val)) playerProfileInterest2Text.text = val;
+        }
+        if (playerProfileInterest3Text != null)
+        {
+            string val = GetDropdownSelectedText(interest3Dropdown);
+            if (!string.IsNullOrEmpty(val)) playerProfileInterest3Text.text = val;
+        }
+
+        RefreshPlayerStatsUI();
+    }
+
+    public void RefreshPlayerStatsUI()
+    {
+        EnsurePlayerProfileReferences();
+
+        if (statSwipedLeftText != null)
+            statSwipedLeftText.text = "Swiped Left: " + swipedLeftCount;
+        if (statSwipedRightText != null)
+            statSwipedRightText.text = "Swiped Right: " + swipedRightCount;
+        if (statMatchesText != null)
+            statMatchesText.text = "Matches: " + successfulMatchesCount;
+        if (statFailedMatchesText != null)
+            statFailedMatchesText.text = "Failed matches: " + failedMatchesCount;
+        if (statAbandonedMatchesText != null)
+            statAbandonedMatchesText.text = "Abandoned matches: " + abandonedMatchesCount;
+        if (statMoneySentText != null)
+            statMoneySentText.text = "Money sent: $" + totalMoneySent.ToString("0.##");
     }
 
     public void ResumeChat(ThunderContact contact)
@@ -1371,7 +1885,7 @@ public class ThunderManager : MonoBehaviour
 
         // Restore chat headers
         if (chat_name != null) chat_name.text = contact.name;
-        if (chat_profilePicture != null) chat_profilePicture.sprite = contact.profilePicture;
+        ApplyContactToChatProfile(contact);
 
         // Restore sliders
         happinessLevel = contact.happinessLevel;
@@ -1426,6 +1940,7 @@ public class ThunderManager : MonoBehaviour
         // Switch windows
         if (chatListWindow != null) chatListWindow.SetActive(false);
         if (swipeWindow != null) swipeWindow.SetActive(false);
+        if (playerProfileWindow != null) playerProfileWindow.SetActive(false);
         if (chatWindow != null) chatWindow.SetActive(true);
 
         StartCoroutine(ScrollToBottomAnimated(0.18f));
@@ -1520,11 +2035,11 @@ public class ThunderManager : MonoBehaviour
         GameObject prefabToUse = contactItemPrefab != null ? contactItemPrefab : contactTemplate;
         if (prefabToUse == null) return;
 
-        contacts.RemoveAll(c => c == null || c.isMatchedSuccess);
+        contacts.RemoveAll(c => c == null || c.isMatchedSuccess || c.isAbandonedOrRejected);
 
         foreach (var contact in contacts)
         {
-            if (contact.isMatchedSuccess) continue;
+            if (contact.isMatchedSuccess || contact.isAbandonedOrRejected) continue;
             GameObject itemObj = Instantiate(prefabToUse, contactListParent);
             itemObj.SetActive(true);
             BindContactItemUI(itemObj, contact);
@@ -1543,27 +2058,43 @@ public class ThunderManager : MonoBehaviour
             bgImg.raycastTarget = true;
         }
 
-        // Profile picture Image
-        Image profileImg = null;
-        Transform picTr = itemObj.transform.Find("ProfilePic") ?? itemObj.transform.Find("Image") ?? itemObj.transform.Find("Avatar");
-        if (picTr != null) profileImg = picTr.GetComponent<Image>();
-        if (profileImg == null)
+        // Profile picture (multi-layer ProfilePicture container or legacy single Image)
+        Transform layeredPicRoot = itemObj.transform.Find("ProfilePicture");
+        if (layeredPicRoot != null)
         {
-            Image[] images = itemObj.GetComponentsInChildren<Image>(true);
-            foreach (var img in images)
+            ApplyProfileLayersToContainer(
+                layeredPicRoot,
+                contact.additionalBgSprite,
+                contact.bodySprite,
+                contact.headSprite,
+                contact.faceSprite,
+                contact.hairSprite,
+                disableRaycast: true
+            );
+        }
+        else
+        {
+            Image profileImg = null;
+            Transform picTr = itemObj.transform.Find("ProfilePic") ?? itemObj.transform.Find("Image") ?? itemObj.transform.Find("Avatar");
+            if (picTr != null) profileImg = picTr.GetComponent<Image>();
+            if (profileImg == null)
             {
-                if (img.gameObject != itemObj && img != bgImg)
+                Image[] images = itemObj.GetComponentsInChildren<Image>(true);
+                foreach (var img in images)
                 {
-                    profileImg = img;
-                    break;
+                    if (img.gameObject != itemObj && img != bgImg)
+                    {
+                        profileImg = img;
+                        break;
+                    }
                 }
             }
-        }
-        if (profileImg != null)
-        {
-            profileImg.raycastTarget = false;
-            if (contact.profilePicture != null)
-                profileImg.sprite = contact.profilePicture;
+            if (profileImg != null)
+            {
+                profileImg.raycastTarget = false;
+                if (contact.profilePicture != null)
+                    profileImg.sprite = contact.profilePicture;
+            }
         }
 
         // Texts for Name & Age
